@@ -46,7 +46,6 @@ pushlist 'weapons' 0x13ff // Katana
 pushlist 'weapons' 0x13fb // Large Battle Axe
 pushlist 'weapons' 0xf50  // Crossbow
 @clearignorelist
-@unsetalias 'dorecycling'
 for 0 in 'weapons'
   while @findtype weapons[] 'any' 'backpack' 'any' 0
     @removelist 'valuetally'
@@ -59,10 +58,6 @@ for 0 in 'weapons'
     endif
     if @property 'Faster Cast Recovery' 'found' > 0
       if @property 'Faster Cast Recovery' 'found' == 1
-        for 5
-          pushlist 'valuetally' 'x'
-        endfor
-      elseif @property 'Faster Cast Recovery' 'found' == 1
         for 5
           pushlist 'valuetally' 'x'
         endfor
@@ -90,10 +85,6 @@ for 0 in 'weapons'
     endif
     if @property 'Regen Stamina' 'found' > 0
       if @property 'Regen Stamina' 'found' == 1
-        for 1
-          pushlist 'valuetally' 'x'
-        endfor
-      elseif @property 'Regen Stamina' 'found' == 1
         for 1
           pushlist 'valuetally' 'x'
         endfor
@@ -137,10 +128,6 @@ for 0 in 'weapons'
     endif
     if @property 'Reflect Physical Damage' 'found' > 0
       if @property 'Reflect Physical Damage' 'found' == 1
-        for 3
-          pushlist 'valuetally' 'x'
-        endfor
-      elseif @property 'Reflect Physical Damage' 'found' == 1
         for 3
           pushlist 'valuetally' 'x'
         endfor
@@ -204,10 +191,6 @@ for 0 in 'weapons'
     endif
     if @property 'Damage Increase' 'found' > 0
       if @property 'Damage Increase' 'found' == 1
-        for 4
-          pushlist 'valuetally' 'x'
-        endfor
-      elseif @property 'Damage Increase' 'found' == 1
         for 4
           pushlist 'valuetally' 'x'
         endfor
@@ -454,10 +437,6 @@ for 0 in 'weapons'
         for 4
           pushlist 'valuetally' 'x'
         endfor
-      elseif @property 'Hit Fireball' 'found' == 1
-        for 4
-          pushlist 'valuetally' 'x'
-        endfor
       elseif @property 'Hit Fireball' 'found' == 2
         for 8
           pushlist 'valuetally' 'x'
@@ -701,10 +680,6 @@ for 0 in 'weapons'
         for 4
           pushlist 'valuetally' 'x'
         endfor
-      elseif @property 'Swing Speed Increase' 'found' == 1
-        for 4
-          pushlist 'valuetally' 'x'
-        endfor
       elseif @property 'Swing Speed Increase' 'found' == 2
         for 8
           pushlist 'valuetally' 'x'
@@ -865,10 +840,6 @@ for 0 in 'weapons'
     endif
     if @property 'Hit Stamina Leech' 'found' > 0
       if @property 'Hit Stamina Leech' 'found' == 1
-        for 3
-          pushlist 'valuetally' 'x'
-        endfor
-      elseif @property 'Hit Stamina Leech' 'found' == 1
         for 3
           pushlist 'valuetally' 'x'
         endfor
@@ -1115,10 +1086,6 @@ for 0 in 'weapons'
         for 5
           pushlist 'valuetally' 'x'
         endfor
-      elseif @property 'Physical Resist' 'found' == 1
-        for 5
-          pushlist 'valuetally' 'x'
-        endfor
       elseif @property 'Physical Resist' 'found' == 2
         for 10
           pushlist 'valuetally' 'x'
@@ -1199,10 +1166,6 @@ for 0 in 'weapons'
     endif
     if @property 'Hit Lower Attack' 'found' > 0
       if @property 'Hit Lower Attack' 'found' == 1
-        for 3
-          pushlist 'valuetally' 'x'
-        endfor
-      elseif @property 'Hit Lower Attack' 'found' == 1
         for 3
           pushlist 'valuetally' 'x'
         endfor
@@ -1449,10 +1412,6 @@ for 0 in 'weapons'
         for 3
           pushlist 'valuetally' 'x'
         endfor
-      elseif @property 'Bonus Mana' 'found' == 1
-        for 3
-          pushlist 'valuetally' 'x'
-        endfor
       elseif @property 'Bonus Mana' 'found' == 2
         for 6
           pushlist 'valuetally' 'x'
@@ -1485,10 +1444,6 @@ for 0 in 'weapons'
     endif
     if @property 'Hit Magic Arrow' 'found' > 0
       if @property 'Hit Magic Arrow' 'found' == 1
-        for 4
-          pushlist 'valuetally' 'x'
-        endfor
-      elseif @property 'Hit Magic Arrow' 'found' == 1
         for 4
           pushlist 'valuetally' 'x'
         endfor
@@ -1735,10 +1690,6 @@ for 0 in 'weapons'
         for 3
           pushlist 'valuetally' 'x'
         endfor
-      elseif @property 'Defence Chance Increase' 'found' == 1
-        for 3
-          pushlist 'valuetally' 'x'
-        endfor
       elseif @property 'Defence Chance Increase' 'found' == 2
         for 6
           pushlist 'valuetally' 'x'
@@ -1942,10 +1893,6 @@ for 0 in 'weapons'
         for 4
           pushlist 'valuetally' 'x'
         endfor
-      elseif @property 'Bonus Dex' 'found' == 1
-        for 4
-          pushlist 'valuetally' 'x'
-        endfor
       elseif @property 'Bonus Dex' 'found' == 2
         for 8
           pushlist 'valuetally' 'x'
@@ -1978,10 +1925,6 @@ for 0 in 'weapons'
     endif
     if @property 'Hit Lower Defense' 'found' > 0
       if @property 'Hit Lower Defense' 'found' == 1
-        for 3
-          pushlist 'valuetally' 'x'
-        endfor
-      elseif @property 'Hit Lower Defense' 'found' == 1
         for 3
           pushlist 'valuetally' 'x'
         endfor
@@ -2228,10 +2171,6 @@ for 0 in 'weapons'
         for 5
           pushlist 'valuetally' 'x'
         endfor
-      elseif @property 'Lower Reagent Cost' 'found' == 1
-        for 5
-          pushlist 'valuetally' 'x'
-        endfor
       elseif @property 'Lower Reagent Cost' 'found' == 2
         for 10
           pushlist 'valuetally' 'x'
@@ -2312,10 +2251,6 @@ for 0 in 'weapons'
     endif
     if @property 'Hit Lightning' 'found' > 0
       if @property 'Hit Lightning' 'found' == 1
-        for 4
-          pushlist 'valuetally' 'x'
-        endfor
-      elseif @property 'Hit Lightning' 'found' == 1
         for 4
           pushlist 'valuetally' 'x'
         endfor
@@ -2562,10 +2497,6 @@ for 0 in 'weapons'
         for 2
           pushlist 'valuetally' 'x'
         endfor
-      elseif @property 'Regen Hits' 'found' == 1
-        for 2
-          pushlist 'valuetally' 'x'
-        endfor
       elseif @property 'Regen Hits' 'found' == 2
         for 4
           pushlist 'valuetally' 'x'
@@ -2590,10 +2521,6 @@ for 0 in 'weapons'
     endif
     if @property 'Spell Damage' 'found' > 0
       if @property 'Spell Damage' 'found' == 1
-        for 2
-          pushlist 'valuetally' 'x'
-        endfor
-      elseif @property 'Spell Damage' 'found' == 1
         for 2
           pushlist 'valuetally' 'x'
         endfor
@@ -2677,10 +2604,6 @@ for 0 in 'weapons'
     endif
     if @property 'Luck' 'found' > 0
       if @property 'Luck' 'found' == 1
-        for 3
-          pushlist 'valuetally' 'x'
-        endfor
-      elseif @property 'Luck' 'found' == 1
         for 3
           pushlist 'valuetally' 'x'
         endfor
@@ -3287,10 +3210,6 @@ for 0 in 'weapons'
         for 3
           pushlist 'valuetally' 'x'
         endfor
-      elseif @property 'Hit Mana Leech' 'found' == 1
-        for 3
-          pushlist 'valuetally' 'x'
-        endfor
       elseif @property 'Hit Mana Leech' 'found' == 2
         for 6
           pushlist 'valuetally' 'x'
@@ -3531,10 +3450,6 @@ for 0 in 'weapons'
     endif
     if @property 'Hit Harm' 'found' > 0
       if @property 'Hit Harm' 'found' == 1
-        for 4
-          pushlist 'valuetally' 'x'
-        endfor
-      elseif @property 'Hit Harm' 'found' == 1
         for 4
           pushlist 'valuetally' 'x'
         endfor
@@ -3781,10 +3696,6 @@ for 0 in 'weapons'
         for 5
           pushlist 'valuetally' 'x'
         endfor
-      elseif @property 'Lower Mana Cost' 'found' == 1
-        for 5
-          pushlist 'valuetally' 'x'
-        endfor
       elseif @property 'Lower Mana Cost' 'found' == 2
         for 10
           pushlist 'valuetally' 'x'
@@ -3825,10 +3736,6 @@ for 0 in 'weapons'
     endif
     if @property 'Hit Life Leech' 'found' > 0
       if @property 'Hit Life Leech' 'found' == 1
-        for 3
-          pushlist 'valuetally' 'x'
-        endfor
-      elseif @property 'Hit Life Leech' 'found' == 1
         for 3
           pushlist 'valuetally' 'x'
         endfor
@@ -4075,10 +3982,6 @@ for 0 in 'weapons'
         for 5
           pushlist 'valuetally' 'x'
         endfor
-      elseif @property 'Fire Resist' 'found' == 1
-        for 5
-          pushlist 'valuetally' 'x'
-        endfor
       elseif @property 'Fire Resist' 'found' == 2
         for 10
           pushlist 'valuetally' 'x'
@@ -4159,10 +4062,6 @@ for 0 in 'weapons'
     endif
     if @property 'Cold Resist' 'found' > 0
       if @property 'Cold Resist' 'found' == 1
-        for 5
-          pushlist 'valuetally' 'x'
-        endfor
-      elseif @property 'Cold Resist' 'found' == 1
         for 5
           pushlist 'valuetally' 'x'
         endfor
@@ -4249,10 +4148,6 @@ for 0 in 'weapons'
         for 4
           pushlist 'valuetally' 'x'
         endfor
-      elseif @property 'Bonus Strength' 'found' == 1
-        for 4
-          pushlist 'valuetally' 'x'
-        endfor
       elseif @property 'Bonus Strength' 'found' == 2
         for 8
           pushlist 'valuetally' 'x'
@@ -4285,10 +4180,6 @@ for 0 in 'weapons'
     endif
     if @property 'Bonus Stamina' 'found' > 0
       if @property 'Bonus Stamina' 'found' == 1
-        for 3
-          pushlist 'valuetally' 'x'
-        endfor
-      elseif @property 'Bonus Stamina' 'found' == 1
         for 3
           pushlist 'valuetally' 'x'
         endfor
@@ -4327,10 +4218,6 @@ for 0 in 'weapons'
         for 6
           pushlist 'valuetally' 'x'
         endfor
-      elseif @property 'Regen Mana' 'found' == 1
-        for 6
-          pushlist 'valuetally' 'x'
-        endfor
       elseif @property 'Regen Mana' 'found' == 2
         for 12
           pushlist 'valuetally' 'x'
@@ -4355,10 +4242,6 @@ for 0 in 'weapons'
     endif
     if @property 'Bonus Hits' 'found' > 0
       if @property 'Bonus Hits' 'found' == 1
-        for 3
-          pushlist 'valuetally' 'x'
-        endfor
-      elseif @property 'Bonus Hits' 'found' == 1
         for 3
           pushlist 'valuetally' 'x'
         endfor
@@ -4394,10 +4277,6 @@ for 0 in 'weapons'
     endif
     if @property 'Energy Resist' 'found' > 0
       if @property 'Energy Resist' 'found' == 1
-        for 5
-          pushlist 'valuetally' 'x'
-        endfor
-      elseif @property 'Energy Resist' 'found' == 1
         for 5
           pushlist 'valuetally' 'x'
         endfor
@@ -4481,10 +4360,6 @@ for 0 in 'weapons'
     endif
     if @property 'Enhance Potions' 'found' > 0
       if @property 'Enhance Potions' 'found' == 1
-        for 2
-          pushlist 'valuetally' 'x'
-        endfor
-      elseif @property 'Enhance Potions' 'found' == 1
         for 2
           pushlist 'valuetally' 'x'
         endfor
@@ -4588,10 +4463,6 @@ for 0 in 'weapons'
     endif
     if @property 'Hit Chance Increase' 'found' > 0
       if @property 'Hit Chance Increase' 'found' == 1
-        for 3
-          pushlist 'valuetally' 'x'
-        endfor
-      elseif @property 'Hit Chance Increase' 'found' == 1
         for 3
           pushlist 'valuetally' 'x'
         endfor
@@ -4778,10 +4649,6 @@ for 0 in 'weapons'
         for 4
           pushlist 'valuetally' 'x'
         endfor
-      elseif @property 'Bonus Int' 'found' == 1
-        for 4
-          pushlist 'valuetally' 'x'
-        endfor
       elseif @property 'Bonus Int' 'found' == 2
         for 8
           pushlist 'valuetally' 'x'
@@ -4814,10 +4681,6 @@ for 0 in 'weapons'
     endif
     if @property 'Poison Resist' 'found' > 0
       if @property 'Poison Resist' 'found' == 1
-        for 5
-          pushlist 'valuetally' 'x'
-        endfor
-      elseif @property 'Poison Resist' 'found' == 1
         for 5
           pushlist 'valuetally' 'x'
         endfor
@@ -4915,7 +4778,6 @@ for 0 in 'weapons'
       pause 800
     else
       headmsg 'Trash' 33
-      @setalias 'dorecycling' 'self'
       moveitem 'found' 'recyclebag'
       pause 800
     endif
@@ -4923,7 +4785,5 @@ for 0 in 'weapons'
 endfor
 @removelist 'valuetally'
 headmsg '*Appraisal Done*' 69
-if @findalias 'dorecycling'
-  playmacro 'RecycleStuff'
-endif
+playmacro 'RecycleStuff'
 

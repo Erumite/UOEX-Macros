@@ -167,7 +167,7 @@ for p in "${!props[@]}"; do
           pushlist 'valuetally' 'x'
         endfor"
   submax=$((${max[${p}]} - 1))
-  for i in $(eval echo $(echo {1..${submax}})) ; do
+  for i in $(eval echo $(echo {2..${submax}})) ; do
     echo "      elseif @property '${p}' 'found' == ${i}
         for $((${i}*${props[$p]}))
           pushlist 'valuetally' 'x'
