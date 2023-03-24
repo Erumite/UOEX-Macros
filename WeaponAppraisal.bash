@@ -2,6 +2,16 @@
 # 
 # This is used to generate the weapon appraisal script for UOSteam programmatically
 #  as there are an ungodly number of condititions to add manually.
+# 
+# Essentially it parses all the relevant properties of weapons, then counts up the total value
+#  of those properties in terms of levelable weapon spending points.  If it's above the value
+#  defined below, it will move it to a keep bag, else to the trash bag.
+#
+# It's not perfect, but it vastly diminishes the amount of manual checking required to find
+#  good weapon drops.
+#
+# Note, after organizing, this will currently play the "RecycleStuff" macro.  Can remove the last
+#  "playmacro" line to stop it doing this.
 #
 # Value (in weapon spending points) at which the item is considered worth considering.
 min_value_to_keep=250
@@ -139,7 +149,6 @@ pushlist 'weapons' 0x13ff // Katana
 pushlist 'weapons' 0x13fb // Large Battle Axe
 pushlist 'weapons' 0xf50  // Crossbow
 @clearignorelist
-@unsetalias 'dorecycling'
 for 0 in 'weapons'
   while @findtype weapons[] 'any' 'backpack' 'any' 0
     @removelist 'valuetally'
@@ -188,7 +197,6 @@ echo "    if @property 'Faster Casting' 'testweap' < 0
       pause 800
     else
       headmsg 'Trash' 33
-      @setalias 'dorecycling' 'self'
       moveitem 'found' 'recyclebag'
       pause 800
     endif
@@ -196,7 +204,5 @@ echo "    if @property 'Faster Casting' 'testweap' < 0
 endfor
 @removelist 'valuetally'
 headmsg '*Appraisal Done*' 69
-if @findalias 'dorecycling'
-  playmacro 'RecycleStuff'
-endif
+playmacro 'RecycleStuff'
 "
