@@ -14,7 +14,7 @@
 if not @findalias 'scissors'
   @setalias 'scissors' 0x69420
 endif
-// 
+//
 if not @findobject 'scissors'
   @findtype 0xf9f 'any' 'backpack' 'any' 1
   @setalias 'scissors' 'found'
@@ -27,6 +27,10 @@ endif
 if not @findobject 'skinningknife'
   @findtype 0x13f6 'any' 'backpack' 'any' 1
   @setalias 'skinningknife' 'found'
+endif
+if not @findobject 'skinningknife'
+  headmsg "Select Bladed Object"
+  promptalias 'skinningknife'
 endif
 // Body types that should not be skinned to claim faster. (Very incomplete)
 //  Currently will 'removelist' and recreate every time so this can expand easily.
@@ -41,21 +45,27 @@ if not @listexists 'corpseignore'
   pushlist 'corpseignore'  13 // Air Elemental
   pushlist 'corpseignore'  14 // Earth Elemental
   pushlist 'corpseignore'  15 // Fire Elemental
+  pushlist 'corpseignore'  16 // Blood Elemental
   pushlist 'corpseignore'  17 // Orc
   pushlist 'corpseignore'  18 // Ettin
   pushlist 'corpseignore'  21 // Silver Serpent
   pushlist 'corpseignore'  22 // Gazer
   pushlist 'corpseignore'  24 // Lich
   pushlist 'corpseignore'  26 // Shade
+  pushlist 'corpseignore'  31 // Headless One
   pushlist 'corpseignore'  39 // Mongbat
   pushlist 'corpseignore'  40 // Balron
   pushlist 'corpseignore'  50 // Skeleton
   pushlist 'corpseignore'  51 // Slime
+  pushlist 'corpseignore'  53 // Troll
   pushlist 'corpseignore'  56 // Another Skeleton
   pushlist 'corpseignore'  57 // Skeletal Knight
+  pushlist 'corpseignore'  58 // Wisp
   pushlist 'corpseignore'  67 // Stone Gargoyle
+  pushlist 'corpseignore'  75 // Cyclops
   pushlist 'corpseignore'  89 // Fungal Lurker
   pushlist 'corpseignore' 124 // Evil Mage
+  pushlist 'corpseignore' 130 // Fire Gargoyle
   pushlist 'corpseignore' 148 // Skeletal Mage
   pushlist 'corpseignore' 149 // Succubus
   pushlist 'corpseignore' 154 // Mummy
@@ -64,13 +74,25 @@ if not @listexists 'corpseignore'
   pushlist 'corpseignore' 238 // Rat
   pushlist 'corpseignore' 240 // Kappa
   pushlist 'corpseignore' 245 // Yomutsu Warrior
+  pushlist 'corpseignore' 247 // Fan Dancer
   pushlist 'corpseignore' 252 // Lady of the Snow
   pushlist 'corpseignore' 302 // Skittering Hopper
   pushlist 'corpseignore' 303 // Devourer of Souls
   pushlist 'corpseignore' 308 // Bone Daemon
   pushlist 'corpseignore' 400 // Human Male
   pushlist 'corpseignore' 401 // Human Female
+  pushlist 'corpseignore' 752 // Golem
+  pushlist 'corpseignore' 764 // Juka Warrior
+  pushlist 'corpseignore' 765 // Juka Mage
+  pushlist 'corpseignore' 766 // Juka Lord
+  pushlist 'corpseignore' 776 // Horde Minion
   pushlist 'corpseignore' 777 // Doppelganger
+  pushlist 'corpseignore' 778 // Gazer Larva
+  pushlist 'corpseignore' 780 // Bog Thing
+  pushlist 'corpseignore' 785 // Moloch
+  pushlist 'corpseignore' 789 // Quagmire
+  pushlist 'corpseignore' 792 // Chaos Demon
+  pushlist 'corpseignore' 970 // Restless Soul (shrouded human)
 endif
 // Hacky bool to see if the corpse should be ignored.
 @unsetalias 'ignoreme'
@@ -90,11 +112,13 @@ if @findtype 0x2006 'any' 'ground' 'any' 2
       @organizer 'stop'
     endif
     useobject 'skinningknife'
-    // Long delay so it will lock up if it was unable to use skinning knife due to
-    //   item use queueing/cooldown.
+    // Long delay so it will lock up if it was unable to use skinning knife
+    // due to item use queueing/cooldown.
     waitfortarget 30000
     target! 'body'
     pause 200
+    // This doesn't seem to work on bodies.
+    // waitforcontents 'body' 3000
     @useobject 'body'
     pause 400
     if @findtype 0x1079 'any' 'body' 'any' 1
@@ -148,6 +172,15 @@ for 0 in 'bodyparts'
     @moveitem 'found' 'trashbag'
   endwhile
 endfor
+// Smelt ore from mobs because that crap's heavy.
+if not @findobject 'mobileforge'
+  @setalias 'mobileforge' 0x407e65b2
+endif
+while @findtype 0x19b9 'any' 'backpack' 'any' 0
+  useobject 'found'
+  waitfortarget 1500
+  target! 'mobileforge'
+endwhile
 // Weight Warnings
 if weight > 540
   headmsg "*HIGH WEIGHT*" 33
@@ -155,9 +188,9 @@ elseif weight > 480
   headmsg "Weight Warning" 53
 endif
 // Item Count Warnings
-if contents 'backpack' > 190
+if contents 'backpack' > 290
   headmsg '190+ Items!!!' 33
-elseif contents 'backpack' > 180
+elseif contents 'backpack' > 280
   headmsg '180+ Items' 53
 endif
 sysmsg 'Yoink!' 69
