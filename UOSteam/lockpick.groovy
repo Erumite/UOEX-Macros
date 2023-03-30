@@ -17,14 +17,6 @@
 //
 //   Happy Lockpicking!
 //
-// Ensure we've got enough HP to tank a hit from an explosion just in case.
-if hits < maxhits
-  headmsg "*regen hits*" 43
-  while hits < maxhits
-    useskill 'Spirit Speak'
-    pause 5200
-  endwhile
-endif
 // Ask the user for the box to pick.
 @unsetalias 'box'
 headmsg 'What should I pick?' 64
@@ -103,7 +95,7 @@ endwhile
 // Only successes above will unset this alias so we can continue to disarm.
 //  If Remove Trap is below 50, then it will just open the box.  WATCH YOUR HP!!!
 if not @findalias 'working'
-  pause 4000
+  pause 5000
   @setalias 'working' 'box'
   while @findalias 'working'
     clearjournal
