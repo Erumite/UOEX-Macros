@@ -1,5 +1,5 @@
 // Recycling Script - Eremite
-// 
+//
 // Welcome to the [claimall life.
 // This is essentially an inventory sorter that will handle most everything in your
 //  pack after doing [claimall on a bunch of bodies.
@@ -85,8 +85,8 @@ endif
 //@removelist 'keymetals'
 //@removelist 'pouchgems'
 //@removelist 'smeltores'
-@removelist 'tools'
-@removelist 'bohitems'
+//@removelist 'tools'
+//@removelist 'bohitems'
 // Stop organizing if one's running
 if organizing
   organizer 'stop'
@@ -115,6 +115,7 @@ if not @listexists 'keyreagents'
   pushlist 'keyreagents' 0xf0e  // Empty Bottle
   pushlist 'keyreagents' 0xef3  // Blank Scrolls
   pushlist 'keyreagents' 0x26b7 // Zoogi Fungus
+  pushlist 'keyreagents' 0xf8f  // Ethereal Powder
 endif
 headmsg "*spell keys*"
 @unsetalias 'dokeyregs'
@@ -151,6 +152,7 @@ if not @listexists 'pouchgems'
   pushlist 'pouchgems' 0xf13 // Ruby
   pushlist 'pouchgems' 0xf25 // Pice of Amber
   pushlist 'pouchgems' 0xf15 // Citrine
+  pushlist 'pouchgems' 0x1ea7 // Arcane Gem
 endif
 @unsetalias 'dopouchgems'
 for 0 in 'pouchgems'
@@ -189,7 +191,6 @@ if not @listexists 'tools'
   pushlist 'tools' 0x1373 // Pet Brush
   pushlist 'tools' 0x102a // Carp Hammer
   pushlist 'tools' 0x1034 // Saw
-
 endif
 @unsetalias 'dotoolhouse'
 for 0 in 'tools'
@@ -256,7 +257,7 @@ for 0 in 'smeltores'
   endwhile
 endfor
 @canceltarget
-// If we are in war mode, then do a basic organize first.
+// If we are in war mode, then do a full organize first.
 if war 'self'
   headmsg '*pre oraganize*' 33
   organizer 'Trash4Tokens'
