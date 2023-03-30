@@ -1,3 +1,5 @@
+// Equip Weapon if not equipped
+dress 'Weapon'
 // Find and attack closest enemy.
 @cleartargetqueue
 @getenemy 'criminal' 'enemy' 'murderer' 'gray' 'closest'
@@ -15,15 +17,15 @@ endif
 if @findobject 'mypet' 'any' 'ground' 'any' 20
   if war 'self' and @findobject 'enemy' 'any' 'ground' 'any'
     // Attack the target
-    @waitforcontext 'mypet' 3 1500
+    waitforcontext 'mypet' 3 1500
     waitfortarget 1500
     target! 'enemy'
   elseif war 'self' and not @findobject 'enemy' 'any' 'ground' 'any'
     // Guard
-    @waitforcontext 'mypet' 0 1500
+    waitforcontext 'mypet' 0 1500
   else
     // Guard
-    @waitforcontext 'mypet' 0 1500
+    waitforcontext 'mypet' 0 1500
   endif
 endif
 // Budget WhirlWind
@@ -46,6 +48,10 @@ elseif timer 'confidencetimer' > 12500
   @settimer 'confidencetimer' 0
   pause 1000
 endif
+// Stamina Regain if low
+if stam < 150
+  cast "Divine Fury"
+endif
 // Discord Target
 useskill 'Discordance'
 waitfortarget 1500
@@ -53,10 +59,10 @@ target! 'enemy'
 // Organize on the fly.
 if not organizing
   if @findalias 'orgtoggle'
-    @organizer 'BushidoChop'
+    organizer 'ChopItems'
     @unsetalias 'orgtoggle'
   else
-    @organizer 'Trash4Tokens'
+    organizer 'Trash4Tokens'
     @setalias 'orgtoggle' 'self'
   endif
 endif
