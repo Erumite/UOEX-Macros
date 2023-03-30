@@ -100,6 +100,17 @@ max["Hit Lightning"]=60
 props["Luck"]=3
 max["Luck"]=150
 # Ignore Other Misc Attributes
+# Non-Weapon Stuff with Values
+props["Hit Energy Area"]=4
+max["Hit Energy Area"]=50
+props["Hit Fire Area"]=4
+max["Hit Fire Area"]=50
+props["Hit Poison Area"]=4
+max["Hit Poison Area"]=50
+props["Hit Cold Area"]=4
+max["Hit Cold Area"]=50
+props["Hit Physical Area"]=4
+max["Hit Physical Area"]=50
 
 echo "
 @setalias 'sellbag' 0x433fd36c
@@ -194,11 +205,11 @@ echo "    if @property 'Faster Casting' 'testweap' < 0
     if list 'valuetally' > ${min_value_to_keep}
       headmsg 'Keep' 69
       moveitem 'found' 'sellbag'
-      pause 800
+      pause 750
     else
       headmsg 'Trash' 33
       moveitem 'found' 'recyclebag'
-      pause 800
+      pause 750
     endif
   endwhile
 endfor
