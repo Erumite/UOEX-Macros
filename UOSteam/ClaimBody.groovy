@@ -10,20 +10,13 @@
 //
 // Aliases may be hard-coded below, but should try to find them otherwise.  Can define them manually if desired.
 //
-// Scissors Alias
-if not @findalias 'scissors'
-  @setalias 'scissors' 0x69420
-endif
-//
+// Find & Set Scissors Alias
 if not @findobject 'scissors'
   @findtype 0xf9f 'any' 'backpack' 'any' 1
   @setalias 'scissors' 'found'
 endif
 // Skinning Knife Alias (Currently using a Butcher Knife)
 //  This can be most bladed weapons, and apparently even relayered bladed weapons.
-if not @findalias 'skinningknife'
-  @setalias 'skinningknife' 0x69420
-endif
 if not @findobject 'skinningknife'
   @findtype 0x13f6 'any' 'backpack' 'any' 1
   @setalias 'skinningknife' 'found'
@@ -41,6 +34,7 @@ if not @listexists 'corpseignore'
   pushlist 'corpseignore'   3 // Zombie
   pushlist 'corpseignore'   4 // Gargoyle
   pushlist 'corpseignore'   7 // Orc Lord
+  pushlist 'corpseignore'   8 // Corpser
   pushlist 'corpseignore'  11 // Dread Spider
   pushlist 'corpseignore'  13 // Air Elemental
   pushlist 'corpseignore'  14 // Earth Elemental
@@ -52,9 +46,11 @@ if not @listexists 'corpseignore'
   pushlist 'corpseignore'  22 // Gazer
   pushlist 'corpseignore'  24 // Lich
   pushlist 'corpseignore'  26 // Shade
+  pushlist 'corpseignore'  28 // Giant Spider
   pushlist 'corpseignore'  31 // Headless One
   pushlist 'corpseignore'  39 // Mongbat
   pushlist 'corpseignore'  40 // Balron
+  pushlist 'corpseignore'  48 // Giant Scorpion
   pushlist 'corpseignore'  50 // Skeleton
   pushlist 'corpseignore'  51 // Slime
   pushlist 'corpseignore'  53 // Troll
@@ -62,12 +58,20 @@ if not @listexists 'corpseignore'
   pushlist 'corpseignore'  57 // Skeletal Knight
   pushlist 'corpseignore'  58 // Wisp
   pushlist 'corpseignore'  67 // Stone Gargoyle
+  pushlist 'corpseignore'  70 // Terathan Warrior
+  pushlist 'corpseignore'  71 // Terathan Drone
+  pushlist 'corpseignore'  72 // Terathan Matriarch
   pushlist 'corpseignore'  75 // Cyclops
+  pushlist 'corpseignore'  85 // Ophidian Mage/Shaman
+  pushlist 'corpseignore'  86 // Ophidian Avenger
+  pushlist 'corpseignore'  87 // Ophidian Matriarch
   pushlist 'corpseignore'  89 // Fungal Lurker
   pushlist 'corpseignore' 124 // Evil Mage
+  pushlist 'corpseignore' 125 // Evil Mage Lord
   pushlist 'corpseignore' 130 // Fire Gargoyle
   pushlist 'corpseignore' 148 // Skeletal Mage
   pushlist 'corpseignore' 149 // Succubus
+  pushlist 'corpseignore' 152 // Terathan Avenger
   pushlist 'corpseignore' 154 // Mummy
   pushlist 'corpseignore' 182 // Orc Bomber
   pushlist 'corpseignore' 219 // Forest Ostard
@@ -76,6 +80,7 @@ if not @listexists 'corpseignore'
   pushlist 'corpseignore' 245 // Yomutsu Warrior
   pushlist 'corpseignore' 247 // Fan Dancer
   pushlist 'corpseignore' 252 // Lady of the Snow
+  pushlist 'corpseignore' 253 // Yumutsu Priest
   pushlist 'corpseignore' 302 // Skittering Hopper
   pushlist 'corpseignore' 303 // Devourer of Souls
   pushlist 'corpseignore' 308 // Bone Daemon
@@ -92,6 +97,7 @@ if not @listexists 'corpseignore'
   pushlist 'corpseignore' 785 // Moloch
   pushlist 'corpseignore' 789 // Quagmire
   pushlist 'corpseignore' 792 // Chaos Demon
+  pushlist 'corpseignore' 793 // Undead Steed
   pushlist 'corpseignore' 970 // Restless Soul (shrouded human)
 endif
 // Hacky bool to see if the corpse should be ignored.
@@ -121,12 +127,11 @@ if @findtype 0x2006 'any' 'ground' 'any' 2
     // waitforcontents 'body' 3000
     @useobject 'body'
     pause 400
-    if @findtype 0x1079 'any' 'body' 'any' 1
-      @setalias 'hides' 'found'
+    while @findtype 0x1079 'any' 'body' 'any' 1
       useobject 'scissors'
       waitfortarget 1000
-      target! 'hides'
-    endif
+      target! 'found'
+    endwhile
   endif
   msg '[claimall'
   waitfortarget 1500
