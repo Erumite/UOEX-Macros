@@ -204,11 +204,11 @@ echo "    if @property 'Faster Casting' 'testweap' < 0
     @ignoreobject 'found'
     if list 'valuetally' > ${min_value_to_keep}
       headmsg 'Keep' 69
-      moveitem 'found' 'sellbag'
+      moveitem 'found' 'sellbag' 0 0 0
       pause 750
     else
       headmsg 'Trash' 33
-      moveitem 'found' 'recyclebag'
+      moveitem 'found' 'recyclebag' 0 0 0
       pause 750
     endif
   endwhile
