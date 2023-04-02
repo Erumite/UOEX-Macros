@@ -127,11 +127,11 @@ if @findtype 0x2006 'any' 'ground' 'any' 2
     // waitforcontents 'body' 3000
     @useobject 'body'
     pause 400
-    while @findtype 0x1079 'any' 'body' 'any' 1
+    if @findtype 0x1079 'any' 'body' 'any' 1
       useobject 'scissors'
       waitfortarget 1000
       target! 'found'
-    endwhile
+    endif
   endif
   msg '[claimall'
   waitfortarget 1500
@@ -141,12 +141,12 @@ if @findtype 0x2006 'any' 'ground' 'any' 2
   pause 400
 endif
 // Cut up hides in pack to reduce weight. Sometimes it fails to cut in the corpse.
-if @findtype 0x1079 'any' 'backpack' 'any' 1
+while @findtype 0x1079 'any' 'backpack' 'any' 1
   @setalias 'hides' 'found'
   useobject 'scissors'
   waitfortarget 1000
   target! 'hides'
-endif
+endwhile
 // Set a trashbag
 if not @findalias 'trashbag'
   @setalias 'trashbag' 0x69420
