@@ -52,6 +52,12 @@ endif
 // Try to pick the chest.
 while @findobject 'pick'
   if @findalias 'working'
+    // If box isn't locked, we can skip picking.
+    // (useful if interupted or for general looting of containers)
+    if not @property 'Lock' 'box'
+      @unsetalias 'working'
+      break
+    endif
     headmsg "*pick*" 43
     clearjournal
     useobject 'pick'
@@ -93,9 +99,7 @@ while @findobject 'pick'
   endif
 endwhile
 // Only successes above will unset this alias so we can continue to disarm.
-//  If Remove Trap is below 50, then it will just open the box.  WATCH YOUR HP!!!
 if not @findalias 'working'
-  pause 5000
   @setalias 'working' 'box'
   while @findalias 'working'
     clearjournal
@@ -113,6 +117,8 @@ if not @findalias 'working'
     elseif @injournal "replace this with the failed message of a trap exploding"
       headmsg "OUCH!" 34
       @unsetalias 'working'
+    elseif @injournal "must wait a few moments to use another skill"
+      pause 100
     else
       pause 10200
     endif
