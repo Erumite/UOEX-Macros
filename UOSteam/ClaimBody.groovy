@@ -50,6 +50,7 @@ if not @listexists 'corpseignore'
   pushlist 'corpseignore'  31 // Headless One
   pushlist 'corpseignore'  39 // Mongbat
   pushlist 'corpseignore'  40 // Balron
+  pushlist 'corpseignore'  47 // Reaper
   pushlist 'corpseignore'  48 // Giant Scorpion
   pushlist 'corpseignore'  50 // Skeleton
   pushlist 'corpseignore'  51 // Slime
@@ -74,9 +75,11 @@ if not @listexists 'corpseignore'
   pushlist 'corpseignore' 152 // Terathan Avenger
   pushlist 'corpseignore' 154 // Mummy
   pushlist 'corpseignore' 182 // Orc Bomber
+  pushlist 'corpseignore' 196 // Kaze Kemono
   pushlist 'corpseignore' 219 // Forest Ostard
   pushlist 'corpseignore' 238 // Rat
   pushlist 'corpseignore' 240 // Kappa
+  pushlist 'corpseignore' 241 // Oni
   pushlist 'corpseignore' 245 // Yomutsu Warrior
   pushlist 'corpseignore' 247 // Fan Dancer
   pushlist 'corpseignore' 252 // Lady of the Snow
@@ -98,6 +101,7 @@ if not @listexists 'corpseignore'
   pushlist 'corpseignore' 789 // Quagmire
   pushlist 'corpseignore' 792 // Chaos Demon
   pushlist 'corpseignore' 793 // Undead Steed
+  pushlist 'corpseignore' 806 // Solen Infiltrator
   pushlist 'corpseignore' 970 // Restless Soul (shrouded human)
 endif
 // Hacky bool to see if the corpse should be ignored.
@@ -142,6 +146,13 @@ if @findtype 0x2006 'any' 'ground' 'any' 2
 endif
 // Cut up hides in pack to reduce weight. Sometimes it fails to cut in the corpse.
 while @findtype 0x1079 'any' 'backpack' 'any' 1
+  @setalias 'hides' 'found'
+  useobject 'scissors'
+  waitfortarget 1000
+  target! 'hides'
+endwhile
+// Also do any on the ground if we went overweight.  Scavenger agent should grab them if added.
+while @findtype 0x1079 'any' 'ground' 'any' 1
   @setalias 'hides' 'found'
   useobject 'scissors'
   waitfortarget 1000
