@@ -107,7 +107,11 @@ endif
 // Hacky bool to see if the corpse should be ignored.
 @unsetalias 'ignoreme'
 // Find and analyze a body within 2 tiles.
-if @findtype 0x2006 'any' 'ground' 'any' 2
+while @findtype 0x2006 'any' 'ground' 'any' 2
+  if weight > 550
+    headmsg '** Weight High **' 33
+    stop
+  endif
   @setalias 'body' 'found'
   for 0 in corpseignore
     if @amount 'body' == corpseignore[]
@@ -143,7 +147,7 @@ if @findtype 0x2006 'any' 'ground' 'any' 2
   waitfortarget 1500
   canceltarget
   pause 400
-endif
+endwhile
 // Cut up hides in pack to reduce weight. Sometimes it fails to cut in the corpse.
 while @findtype 0x1079 'any' 'backpack' 'any' 1
   @setalias 'hides' 'found'
