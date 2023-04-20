@@ -97,8 +97,9 @@ props["Hit Lightning"]=4
 max["Hit Lightning"]=60
 # Ignore Hit Dispel
 # Misc Attributes
-props["Luck"]=3
-max["Luck"]=150
+# Ignore Luck as it can be added with ED:
+# props["Luck"]=3
+# max["Luck"]=150
 # Ignore Other Misc Attributes
 # Non-Weapon Stuff with Values
 props["Hit Energy Area"]=4
@@ -159,6 +160,7 @@ pushlist 'weapons' 0xf45  // Executioner Axe
 pushlist 'weapons' 0x13ff // Katana
 pushlist 'weapons' 0x13fb // Large Battle Axe
 pushlist 'weapons' 0xf50  // Crossbow
+pushlist 'weapons' 0xe81  // Shepherd's Crook
 @clearignorelist
 for 0 in 'weapons'
   while @findtype weapons[] 'any' 'backpack' 'any' 0
