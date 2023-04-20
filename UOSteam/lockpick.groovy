@@ -3,7 +3,11 @@
 //   - Eremite
 //
 // Need lockpicks in your inventory (obviously)
-// Hit the macro and it will ask for the box you want to pick.
+// Hit the macro and it will look for a locked box within 1 tile.
+//   If none is found, it will ask for the box you want to pick.
+//   You can select an unlocked box and it will try to remove trap and'
+//     run a looter against the box once it's safe.
+//   Also works on boxes in inventory (Paragon Chests, Tokuno chest, etc)
 // The first time you use the script, it will ask for the picks you want to use
 //   - (if you run out of picks, it'll prompt again)
 // It will also ask for your trash bag - this is the Trash 4 Tokens bag.
@@ -17,10 +21,46 @@
 //
 //   Happy Lockpicking!
 //
-// Ask the user for the box to pick.
+// List of Lockables
+@removelist 'lockables'
+if not @listexists 'lockables'
+  @createlist 'lockables'
+  @pushlist 'lockables' 0xe7c // Grey EW
+  @pushlist 'lockables' 0x9ab // Gray NS
+  @pushlist 'lockables' 0xe41 // Gray/Gold NS
+  @pushlist 'lockables' 0xe40 // Gray/Gold EW
+  @pushlist 'lockables' 0xe43 // Wood/Gold NS
+  @pushlist 'lockables' 0xe42 // Wood/Gold EW
+  @pushlist 'lockables' 0xe3e // Med Wood Crate WE
+  @pushlist 'lockables' 0x9a9 // Small Wood Crate NS
+  @pushlist 'lockables' 0xe3c // Big Wood Crate (Square)
+  @pushlist 'lockables' 0xe7f // Keg
+  @pushlist 'lockables' 0xe77 // Barrel
+endif
+// Look for a locked container within 1 tile.
+// Seems glitchy in some areas for some reason.
+@clearignorelist
 @unsetalias 'box'
-headmsg 'What should I pick?' 64
-promptalias 'box'
+for 0 in 'lockables'
+  while @findtype lockables[] 'any' 'ground' 'any' 1
+    if @property 'Lock' 'found'
+      headmsg 'Oi!' 69 'found'
+      @setalias 'box' 'found'
+      break
+    else
+      ignoreobject 'found'
+    endif
+  endwhile
+endfor
+// Ask the user for the box to pick if nothing on ground.
+if not @findalias 'box'
+  headmsg 'What should I pick?' 64
+  promptalias 'box'
+endif
+// If no box defined, bail.
+if not @findalias 'box'
+  stop
+endif
 // If pick is missing or ran out, set the alias to something random and prompt till we
 //   have a proper lockpick.  If you want to change lockpicks, uncomment the unsetalias
 //   below and run the script again. (or have a different macro that does so)
