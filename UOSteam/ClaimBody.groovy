@@ -76,6 +76,7 @@ if not @listexists 'corpseignore'
   pushlist 'corpseignore' 154 // Mummy
   pushlist 'corpseignore' 182 // Orc Bomber
   pushlist 'corpseignore' 196 // Kaze Kemono
+  pushlist 'corpseignore' 199 // Shadow
   pushlist 'corpseignore' 219 // Forest Ostard
   pushlist 'corpseignore' 238 // Rat
   pushlist 'corpseignore' 240 // Kappa
@@ -87,9 +88,15 @@ if not @listexists 'corpseignore'
   pushlist 'corpseignore' 302 // Skittering Hopper
   pushlist 'corpseignore' 303 // Devourer of Souls
   pushlist 'corpseignore' 308 // Bone Daemon
+  pushlist 'corpseignore' 309 // Patchwork Skeleton
   pushlist 'corpseignore' 400 // Human Male
   pushlist 'corpseignore' 401 // Human Female
   pushlist 'corpseignore' 752 // Golem
+  pushlist 'corpseignore' 753 // Enslaved Gargoyle
+  pushlist 'corpseignore' 754 // Gargoyle Enforcer
+  pushlist 'corpseignore' 755 // Gargoyle Destroyer
+  pushlist 'corpseignore' 756 // Exoduse Overseer
+  pushlist 'corpseignore' 757 // Exodus Minion
   pushlist 'corpseignore' 764 // Juka Warrior
   pushlist 'corpseignore' 765 // Juka Mage
   pushlist 'corpseignore' 766 // Juka Lord
@@ -99,6 +106,7 @@ if not @listexists 'corpseignore'
   pushlist 'corpseignore' 780 // Bog Thing
   pushlist 'corpseignore' 785 // Moloch
   pushlist 'corpseignore' 789 // Quagmire
+  pushlist 'corpseignore' 790 // Sand Vortex
   pushlist 'corpseignore' 792 // Chaos Demon
   pushlist 'corpseignore' 793 // Undead Steed
   pushlist 'corpseignore' 806 // Solen Infiltrator
@@ -107,10 +115,11 @@ endif
 // Hacky bool to see if the corpse should be ignored.
 @unsetalias 'ignoreme'
 // Find and analyze a body within 2 tiles.
+@clearignorelist
 while @findtype 0x2006 'any' 'ground' 'any' 2
   if weight > 550
     headmsg '** Weight High **' 33
-    stop
+    break
   endif
   @setalias 'body' 'found'
   for 0 in corpseignore
@@ -144,9 +153,16 @@ while @findtype 0x2006 'any' 'ground' 'any' 2
   msg '[claimall'
   waitfortarget 1500
   target! 'body'
+  @ignoreobject 'body'
   waitfortarget 1500
   canceltarget
   pause 400
+  while @findtype 0x1079 'any' 'backpack' 'any' 1
+    @setalias 'hides' 'found'
+    useobject 'scissors'
+    waitfortarget 1000
+    target! 'hides'
+  endwhile
 endwhile
 // Cut up hides in pack to reduce weight. Sometimes it fails to cut in the corpse.
 while @findtype 0x1079 'any' 'backpack' 'any' 1
