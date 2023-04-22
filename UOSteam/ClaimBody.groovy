@@ -114,8 +114,8 @@ if not @listexists 'corpseignore'
 endif
 // Hacky bool to see if the corpse should be ignored.
 @unsetalias 'ignoreme'
-// Find and analyze a body within 2 tiles.
 @clearignorelist
+// Find and analyze a body within 2 tiles.
 while @findtype 0x2006 'any' 'ground' 'any' 2
   if weight > 550
     headmsg '** Weight High **' 33
