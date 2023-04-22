@@ -47,6 +47,7 @@ pushlist 'weapons' 0x13fb // Large Battle Axe
 pushlist 'weapons' 0xf50  // Crossbow
 pushlist 'weapons' 0xe81  // Shepherd's Crook
 @clearignorelist
+@unsetalias 'replaysort'
 for 0 in 'weapons'
   while @findtype weapons[] 'any' 'backpack' 'any' 0
     @removelist 'valuetally'
@@ -5194,8 +5195,12 @@ for 0 in 'weapons'
       moveitem 'found' 'recyclebag' 0 0 0
       pause 750
     endif
+    @setalias 'replaysort' 'found'
   endwhile
 endfor
+if @findalias 'replaysort'
+  replay
+endif
 @removelist 'valuetally'
 headmsg '*Appraisal Done*' 69
 playmacro 'RecycleStuff'
