@@ -47,13 +47,39 @@ for 0 in 'lockables'
       headmsg 'Oi!' 69 'found'
       @setalias 'box' 'found'
       break
+    elseif not @property "0 Items, 0 Stones" 'found' and @property "Items, " 'found'
+      headmsg 'Loot!' 69 'found'
+      @setalias 'box' 'found'
+      break
     else
       ignoreobject 'found'
     endif
   endwhile
+  if @findalias 'box'
+    break
+  endif
 endfor
 // Ask the user for the box to pick if nothing on ground.
 if not @findalias 'box'
+  @clearignorelist
+  for 0 in 'lockables'
+    while @findtype lockables[] 'any' 'ground' 'any' 20
+      if @property 'Agapite Lock' 'found'
+        headmsg '=(Agapite)=' 46 'found'
+      elseif @property 'Bronze Lock' 'found'
+        headmsg '=(Bronze)=' 444 'found'
+      elseif @property 'Blaze Lock' 'found'
+        headmsg '=(Blaze)=' 39 'found'
+      elseif @property 'Shadow Iron Lock' 'found'
+        headmsg '=(S.Iron)=' 999 'found'
+      elseif @property 'Lock' 'found'
+        headmsg '=(^_^)=' 69 'found'
+      elseif not @property "0 Items, 0 Stones" 'found' and @property "Items, " 'found'
+        headmsg '=(Items)=' 69 'found'
+      endif
+      @ignoreobject 'found'
+    endwhile
+  endfor
   headmsg 'What should I pick?' 64
   promptalias 'box'
 endif
