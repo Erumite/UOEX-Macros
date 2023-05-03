@@ -25,8 +25,9 @@ props["Defence Chance Increase"]=3
 max["Defence Chance Increase"]=50
 props["Hit Chance Increase"]=3
 max["Hit Chance Increase"]=45
-props["Damage Increase"]=4
-max["Damage Increase"]=60
+# Ignore damage increase as it should be maxed by relayers typically. 
+# props["Damage Increase"]=4
+# max["Damage Increase"]=60
 props["Swing Speed Increase"]=4
 max["Swing Speed Increase"]=40
 props["Reflect Physical Damage"]=3
