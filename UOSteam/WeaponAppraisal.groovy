@@ -85,44 +85,44 @@ for 0 in 'weapons'
         endfor
       endif
     endif
-    if @property 'Regen Stamina' 'found' > 0
-      if @property 'Regen Stamina' 'found' == 1
+    if @property 'Stamina Regeneration' 'found' > 0
+      if @property 'Stamina Regeneration' 'found' == 1
         for 1
           pushlist 'valuetally' 'x'
         endfor
-      elseif @property 'Regen Stamina' 'found' == 2
+      elseif @property 'Stamina Regeneration' 'found' == 2
         for 2
           pushlist 'valuetally' 'x'
         endfor
-      elseif @property 'Regen Stamina' 'found' == 3
+      elseif @property 'Stamina Regeneration' 'found' == 3
         for 3
           pushlist 'valuetally' 'x'
         endfor
-      elseif @property 'Regen Stamina' 'found' == 4
+      elseif @property 'Stamina Regeneration' 'found' == 4
         for 4
           pushlist 'valuetally' 'x'
         endfor
-      elseif @property 'Regen Stamina' 'found' == 5
+      elseif @property 'Stamina Regeneration' 'found' == 5
         for 5
           pushlist 'valuetally' 'x'
         endfor
-      elseif @property 'Regen Stamina' 'found' == 6
+      elseif @property 'Stamina Regeneration' 'found' == 6
         for 6
           pushlist 'valuetally' 'x'
         endfor
-      elseif @property 'Regen Stamina' 'found' == 7
+      elseif @property 'Stamina Regeneration' 'found' == 7
         for 7
           pushlist 'valuetally' 'x'
         endfor
-      elseif @property 'Regen Stamina' 'found' == 8
+      elseif @property 'Stamina Regeneration' 'found' == 8
         for 8
           pushlist 'valuetally' 'x'
         endfor
-      elseif @property 'Regen Stamina' 'found' == 9
+      elseif @property 'Stamina Regeneration' 'found' == 9
         for 9
           pushlist 'valuetally' 'x'
         endfor
-      elseif @property 'Regen Stamina' 'found' >= 10
+      elseif @property 'Stamina Regeneration' 'found' >= 10
         for 10
           pushlist 'valuetally' 'x'
         endfor
@@ -430,6 +430,33 @@ for 0 in 'weapons'
         endfor
       elseif @property 'Hit Fireball' 'found' >= 60
         for 240
+          pushlist 'valuetally' 'x'
+        endfor
+      endif
+    endif
+    if @property 'Mana Regeneration' 'found' > 0
+      if @property 'Mana Regeneration' 'found' == 1
+        for 6
+          pushlist 'valuetally' 'x'
+        endfor
+      elseif @property 'Mana Regeneration' 'found' == 2
+        for 12
+          pushlist 'valuetally' 'x'
+        endfor
+      elseif @property 'Mana Regeneration' 'found' == 3
+        for 18
+          pushlist 'valuetally' 'x'
+        endfor
+      elseif @property 'Mana Regeneration' 'found' == 4
+        for 24
+          pushlist 'valuetally' 'x'
+        endfor
+      elseif @property 'Mana Regeneration' 'found' == 5
+        for 30
+          pushlist 'valuetally' 'x'
+        endfor
+      elseif @property 'Mana Regeneration' 'found' >= 6
+        for 36
           pushlist 'valuetally' 'x'
         endfor
       endif
@@ -1126,6 +1153,41 @@ for 0 in 'weapons'
         endfor
       endif
     endif
+    if @property 'Mana Increase' 'found' > 0
+      if @property 'Mana Increase' 'found' == 1
+        for 3
+          pushlist 'valuetally' 'x'
+        endfor
+      elseif @property 'Mana Increase' 'found' == 2
+        for 6
+          pushlist 'valuetally' 'x'
+        endfor
+      elseif @property 'Mana Increase' 'found' == 3
+        for 9
+          pushlist 'valuetally' 'x'
+        endfor
+      elseif @property 'Mana Increase' 'found' == 4
+        for 12
+          pushlist 'valuetally' 'x'
+        endfor
+      elseif @property 'Mana Increase' 'found' == 5
+        for 15
+          pushlist 'valuetally' 'x'
+        endfor
+      elseif @property 'Mana Increase' 'found' == 6
+        for 18
+          pushlist 'valuetally' 'x'
+        endfor
+      elseif @property 'Mana Increase' 'found' == 7
+        for 21
+          pushlist 'valuetally' 'x'
+        endfor
+      elseif @property 'Mana Increase' 'found' >= 8
+        for 24
+          pushlist 'valuetally' 'x'
+        endfor
+      endif
+    endif
     if @property 'Hit Lower Attack' 'found' > 0
       if @property 'Hit Lower Attack' 'found' == 1
         for 3
@@ -1572,36 +1634,36 @@ for 0 in 'weapons'
         endfor
       endif
     endif
-    if @property 'Bonus Mana' 'found' > 0
-      if @property 'Bonus Mana' 'found' == 1
+    if @property 'Hit Point Increase' 'found' > 0
+      if @property 'Hit Point Increase' 'found' == 1
         for 3
           pushlist 'valuetally' 'x'
         endfor
-      elseif @property 'Bonus Mana' 'found' == 2
+      elseif @property 'Hit Point Increase' 'found' == 2
         for 6
           pushlist 'valuetally' 'x'
         endfor
-      elseif @property 'Bonus Mana' 'found' == 3
+      elseif @property 'Hit Point Increase' 'found' == 3
         for 9
           pushlist 'valuetally' 'x'
         endfor
-      elseif @property 'Bonus Mana' 'found' == 4
+      elseif @property 'Hit Point Increase' 'found' == 4
         for 12
           pushlist 'valuetally' 'x'
         endfor
-      elseif @property 'Bonus Mana' 'found' == 5
+      elseif @property 'Hit Point Increase' 'found' == 5
         for 15
           pushlist 'valuetally' 'x'
         endfor
-      elseif @property 'Bonus Mana' 'found' == 6
+      elseif @property 'Hit Point Increase' 'found' == 6
         for 18
           pushlist 'valuetally' 'x'
         endfor
-      elseif @property 'Bonus Mana' 'found' == 7
+      elseif @property 'Hit Point Increase' 'found' == 7
         for 21
           pushlist 'valuetally' 'x'
         endfor
-      elseif @property 'Bonus Mana' 'found' >= 8
+      elseif @property 'Hit Point Increase' 'found' >= 8
         for 24
           pushlist 'valuetally' 'x'
         endfor
@@ -2053,6 +2115,41 @@ for 0 in 'weapons'
         endfor
       endif
     endif
+    if @property 'Strength Bonus' 'found' > 0
+      if @property 'Strength Bonus' 'found' == 1
+        for 4
+          pushlist 'valuetally' 'x'
+        endfor
+      elseif @property 'Strength Bonus' 'found' == 2
+        for 8
+          pushlist 'valuetally' 'x'
+        endfor
+      elseif @property 'Strength Bonus' 'found' == 3
+        for 12
+          pushlist 'valuetally' 'x'
+        endfor
+      elseif @property 'Strength Bonus' 'found' == 4
+        for 16
+          pushlist 'valuetally' 'x'
+        endfor
+      elseif @property 'Strength Bonus' 'found' == 5
+        for 20
+          pushlist 'valuetally' 'x'
+        endfor
+      elseif @property 'Strength Bonus' 'found' == 6
+        for 24
+          pushlist 'valuetally' 'x'
+        endfor
+      elseif @property 'Strength Bonus' 'found' == 7
+        for 28
+          pushlist 'valuetally' 'x'
+        endfor
+      elseif @property 'Strength Bonus' 'found' >= 8
+        for 32
+          pushlist 'valuetally' 'x'
+        endfor
+      endif
+    endif
     if @property 'Defence Chance Increase' 'found' > 0
       if @property 'Defence Chance Increase' 'found' == 1
         for 3
@@ -2252,41 +2349,6 @@ for 0 in 'weapons'
         endfor
       elseif @property 'Defence Chance Increase' 'found' >= 50
         for 150
-          pushlist 'valuetally' 'x'
-        endfor
-      endif
-    endif
-    if @property 'Bonus Dex' 'found' > 0
-      if @property 'Bonus Dex' 'found' == 1
-        for 4
-          pushlist 'valuetally' 'x'
-        endfor
-      elseif @property 'Bonus Dex' 'found' == 2
-        for 8
-          pushlist 'valuetally' 'x'
-        endfor
-      elseif @property 'Bonus Dex' 'found' == 3
-        for 12
-          pushlist 'valuetally' 'x'
-        endfor
-      elseif @property 'Bonus Dex' 'found' == 4
-        for 16
-          pushlist 'valuetally' 'x'
-        endfor
-      elseif @property 'Bonus Dex' 'found' == 5
-        for 20
-          pushlist 'valuetally' 'x'
-        endfor
-      elseif @property 'Bonus Dex' 'found' == 6
-        for 24
-          pushlist 'valuetally' 'x'
-        endfor
-      elseif @property 'Bonus Dex' 'found' == 7
-        for 28
-          pushlist 'valuetally' 'x'
-        endfor
-      elseif @property 'Bonus Dex' 'found' >= 8
-        for 32
           pushlist 'valuetally' 'x'
         endfor
       endif
@@ -2860,29 +2922,37 @@ for 0 in 'weapons'
         endfor
       endif
     endif
-    if @property 'Regen Hits' 'found' > 0
-      if @property 'Regen Hits' 'found' == 1
-        for 2
-          pushlist 'valuetally' 'x'
-        endfor
-      elseif @property 'Regen Hits' 'found' == 2
+    if @property 'Dexterity Bonus' 'found' > 0
+      if @property 'Dexterity Bonus' 'found' == 1
         for 4
           pushlist 'valuetally' 'x'
         endfor
-      elseif @property 'Regen Hits' 'found' == 3
-        for 6
-          pushlist 'valuetally' 'x'
-        endfor
-      elseif @property 'Regen Hits' 'found' == 4
+      elseif @property 'Dexterity Bonus' 'found' == 2
         for 8
           pushlist 'valuetally' 'x'
         endfor
-      elseif @property 'Regen Hits' 'found' == 5
-        for 10
+      elseif @property 'Dexterity Bonus' 'found' == 3
+        for 12
           pushlist 'valuetally' 'x'
         endfor
-      elseif @property 'Regen Hits' 'found' >= 6
-        for 12
+      elseif @property 'Dexterity Bonus' 'found' == 4
+        for 16
+          pushlist 'valuetally' 'x'
+        endfor
+      elseif @property 'Dexterity Bonus' 'found' == 5
+        for 20
+          pushlist 'valuetally' 'x'
+        endfor
+      elseif @property 'Dexterity Bonus' 'found' == 6
+        for 24
+          pushlist 'valuetally' 'x'
+        endfor
+      elseif @property 'Dexterity Bonus' 'found' == 7
+        for 28
+          pushlist 'valuetally' 'x'
+        endfor
+      elseif @property 'Dexterity Bonus' 'found' >= 8
+        for 32
           pushlist 'valuetally' 'x'
         endfor
       endif
@@ -3908,103 +3978,6 @@ for 0 in 'weapons'
         endfor
       endif
     endif
-    if @property 'Bonus Strength' 'found' > 0
-      if @property 'Bonus Strength' 'found' == 1
-        for 4
-          pushlist 'valuetally' 'x'
-        endfor
-      elseif @property 'Bonus Strength' 'found' == 2
-        for 8
-          pushlist 'valuetally' 'x'
-        endfor
-      elseif @property 'Bonus Strength' 'found' == 3
-        for 12
-          pushlist 'valuetally' 'x'
-        endfor
-      elseif @property 'Bonus Strength' 'found' == 4
-        for 16
-          pushlist 'valuetally' 'x'
-        endfor
-      elseif @property 'Bonus Strength' 'found' == 5
-        for 20
-          pushlist 'valuetally' 'x'
-        endfor
-      elseif @property 'Bonus Strength' 'found' == 6
-        for 24
-          pushlist 'valuetally' 'x'
-        endfor
-      elseif @property 'Bonus Strength' 'found' == 7
-        for 28
-          pushlist 'valuetally' 'x'
-        endfor
-      elseif @property 'Bonus Strength' 'found' >= 8
-        for 32
-          pushlist 'valuetally' 'x'
-        endfor
-      endif
-    endif
-    if @property 'Bonus Stamina' 'found' > 0
-      if @property 'Bonus Stamina' 'found' == 1
-        for 3
-          pushlist 'valuetally' 'x'
-        endfor
-      elseif @property 'Bonus Stamina' 'found' == 2
-        for 6
-          pushlist 'valuetally' 'x'
-        endfor
-      elseif @property 'Bonus Stamina' 'found' == 3
-        for 9
-          pushlist 'valuetally' 'x'
-        endfor
-      elseif @property 'Bonus Stamina' 'found' == 4
-        for 12
-          pushlist 'valuetally' 'x'
-        endfor
-      elseif @property 'Bonus Stamina' 'found' == 5
-        for 15
-          pushlist 'valuetally' 'x'
-        endfor
-      elseif @property 'Bonus Stamina' 'found' == 6
-        for 18
-          pushlist 'valuetally' 'x'
-        endfor
-      elseif @property 'Bonus Stamina' 'found' == 7
-        for 21
-          pushlist 'valuetally' 'x'
-        endfor
-      elseif @property 'Bonus Stamina' 'found' >= 8
-        for 24
-          pushlist 'valuetally' 'x'
-        endfor
-      endif
-    endif
-    if @property 'Regen Mana' 'found' > 0
-      if @property 'Regen Mana' 'found' == 1
-        for 6
-          pushlist 'valuetally' 'x'
-        endfor
-      elseif @property 'Regen Mana' 'found' == 2
-        for 12
-          pushlist 'valuetally' 'x'
-        endfor
-      elseif @property 'Regen Mana' 'found' == 3
-        for 18
-          pushlist 'valuetally' 'x'
-        endfor
-      elseif @property 'Regen Mana' 'found' == 4
-        for 24
-          pushlist 'valuetally' 'x'
-        endfor
-      elseif @property 'Regen Mana' 'found' == 5
-        for 30
-          pushlist 'valuetally' 'x'
-        endfor
-      elseif @property 'Regen Mana' 'found' >= 6
-        for 36
-          pushlist 'valuetally' 'x'
-        endfor
-      endif
-    endif
     if @property 'Hit Fire Area' 'found' > 0
       if @property 'Hit Fire Area' 'found' == 1
         for 4
@@ -4411,41 +4384,6 @@ for 0 in 'weapons'
         endfor
       endif
     endif
-    if @property 'Bonus Hits' 'found' > 0
-      if @property 'Bonus Hits' 'found' == 1
-        for 3
-          pushlist 'valuetally' 'x'
-        endfor
-      elseif @property 'Bonus Hits' 'found' == 2
-        for 6
-          pushlist 'valuetally' 'x'
-        endfor
-      elseif @property 'Bonus Hits' 'found' == 3
-        for 9
-          pushlist 'valuetally' 'x'
-        endfor
-      elseif @property 'Bonus Hits' 'found' == 4
-        for 12
-          pushlist 'valuetally' 'x'
-        endfor
-      elseif @property 'Bonus Hits' 'found' == 5
-        for 15
-          pushlist 'valuetally' 'x'
-        endfor
-      elseif @property 'Bonus Hits' 'found' == 6
-        for 18
-          pushlist 'valuetally' 'x'
-        endfor
-      elseif @property 'Bonus Hits' 'found' == 7
-        for 21
-          pushlist 'valuetally' 'x'
-        endfor
-      elseif @property 'Bonus Hits' 'found' >= 8
-        for 24
-          pushlist 'valuetally' 'x'
-        endfor
-      endif
-    endif
     if @property 'Energy Resist' 'found' > 0
       if @property 'Energy Resist' 'found' == 1
         for 5
@@ -4525,6 +4463,33 @@ for 0 in 'weapons'
         endfor
       elseif @property 'Energy Resist' 'found' >= 20
         for 100
+          pushlist 'valuetally' 'x'
+        endfor
+      endif
+    endif
+    if @property 'Hit Point Regeneration' 'found' > 0
+      if @property 'Hit Point Regeneration' 'found' == 1
+        for 2
+          pushlist 'valuetally' 'x'
+        endfor
+      elseif @property 'Hit Point Regeneration' 'found' == 2
+        for 4
+          pushlist 'valuetally' 'x'
+        endfor
+      elseif @property 'Hit Point Regeneration' 'found' == 3
+        for 6
+          pushlist 'valuetally' 'x'
+        endfor
+      elseif @property 'Hit Point Regeneration' 'found' == 4
+        for 8
+          pushlist 'valuetally' 'x'
+        endfor
+      elseif @property 'Hit Point Regeneration' 'found' == 5
+        for 10
+          pushlist 'valuetally' 'x'
+        endfor
+      elseif @property 'Hit Point Regeneration' 'found' >= 6
+        for 12
           pushlist 'valuetally' 'x'
         endfor
       endif
@@ -4628,6 +4593,76 @@ for 0 in 'weapons'
         endfor
       elseif @property 'Enhance Potions' 'found' >= 25
         for 50
+          pushlist 'valuetally' 'x'
+        endfor
+      endif
+    endif
+    if @property 'Intelligence Bonus' 'found' > 0
+      if @property 'Intelligence Bonus' 'found' == 1
+        for 4
+          pushlist 'valuetally' 'x'
+        endfor
+      elseif @property 'Intelligence Bonus' 'found' == 2
+        for 8
+          pushlist 'valuetally' 'x'
+        endfor
+      elseif @property 'Intelligence Bonus' 'found' == 3
+        for 12
+          pushlist 'valuetally' 'x'
+        endfor
+      elseif @property 'Intelligence Bonus' 'found' == 4
+        for 16
+          pushlist 'valuetally' 'x'
+        endfor
+      elseif @property 'Intelligence Bonus' 'found' == 5
+        for 20
+          pushlist 'valuetally' 'x'
+        endfor
+      elseif @property 'Intelligence Bonus' 'found' == 6
+        for 24
+          pushlist 'valuetally' 'x'
+        endfor
+      elseif @property 'Intelligence Bonus' 'found' == 7
+        for 28
+          pushlist 'valuetally' 'x'
+        endfor
+      elseif @property 'Intelligence Bonus' 'found' >= 8
+        for 32
+          pushlist 'valuetally' 'x'
+        endfor
+      endif
+    endif
+    if @property 'Stamina Increase' 'found' > 0
+      if @property 'Stamina Increase' 'found' == 1
+        for 3
+          pushlist 'valuetally' 'x'
+        endfor
+      elseif @property 'Stamina Increase' 'found' == 2
+        for 6
+          pushlist 'valuetally' 'x'
+        endfor
+      elseif @property 'Stamina Increase' 'found' == 3
+        for 9
+          pushlist 'valuetally' 'x'
+        endfor
+      elseif @property 'Stamina Increase' 'found' == 4
+        for 12
+          pushlist 'valuetally' 'x'
+        endfor
+      elseif @property 'Stamina Increase' 'found' == 5
+        for 15
+          pushlist 'valuetally' 'x'
+        endfor
+      elseif @property 'Stamina Increase' 'found' == 6
+        for 18
+          pushlist 'valuetally' 'x'
+        endfor
+      elseif @property 'Stamina Increase' 'found' == 7
+        for 21
+          pushlist 'valuetally' 'x'
+        endfor
+      elseif @property 'Stamina Increase' 'found' >= 8
+        for 24
           pushlist 'valuetally' 'x'
         endfor
       endif
@@ -4811,41 +4846,6 @@ for 0 in 'weapons'
         endfor
       elseif @property 'Hit Chance Increase' 'found' >= 45
         for 135
-          pushlist 'valuetally' 'x'
-        endfor
-      endif
-    endif
-    if @property 'Bonus Int' 'found' > 0
-      if @property 'Bonus Int' 'found' == 1
-        for 4
-          pushlist 'valuetally' 'x'
-        endfor
-      elseif @property 'Bonus Int' 'found' == 2
-        for 8
-          pushlist 'valuetally' 'x'
-        endfor
-      elseif @property 'Bonus Int' 'found' == 3
-        for 12
-          pushlist 'valuetally' 'x'
-        endfor
-      elseif @property 'Bonus Int' 'found' == 4
-        for 16
-          pushlist 'valuetally' 'x'
-        endfor
-      elseif @property 'Bonus Int' 'found' == 5
-        for 20
-          pushlist 'valuetally' 'x'
-        endfor
-      elseif @property 'Bonus Int' 'found' == 6
-        for 24
-          pushlist 'valuetally' 'x'
-        endfor
-      elseif @property 'Bonus Int' 'found' == 7
-        for 28
-          pushlist 'valuetally' 'x'
-        endfor
-      elseif @property 'Bonus Int' 'found' >= 8
-        for 32
           pushlist 'valuetally' 'x'
         endfor
       endif

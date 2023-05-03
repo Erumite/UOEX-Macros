@@ -47,24 +47,24 @@ props["Enhance Potions"]=2
 max["Enhance Potions"]=25
 # Ignore Mage Weapon
 # Character Stats
-props["Regen Hits"]=2
-max["Regen Hits"]=6
-props["Regen Stamina"]=1
-max["Regen Stamina"]=10
-props["Regen Mana"]=6
-max["Regen Mana"]=6
-props["Bonus Strength"]=4
-max["Bonus Strength"]=8
-props["Bonus Dex"]=4
-max["Bonus Dex"]=8
-props["Bonus Int"]=4
-max["Bonus Int"]=8
-props["Bonus Hits"]=3
-max["Bonus Hits"]=8
-props["Bonus Stamina"]=3
-max["Bonus Stamina"]=8
-props["Bonus Mana"]=3
-max["Bonus Mana"]=8
+props["Hit Point Regeneration"]=2
+max["Hit Point Regeneration"]=6
+props["Stamina Regeneration"]=1
+max["Stamina Regeneration"]=10
+props["Mana Regeneration"]=6
+max["Mana Regeneration"]=6
+props["Strength Bonus"]=4
+max["Strength Bonus"]=8
+props["Dexterity Bonus"]=4
+max["Dexterity Bonus"]=8
+props["Intelligence Bonus"]=4
+max["Intelligence Bonus"]=8
+props["Hit Point Increase"]=3
+max["Hit Point Increase"]=8
+props["Stamina Increase"]=3
+max["Stamina Increase"]=8
+props["Mana Increase"]=3
+max["Mana Increase"]=8
 # Ignore Lower Stat Requirement
 # Resistances
 props["Physical Resist"]=5
