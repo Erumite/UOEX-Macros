@@ -15,10 +15,10 @@ if not @findobject 'scissors'
   @findtype 0xf9f 'any' 'backpack' 'any' 1
   @setalias 'scissors' 'found'
 endif
-// Skinning Knife Alias (Currently using a Butcher Knife)
+// Skinning Knife Alias (Currently using a Skinning Knife)
 //  This can be most bladed weapons, and apparently even relayered bladed weapons.
 if not @findobject 'skinningknife'
-  @findtype 0x13f6 'any' 'backpack' 'any' 1
+  @findtype 0xec4 'any' 'backpack' 'any' 1
   @setalias 'skinningknife' 'found'
 endif
 if not @findobject 'skinningknife'
@@ -134,21 +134,12 @@ while @findtype 0x2006 'any' 'ground' 'any' 2
     if organizing
       @organizer 'stop'
     endif
-    useobject 'skinningknife'
-    // Long delay so it will lock up if it was unable to use skinning knife
-    // due to item use queueing/cooldown.
-    waitfortarget 30000
+    @clearjournal
+    while not @injournal 'What do you want to use this item on?' 'system'
+      @useobject 'skinningknife'
+      waitfortarget 100
+    endwhile
     target! 'body'
-    pause 200
-    // This doesn't seem to work on bodies.
-    // waitforcontents 'body' 3000
-    @useobject 'body'
-    pause 400
-    if @findtype 0x1079 'any' 'body' 'any' 1
-      useobject 'scissors'
-      waitfortarget 1000
-      target! 'found'
-    endif
   endif
   msg '[claimall'
   waitfortarget 1500
@@ -157,12 +148,18 @@ while @findtype 0x2006 'any' 'ground' 'any' 2
   waitfortarget 1500
   canceltarget
   pause 400
-  while @findtype 0x1079 'any' 'backpack' 'any' 1
-    @setalias 'hides' 'found'
-    useobject 'scissors'
-    waitfortarget 1000
-    target! 'hides'
-  endwhile
+  if weight > 450
+    while @findtype 0x1079 'any' 'backpack' 'any' 1
+      @setalias 'hides' 'found'
+      useobject 'scissors'
+      waitfortarget 1000
+      target! 'hides'
+    endwhile
+    @organizer 'BOHSort'
+    while @organizing
+      pause 50
+    endwhile
+  endif
 endwhile
 // Cut up hides in pack to reduce weight. Sometimes it fails to cut in the corpse.
 while @findtype 0x1079 'any' 'backpack' 'any' 1
@@ -171,12 +168,20 @@ while @findtype 0x1079 'any' 'backpack' 'any' 1
   waitfortarget 1000
   target! 'hides'
 endwhile
-// Also do any on the ground if we went overweight.  Scavenger agent should grab them if added.
+// Also do any on the ground if we went overweight.
 while @findtype 0x1079 'any' 'ground' 'any' 1
   @setalias 'hides' 'found'
   useobject 'scissors'
   waitfortarget 1000
   target! 'hides'
+endwhile
+// Pick up any cut leather on the ground.
+while @findtype 0x1081 'any' 'ground' 'any' 1 and weight < 550
+  moveitem 'found' 'backpack'
+endwhile
+@organizer 'BOHSort'
+while @organizing
+  pause 50
 endwhile
 // Set a trashbag
 if not @findalias 'trashbag'
