@@ -1,5 +1,5 @@
 //UOS
-// Vesper Lockpicking Boxes Script
+// Lockpicking Boxes Script (And looter)
 //   - Eremite
 //
 // Need lockpicks in your inventory (obviously)
