@@ -20,7 +20,7 @@
 //  * Various Resource Keys, pouches, holders:
 //    * Spell Keys, Tailor Keys, Wood Keys, Metal Keys, Gem Pouch, Tool House
 //  * Bag of Holding   - Very expensive, but dumping gold into here is really nice for weight management.
-
+//
 // Can hard code the alias here if preferred
 //  Can also set it to anything if you don't have the item.
 @setalias 'recyclebag' 0x41a15e99
@@ -79,7 +79,7 @@ endif
 //@removelist 'scissorables'
 //@removelist 'fletchables'
 //@removelist 'carpenterchop'
-//@removelist 'keyreagents'
+@removelist 'keyreagents'
 //@removelist 'keycloths'
 //@removelist 'keywood'
 //@removelist 'keymetals'
@@ -116,6 +116,9 @@ if not @listexists 'keyreagents'
   pushlist 'keyreagents' 0xef3  // Blank Scrolls
   pushlist 'keyreagents' 0x26b7 // Zoogi Fungus
   pushlist 'keyreagents' 0xf8f  // Ethereal Powder
+  pushlist 'keyreagents' 0xf80  // Daemon Bone
+  pushlist 'keyreagents' 0xe1f  // Destroying Angel
+  pushlist 'keyreagents' 0x97a  // Petrified Wood
 endif
 headmsg "*spell keys*"
 @unsetalias 'dokeyregs'
@@ -207,6 +210,7 @@ if @findalias 'dotoolhouse'
   for 0 in 'tools'
     while @findtype tools[] 'any' 'backpack' 'any' 0
       target! 'found'
+      ignoreobject 'found'
       waitfortarget 1500
     endwhile
   endfor
@@ -219,6 +223,7 @@ while @findtype 0x13f6 2419 'backpack' 'any' 0
   replygump 0x5a356683 60030
   waitfortarget 1500
   target! 'found'
+  ignoreobject 'found'
 endwhile
 // Gargoyle Axe
 while @findtype 0xf45 2419 'backpack' 'any' 0
@@ -228,6 +233,7 @@ while @findtype 0xf45 2419 'backpack' 'any' 0
   replygump 0x5a356683 60030
   waitfortarget 1500
   target! 'found'
+  ignoreobject 'found'
 endwhile
 // Move heavy items worth keeping to the bag of holding (eg gold)
 if not @listexists 'bohitems'
@@ -340,6 +346,7 @@ if not @listexists 'smeltables'
   pushlist 'smeltables' 0x27af // Sai
   pushlist 'smeltables' 0x27ab // Tekagi
   pushlist 'smeltables' 0x27ad // Kama
+  pushlist 'smeltables' 0x1bc3 // Chaos Shield
   // pushlist 'smeltables' 0xec3  // Cleaver - can't smelt
 endif
 // Look for the mobile anvil in backpack
@@ -385,6 +392,7 @@ if @findobject 'dosmelting'
         replygump 0x38920abd 14
         waitfortarget 1500
         target! 'found'
+        ignoreobject 'found'
         waitforgump 949095101 1000
       endwhile
     endfor
@@ -424,6 +432,7 @@ if @findobject 'dofletching'
       replygump 0x38920abd 14
       waitfortarget 1500
       target! 'found'
+      ignoreobject 'found'
       waitforgump 'any' 1500
     endwhile
   endfor
@@ -463,6 +472,7 @@ if @findobject 'docarp'
       replygump 0x38920abd 14
       waitfortarget 1500
       target! 'chopme'
+      ignoreobject 'chopme'
       waitforgump 949095101 1500
       //waitforgump 'any' 1500
     endwhile
