@@ -265,18 +265,23 @@ endfor
 @canceltarget
 // If we are in war mode, then do a full organize first.
 if war 'self'
-  headmsg '*pre oraganize*' 33
+  headmsg '*pre oraganize*' 63
   organizer 'Trash4Tokens'
   while organizing
     pause 200
   endwhile
-  organizer "ChopItems"
+  organizer 'ChopItems'
   while organizing
     pause 200
   endwhile
 endif
 // Clear the ignore list from the weapon sorter:
 @clearignorelist
+// Clean up some un-recyclable trash from the sell bag.
+// Tribal Spears
+while findtype 0xf62 837 'recyclebag' 'any' 0
+  moveitem 'found' 'tokenbag' 0 0 0
+endwhile
 // List of things to smelt if a forge is nearby.
 if not @listexists 'smeltables'
   createlist 'smeltables'
@@ -389,277 +394,291 @@ if @findobject 'dosmelting'
     waitforgump 949095101 1000
     for 0 in 'smeltables'
       while @findtype smeltables[] 'any' 'recyclebag' 'any' 1
+        if @property "Lower Reagent Cost" "found" > 15
+          @ignoreobject 'found'
+          continue
+          fi
+          replygump 0x38920abd 14
+          waitfortarget 1500
+          target! 'found'
+          ignoreobject 'found'
+          waitforgump 949095101 1000
+        endwhile
+      endfor
+      replygump 0x38920abd 0
+    else
+      headmsg "No forge in range" 34
+    endif
+  endif
+  // Choppable Fletching
+  if not @listexists 'fletchables'
+    createlist 'fletchables'
+    pushlist 'fletchables' 0x13b2 // Bow
+    pushlist 'fletchables' 0xf50  // X-Bow
+    pushlist 'fletchables' 0x13fd // Heavy X-Bow
+    pushlist 'fletchables' 0x26c3 // Repeating X-Bow
+    pushlist 'fletchables' 0x26c2 // Composite Bow
+  endif
+  headmsg "*fletching*"
+  if not @findobject 'fletchtool'
+    findtype 0x1022 'any' 'backpack' 'any' 2
+    @setalias 'fletchtool' found
+  endif
+  // Check for fletchables
+  @unsetalias 'dofletching'
+  for 0 in 'fletchables'
+    if @findtype fletchables[] 'any' 'recyclebag' 'any' 1
+      @setalias 'dofletching' 'found'
+      break
+    endif
+  endfor
+  if @findobject 'dofletching'
+    pause 600
+    useobject 'fletchtool'
+    waitforgump 949095101 1000
+    for 0 in 'fletchables'
+      while @findtype fletchables[] 'any' 'recyclebag' 'any' 1
         replygump 0x38920abd 14
         waitfortarget 1500
         target! 'found'
         ignoreobject 'found'
-        waitforgump 949095101 1000
+        waitforgump 'any' 1500
       endwhile
     endfor
     replygump 0x38920abd 0
-  else
-    headmsg "No forge in range" 34
   endif
-endif
-// Choppable Fletching
-if not @listexists 'fletchables'
-  createlist 'fletchables'
-  pushlist 'fletchables' 0x13b2 // Bow
-  pushlist 'fletchables' 0xf50  // X-Bow
-  pushlist 'fletchables' 0x13fd // Heavy X-Bow
-  pushlist 'fletchables' 0x26c3 // Repeating X-Bow
-  pushlist 'fletchables' 0x26c2 // Composite Bow
-endif
-headmsg "*fletching*"
-if not @findobject 'fletchtool'
-  findtype 0x1022 'any' 'backpack' 'any' 2
-  @setalias 'fletchtool' found
-endif
-// Check for fletchables
-@unsetalias 'dofletching'
-for 0 in 'fletchables'
-  if @findtype fletchables[] 'any' 'recyclebag' 'any' 1
-    @setalias 'dofletching' 'found'
-    break
+  // Chopping Carpentry Stuff
+  if not @listexists 'carpenterchop'
+    createlist 'carpenterchop'
+    pushlist 'carpenterchop' 0x13f8 // Gnarled Staff
+    pushlist 'carpenterchop' 0xe89  // Quarter Staff
+    pushlist 'carpenterchop' 0xdf0  // Black Staff
+    pushlist 'carpenterchop' 0xe81  // Shepherd's Crook
+    pushlist 'carpenterchop' 0x27a8 // Bokuto
+    pushlist 'carpenterchop' 0x27a6 // Tetsubo
+    // pushlist 'carpenterchop' 0x13b4 // Clubs - Can't be chopped.
   endif
-endfor
-if @findobject 'dofletching'
-  pause 600
-  useobject 'fletchtool'
-  waitforgump 949095101 1000
-  for 0 in 'fletchables'
-    while @findtype fletchables[] 'any' 'recyclebag' 'any' 1
-      replygump 0x38920abd 14
-      waitfortarget 1500
-      target! 'found'
-      ignoreobject 'found'
-      waitforgump 'any' 1500
-    endwhile
-  endfor
-  replygump 0x38920abd 0
-endif
-// Chopping Carpentry Stuff
-if not @listexists 'carpenterchop'
-  createlist 'carpenterchop'
-  pushlist 'carpenterchop' 0x13f8 // Gnarled Staff
-  pushlist 'carpenterchop' 0xe89  // Quarter Staff
-  pushlist 'carpenterchop' 0xdf0  // Black Staff
-  pushlist 'carpenterchop' 0xe81  // Shepherd's Crook
-  pushlist 'carpenterchop' 0x27a8 // Bokuto
-  pushlist 'carpenterchop' 0x27a6 // Tetsubo
-  // pushlist 'carpenterchop' 0x13b4 // Clubs - Can't be chopped.
-endif
-if not @findobject 'carphammer'
-  findtype 0x102a 'any' 'backpack' 'any' 2
-  @setalias 'carphammer' found
-endif
-headmsg "*carpenter*"
-// Check for choppables
-@unsetalias 'docarp'
-for 0 in 'carpenterchop'
-  if @findtype carpenterchop[] 'any' 'recyclebag' 'any' 1
-    @setalias 'docarp' 'found'
-    break
+  if not @findobject 'carphammer'
+    findtype 0x102a 'any' 'backpack' 'any' 2
+    @setalias 'carphammer' found
   endif
-endfor
-if @findobject 'docarp'
-  pause 600
-  useobject 'carphammer'
-  waitforgump 949095101 1500
+  headmsg "*carpenter*"
+  // Check for choppables
+  @unsetalias 'docarp'
   for 0 in 'carpenterchop'
-    while @findtype carpenterchop[] 'any' 'recyclebag' 'any' 1
-      @setalias 'chopme' 'found'
-      replygump 0x38920abd 14
-      waitfortarget 1500
-      target! 'chopme'
-      ignoreobject 'chopme'
-      waitforgump 949095101 1500
-      //waitforgump 'any' 1500
-    endwhile
+    if @findtype carpenterchop[] 'any' 'recyclebag' 'any' 1
+      @setalias 'docarp' 'found'
+      break
+    endif
   endfor
-  replygump 0x38920abd 0
-endif
-// List of things to cut with scissors
-if not @listexists 'scissorables'
-  createlist 'scissorables'
-  pushlist 'scissorables' 0x1efd // Fancy Shirt
-  pushlist 'scissorables' 0x1516 // Skirt
-  pushlist 'scissorables' 0x144f // Bone Chest
-  pushlist 'scissorables' 0x1452 // Bone Legs
-  pushlist 'scissorables' 0x1451 // Bone Helm
-  pushlist 'scissorables' 0x13d6 // studded gorget
-  pushlist 'scissorables' 0x170b // Boots
-  pushlist 'scissorables' 0x170d // Sandals
-  pushlist 'scissorables' 0x1711 // thigh boots
-  pushlist 'scissorables' 0x144e // Bone Wrists
-  pushlist 'scissorables' 0x1450 // bone gloves
-  pushlist 'scissorables' 0x1db9 // leather hat
-  pushlist 'scissorables' 0x13d5 // Studded gloves
-  pushlist 'scissorables' 0x1c00 // Leather Shorts
-  pushlist 'scissorables' 0x13cd // Leather Sleeves
-  pushlist 'scissorables' 0x1c06 // Female Leather Armor
-  pushlist 'scissorables' 0x13c6 // Leather Gloves
-  pushlist 'scissorables' 0x1c0c // Studded Bustier
-  pushlist 'scissorables' 0x13cb // Leather Legs
-  pushlist 'scissorables' 0x13db // Studded Tunic
-  pushlist 'scissorables' 0x13cc // Leather Tunic
-  pushlist 'scissorables' 0x13c7 // Leather Gorget
-  pushlist 'scissorables' 0x2776 // Leather Jingasa
-  pushlist 'scissorables' 0x1c0a // Leather Bustier
-  pushlist 'scissorables' 0x13da // Studded Leggings
-  pushlist 'scissorables' 0x13dc // Studded Sleeves
-  pushlist 'scissorables' 0x1c08 // Leather Skirt
-  pushlist 'scissorables' 0x1c02 // Studded Armor
-  pushlist 'scissorables' 0x27c6 // Leather Do
-  pushlist 'scissorables' 0x2796 // Waraji and Tabi
-  pushlist 'scissorables' 0x278a // Leather Haidate
-  pushlist 'scissorables' 0x277e // Leather Hiro Sode
-  pushlist 'scissorables' 0x278e // Leather Ninja Hood
-  pushlist 'scissorables' 0x2797 // Ninja Tabi
-  pushlist 'scissorables' 0x2791 // Leather Ninja Pants
-  pushlist 'scissorables' 0x2792 // Leather Ninja Mitts
-  pushlist 'scissorables' 0x2793 // Leather Ninja Jacket
-endif
-headmsg "*scissors*"
-if not @findobject 'scissors'
-  findtype 0xf9f 'any' 'backpack' 'any' 2
-  @setalias 'scissors' 'found'
-endif
-// See if we have anythin to scissor:
-@unsetalias 'doscissors'
-for 0 in 'scissorables'
-  if @findtype scissorables[] 'any' 'recyclebag' 'any' 1
-    @setalias 'doscissors' 'found'
-    break
+  if @findobject 'docarp'
+    pause 600
+    useobject 'carphammer'
+    waitforgump 949095101 1500
+    for 0 in 'carpenterchop'
+      while @findtype carpenterchop[] 'any' 'recyclebag' 'any' 1
+        @setalias 'chopme' 'found'
+        replygump 0x38920abd 14
+        waitfortarget 1500
+        target! 'chopme'
+        ignoreobject 'chopme'
+        waitforgump 949095101 1500
+        //waitforgump 'any' 1500
+      endwhile
+    endfor
+    replygump 0x38920abd 0
   endif
-endfor
-if @findobject 'doscissors'
-  pause 600
+  // List of things to cut with scissors
+  if not @listexists 'scissorables'
+    createlist 'scissorables'
+    pushlist 'scissorables' 0x1efd // Fancy Shirt
+    pushlist 'scissorables' 0x1516 // Skirt
+    pushlist 'scissorables' 0x144f // Bone Chest
+    pushlist 'scissorables' 0x1452 // Bone Legs
+    pushlist 'scissorables' 0x1451 // Bone Helm
+    pushlist 'scissorables' 0x13d6 // studded gorget
+    pushlist 'scissorables' 0x170b // Boots
+    pushlist 'scissorables' 0x170d // Sandals
+    pushlist 'scissorables' 0x1711 // thigh boots
+    pushlist 'scissorables' 0x144e // Bone Wrists
+    pushlist 'scissorables' 0x1450 // bone gloves
+    pushlist 'scissorables' 0x1db9 // leather hat
+    pushlist 'scissorables' 0x13d5 // Studded gloves
+    pushlist 'scissorables' 0x1c00 // Leather Shorts
+    pushlist 'scissorables' 0x13cd // Leather Sleeves
+    pushlist 'scissorables' 0x1c06 // Female Leather Armor
+    pushlist 'scissorables' 0x13c6 // Leather Gloves
+    pushlist 'scissorables' 0x1c0c // Studded Bustier
+    pushlist 'scissorables' 0x13cb // Leather Legs
+    pushlist 'scissorables' 0x13db // Studded Tunic
+    pushlist 'scissorables' 0x13cc // Leather Tunic
+    pushlist 'scissorables' 0x13c7 // Leather Gorget
+    pushlist 'scissorables' 0x2776 // Leather Jingasa
+    pushlist 'scissorables' 0x1c0a // Leather Bustier
+    pushlist 'scissorables' 0x13da // Studded Leggings
+    pushlist 'scissorables' 0x13dc // Studded Sleeves
+    pushlist 'scissorables' 0x1c08 // Leather Skirt
+    pushlist 'scissorables' 0x1c02 // Studded Armor
+    pushlist 'scissorables' 0x27c6 // Leather Do
+    pushlist 'scissorables' 0x2796 // Waraji and Tabi
+    pushlist 'scissorables' 0x278a // Leather Haidate
+    pushlist 'scissorables' 0x277e // Leather Hiro Sode
+    pushlist 'scissorables' 0x278e // Leather Ninja Hood
+    pushlist 'scissorables' 0x2797 // Ninja Tabi
+    pushlist 'scissorables' 0x2791 // Leather Ninja Pants
+    pushlist 'scissorables' 0x2792 // Leather Ninja Mitts
+    pushlist 'scissorables' 0x2793 // Leather Ninja Jacket
+  endif
+  headmsg "*scissors*"
+  if not @findobject 'scissors'
+    findtype 0xf9f 'any' 'backpack' 'any' 2
+    @setalias 'scissors' 'found'
+  endif
+  // See if we have anythin to scissor:
+  @unsetalias 'doscissors'
   for 0 in 'scissorables'
-    while @findtype scissorables[] 'any' 'recyclebag' 'any' 1
-      useobject 'scissors'
-      waitfortarget 1500
-      target! 'found'
+    if @findtype scissorables[] 'any' 'recyclebag' 'any' 1
+      @setalias 'doscissors' 'found'
+      break
+    endif
+  endfor
+  if @findobject 'doscissors'
+    pause 600
+    for 0 in 'scissorables'
+      while @findtype scissorables[] 'any' 'recyclebag' 'any' 1
+        if @property "Lower Reagent Cost" "found" > 15
+          @ignoreobject 'found'
+          continue
+          fi
+          useobject 'scissors'
+          waitfortarget 1500
+          target! 'found'
+          pause 600
+          if @injournal 'Scissors cannot be used on that'
+            @ignoreobject 'found'
+            clearjournal
+          endif
+        endwhile
+      endfor
+    endif
+    // Cloth into Tailor Keys
+    if not @listexists 'keycloths'
+      createlist 'keycloths'
+      pushlist 'keycloths' 0x1081 // Leather (Any)
+      pushlist 'keycloths' 0xdf8  // Wool
+      pushlist 'keycloths' 0xfa0  // Spools of Thread
+      pushlist 'keycloths' 0x26b4 // Scales
+      pushlist 'keycloths' 0x1766 // Cut Cloth
+    endif
+    headmsg "*cloth keys*"
+    @unsetalias 'docloth'
+    for 0 in 'keycloths'
+      if @findtype keycloths[] 'any' 'backpack' 'any' 1
+        @setalias 'docloth' 'found'
+        break
+      endif
+    endfor
+    if @findobject 'docloth'
       pause 600
-      if @injournal 'Scissors cannot be used on that'
-        @ignoreobject 'found'
-        clearjournal
+      useobject 'tailorkeys'
+      waitforgump 1106836505 1000
+      replygump 0x41f8fc19 60029
+      waitforgump 1106836505 1000
+      for 0 in 'keycloths'
+        while @findtype keycloths[] 'any' 'backpack' 'any' 1
+          target! 'found'
+          pause 500
+        endwhile
+      endfor
+      replygump 0x41f8fc19 0
+    endif
+    @canceltarget
+    // Woodworker Keys
+    if not @listexists 'keywood'
+      createlist 'keywood'
+      pushlist 'keywood' 0x1bd4 // Shafts
+      pushlist 'keywood' 0x1bd1 // Feathers
+      pushlist 'keywood' 0x1bd7 // Boards
+      pushlist 'keywood' 0xf3f  // Arrows
+      pushlist 'keywood' 0x1bfb // bolts
+    endif
+    headmsg "*wood keys*"
+    // Check for stuff to add
+    @unsetalias 'dowoodkeys'
+    for 0 in 'keywood'
+      if @findtype keywood[] 'any' 'backpack' 'any' 0
+        @setalias 'dowoodkeys' 'found'
+        break
+      endif
+    endfor
+    if @findobject 'dowoodkeys'
+      pause 600
+      useobject 'woodkeys'
+      waitforgump 173511501 1000
+      replygump 0xa57934d 60023
+      waitforgump 173511501 1000
+      for 0 in 'keywood'
+        while @findtype keywood[] 'any' 'backpack' 'any' 0
+          target! 'found'
+          waitfortarget 1500
+        endwhile
+      endfor
+      replygump 0xa57934d 0
+    endif
+    @canceltarget
+    // Metal Keys
+    if not @listexists 'keymetals'
+      createlist 'keymetals'
+      pushlist 'keymetals' 0x1bf2 // Ingots
+    endif
+    headmsg "*metal keys*"
+    @unsetalias 'dometalkeys'
+    for 0 in 'keymetals'
+      if @findtype keymetals[] 'any' 'backpack' 'any' 1
+        @setalias 'dometalkeys' 'found'
+        break
+      endif
+    endfor
+    if @findobject 'dometalkeys'
+      pause 600
+      useobject 'metalkeys'
+      waitforgump 4213074123 1500
+      for 0 in 'keymetals'
+        while @findtype keymetals[] 'any' 'backpack' 'any' 1
+          replygump 0xfb1e68cb 60015
+          waitforgump 4213074123 1500
+          target! 'found'
+        endwhile
+      endfor
+      replygump 0xfb1e68cb 0
+    endif
+    @canceltarget
+    // Hack for nunchaku when farming Dojo
+    while @findtype 0x27ae 'any' 'backpack' 'any' 0
+      if property 'Damage Increase' 'found' > 0
+        ignoreobject 'found'
+      else
+        moveitem 'found' 'trashbag'
       endif
     endwhile
-  endfor
-endif
-// Cloth into Tailor Keys
-if not @listexists 'keycloths'
-  createlist 'keycloths'
-  pushlist 'keycloths' 0x1081 // Leather (Any)
-  pushlist 'keycloths' 0xdf8  // Wool
-  pushlist 'keycloths' 0xfa0  // Spools of Thread
-  pushlist 'keycloths' 0x26b4 // Scales
-  pushlist 'keycloths' 0x1766 // Cut Cloth
-endif
-headmsg "*cloth keys*"
-@unsetalias 'docloth'
-for 0 in 'keycloths'
-  if @findtype keycloths[] 'any' 'backpack' 'any' 1
-    @setalias 'docloth' 'found'
-    break
-  endif
-endfor
-if @findobject 'docloth'
-  pause 600
-  useobject 'tailorkeys'
-  waitforgump 1106836505 1000
-  replygump 0x41f8fc19 60029
-  waitforgump 1106836505 1000
-  for 0 in 'keycloths'
-    while @findtype keycloths[] 'any' 'backpack' 'any' 1
-      target! 'found'
-      pause 500
+    // Run an organizer for junk that can be trashed.
+    headmsg '*organize*'
+    if organizing
+      stop
+    else
+      organizer 'Trash4Tokens'
+    endif
+    while organizing
+      pause 200
     endwhile
-  endfor
-  replygump 0x41f8fc19 0
-endif
-@canceltarget
-// Woodworker Keys
-if not @listexists 'keywood'
-  createlist 'keywood'
-  pushlist 'keywood' 0x1bd4 // Shafts
-  pushlist 'keywood' 0x1bd1 // Feathers
-  pushlist 'keywood' 0x1bd7 // Boards
-  pushlist 'keywood' 0xf3f  // Arrows
-  pushlist 'keywood' 0x1bfb // bolts
-endif
-headmsg "*wood keys*"
-// Check for stuff to add
-@unsetalias 'dowoodkeys'
-for 0 in 'keywood'
-  if @findtype keywood[] 'any' 'backpack' 'any' 0
-    @setalias 'dowoodkeys' 'found'
-    break
-  endif
-endfor
-if @findobject 'dowoodkeys'
-  pause 600
-  useobject 'woodkeys'
-  waitforgump 173511501 1000
-  replygump 0xa57934d 60023
-  waitforgump 173511501 1000
-  for 0 in 'keywood'
-    while @findtype keywood[] 'any' 'backpack' 'any' 0
-      target! 'found'
-      waitfortarget 1500
+    organizer 'LootToSellBag'
+    while organizing
+      pause 200
     endwhile
-  endfor
-  replygump 0xa57934d 0
-endif
-@canceltarget
-// Metal Keys
-if not @listexists 'keymetals'
-  createlist 'keymetals'
-  pushlist 'keymetals' 0x1bf2 // Ingots
-endif
-headmsg "*metal keys*"
-@unsetalias 'dometalkeys'
-for 0 in 'keymetals'
-  if @findtype keymetals[] 'any' 'backpack' 'any' 1
-    @setalias 'dometalkeys' 'found'
-    break
-  endif
-endfor
-if @findobject 'dometalkeys'
-  pause 600
-  useobject 'metalkeys'
-  waitforgump 4213074123 1500
-  for 0 in 'keymetals'
-    while @findtype keymetals[] 'any' 'backpack' 'any' 1
-      replygump 0xfb1e68cb 60015
-      waitforgump 4213074123 1500
-      target! 'found'
+    // Some crap that doesn't recycle sometimes.
+    // Juka bows don't recycle.
+    @clearignorelist
+    while @findtype 0x13b2 0 'recyclebag' 'any' 0
+      @moveitem 'found''tokenbag'
     endwhile
-  endfor
-  replygump 0xfb1e68cb 0
-endif
-@canceltarget
-// Hack for nunchaku when farming Dojo
-while @findtype 0x27ae 'any' 'backpack' 'any' 0
-  if property 'Damage Increase' 'found' > 0
-    ignoreobject 'found'
-  else
-    moveitem 'found' 'trashbag'
-  endif
-endwhile
-// Run an organizer for junk that can be trashed.
-headmsg '*organize*'
-if organizing
-  stop
-else
-  organizer 'Trash4Tokens'
-endif
-while organizing
-  pause 200
-endwhile
-organizer 'LootToSellBag'
-while organizing
-  pause 200
-endwhile
-headmsg "**DONE**" 64
+    headmsg "**DONE**" 64
