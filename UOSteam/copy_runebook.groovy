@@ -1,9 +1,6 @@
 // Copy a Runebook - https://www.uoex.net/forum/viewtopic.php?f=39&t=14282
 //  - Eremite
-// Cast Protection first in case any rune locations have monsters
-// that may interrupt mark/recall spells.
-msg '[cs protection'
-pause 2000
+//
 // Find Spell Keys for a rune source:
 //  Optionally hard-code the spell keys (faster)
 @setalias 'spellkeys' 0x42197127
