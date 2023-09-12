@@ -77,15 +77,15 @@ if @findalias "seaserpent"
 endif
 // Heal up if we took some damage.
 while hits < 200
-    msg '[bandself'
-    pause 500
+  msg '[bandself'
+  pause 500
 endwhile
 // Claim all bodies in the area
 while @findtype 0x2006 'any' 'ground' 'any' 10
-     msg '[claimall'
-    waitfortarget 1000
-    target! 'found'
-    pause 200
+  msg '[claimall'
+  waitfortarget 1000
+  target! 'found'
+  pause 200
 endwhile
 @canceltarget
 // If our weight gets high, we do some item management.
@@ -133,10 +133,10 @@ if weight > 450
 endif
 // Move foward if we didn't break for a sea serpent.
 if not @findalias 'seaserpent'
-    msg "slow forward"
-    useskill 'Hiding'
-    pause 10000
-    msg "stop"
-    pause 600
-    useskill 'Hiding'
+  msg "slow forward"
+  useskill 'Hiding'
+  pause 10000
+  msg "stop"
+  pause 600
+  useskill 'Hiding'
 endif
