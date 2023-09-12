@@ -3,7 +3,15 @@
 //
 // Get on a boat with a fishing pole in your pack, point the boat north (or south) with plenty of
 //  space ahead of you, then hit Play.   Watch for AFK checks.
+//  Comments throughout the code should explain what's going on.
+// 
+// Organizers: 
+//   FishToHold  : Add fish steaks etc for objects to move to the ship's hold when heavy.
+//   FishingJunk : Garbage to trash (shoes, boots, buff fish, etc).  Set as backpack -> Trash4Tokens bag.
 //
+// OPTIONAL CONFIG
+// Set bladed weapon (if you aren't using a skinning knife or have a relayered SoP, etc)
+@setalias 'bladed' 0x4834c9ec
 // If fishing pole is not set or if it breaks, find one.
 if not @findobject 'fishrod'
   @findtype 0xdc0 'any' 'backpack' 'any' 0
