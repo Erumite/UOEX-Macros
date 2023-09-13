@@ -3,7 +3,7 @@
 //
 // Just need the target map in your main pack and a shovel
 //   (or a tool house that contains shovels)
-if not @findobject 'tmapbag' 'any' 'backpack'
+if not @findobject 'tmapbag' 'any' 'backpack' or not @findtype 0x14ec 'any' 'tmapbag' 'any' 1
   headmsg 'Select Treasure Map Bag' 69 'self'
   promptalias 'tmapbag'
 endif
@@ -34,27 +34,31 @@ if mounted 'self'
   @useobject 'self'
   pause 600
 endif
-// Loop through all treasure maps in the bag.
+// Discard any completed treasure maps.
 @clearignorelist
 while @findtype 0x14ec 'any' 'tmapbag' 'any' 1
-  @clearjournal
-  pause 600
   if @property 'Completed by' 'found'
     @moveitem 'found' 'trashcan'
   else
-    waitforcontext 'found' 1 1500
-    waitfortarget 1500
-    targettileoffset! 0 0 0
-    pause 600
-    if @injournal 'fail to find any treasure' 'system' or @injournal 'wrong facet' 'system'
-      ignoreobject 'found'
-      continue
-    elseif @injournal 'standing on top of it' 'system'
-      headmsg "Move, fatty." 33 'self'
-      stop
-    elseif @injournal 'already digging treasure' 'system'
-      ignoreobject 'found'
-      stop
-    endif
+    ignoreobject 'found'
+  endif
+endwhile
+// Loop through all treasure maps in the bag and try to dig.
+@clearignorelist
+while @findtype 0x14ec 'any' 'tmapbag' 'any' 1
+  @clearjournal
+  waitforcontext 'found' 1 1500
+  waitfortarget 1500
+  targettileoffset! 0 0 0
+  pause 600
+  if @injournal 'fail to find any treasure' 'system' or @injournal 'wrong facet' 'system'
+    ignoreobject 'found'
+    continue
+  elseif @injournal 'standing on top of it' 'system'
+    headmsg "Move, fatty." 33 'self'
+    stop
+  elseif @injournal 'already digging treasure' 'system'
+    ignoreobject 'found'
+    stop
   endif
 endwhile
