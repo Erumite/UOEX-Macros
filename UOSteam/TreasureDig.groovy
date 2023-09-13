@@ -18,7 +18,7 @@ if not @findobject 'shovel'
     pause 1000
   endif
   if @findtype 0xf39 'any' 'backpack' 'any' 1
-    @setalias 'shovel' 'found
+    @setalias 'shovel' 'found'
   else
     headmsg 'out of shovels?' 33 'self'
     stop
