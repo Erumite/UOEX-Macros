@@ -21,6 +21,12 @@
 //
 //   Happy Lockpicking!
 //
+// Gem Pouch
+if not @findobject 'gempouch'
+  if @findtype 0xe79 2165 'backpack' 'any' 2
+    @setalias 'gempouch' 'found'
+  endif
+endif
 // List of Lockables
 @removelist 'lockables'
 if not @listexists 'lockables'
@@ -198,6 +204,12 @@ if not @findalias 'working'
   while organizing
     pause 100
   endwhile
+  if @findobject 'gempouch'
+    organizer 'LootPickedBoxGems' 'box' 'gempouch'
+    while organizing
+      pause 100
+    endwhile
+  endif
   organizer 'LootPickedBoxTrash' 'box' 'trash'
   while organizing
     pause 100
