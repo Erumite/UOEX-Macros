@@ -43,9 +43,7 @@ if not @findobject 'shovel'
     replygump 0x5a356683 0
     pause 1000
   endif
-  if @findtype 0xf39 'any' 'backpack' 'any' 1
-    @setalias 'shovel' 'found'
-  else
+  if not @findtype 0xf39 'any' 'backpack' 'any' 1
     headmsg 'No Shovel?' 33 'self'
     stop
   endif
