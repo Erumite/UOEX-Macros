@@ -79,7 +79,7 @@ endif
 //@removelist 'scissorables'
 //@removelist 'fletchables'
 //@removelist 'carpenterchop'
-@removelist 'keyreagents'
+//@removelist 'keyreagents'
 //@removelist 'keycloths'
 //@removelist 'keywood'
 //@removelist 'keymetals'
@@ -114,6 +114,7 @@ if not @listexists 'keyreagents'
   pushlist 'keyreagents' 0xf81  // Fertile Dirt
   pushlist 'keyreagents' 0xf0e  // Empty Bottle
   pushlist 'keyreagents' 0xef3  // Blank Scrolls
+  pushlist 'keyreagents' 0x1f14 // Recall Rune
   pushlist 'keyreagents' 0x26b7 // Zoogi Fungus
   pushlist 'keyreagents' 0xf8f  // Ethereal Powder
   pushlist 'keyreagents' 0xf80  // Daemon Bone
@@ -194,6 +195,7 @@ if not @listexists 'tools'
   pushlist 'tools' 0x1373 // Pet Brush
   pushlist 'tools' 0x102a // Carp Hammer
   pushlist 'tools' 0x1034 // Saw
+  pushlist 'tools' 0x97f  // Skillet
 endif
 @unsetalias 'dotoolhouse'
 for 0 in 'tools'
@@ -225,6 +227,9 @@ while @findtype 0x13f6 2419 'backpack' 'any' 0
   target! 'found'
   ignoreobject 'found'
 endwhile
+while @findtype 0x13f6 'any' 'backpack' 'any' 0
+  moveitem 'found' 'tokenbag'
+endwhile
 // Gargoyle Axe
 while @findtype 0xf45 2419 'backpack' 'any' 0
   pause 600
@@ -255,7 +260,7 @@ if not @listexists 'smeltores'
 endif
 headmsg '*smelting ores*'
 for 0 in 'smeltores'
-  while @findtype smeltores[] 'any' 'backpack' 'any' 1
+  while @findtype smeltores[] 'any' 'backpack' 'any' 0
     @useobject 'found'
     waitfortarget 1500
     target! 'mobileforge'
@@ -394,7 +399,7 @@ if @findobject 'dosmelting'
     waitforgump 949095101 1000
     for 0 in 'smeltables'
       while @findtype smeltables[] 'any' 'recyclebag' 'any' 1
-        if @property "Lower Reagent Cost" "found" > 15
+        if @property "Lower Reagent Cost" "found" > 14
           @ignoreobject 'found'
           continue
         endif
@@ -546,7 +551,7 @@ if @findobject 'doscissors'
   pause 600
   for 0 in 'scissorables'
     while @findtype scissorables[] 'any' 'recyclebag' 'any' 1
-      if @property "Lower Reagent Cost" "found" > 15
+      if @property "Lower Reagent Cost" "found" > 14
         @ignoreobject 'found'
         continue
       endif
@@ -658,6 +663,12 @@ while @findtype 0x27ae 'any' 'backpack' 'any' 0
   if property 'Damage Increase' 'found' > 0
     ignoreobject 'found'
   else
+    moveitem 'found' 'trashbag'
+  endif
+endwhile
+// Trash Bandanas manually since some special ones drop:
+while @findtype 0x1540 'any' 'backpack' 'any' 0
+  if name 'found' == "bandana"
     moveitem 'found' 'trashbag'
   endif
 endwhile
