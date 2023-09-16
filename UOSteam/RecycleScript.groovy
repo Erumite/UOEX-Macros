@@ -672,6 +672,14 @@ while @findtype 0x1540 'any' 'backpack' 'any' 0
     moveitem 'found' 'trashbag'
   endif
 endwhile
+// Manually trash clubs in case one's a Cavorting Club
+while @findtype 0x13b4 'any' 'backpack' 'any' 0
+  if @property 'Self Repair' 'found'
+    @ignoreobject 'found'
+  else
+    @moveitem 'found' 'trashbag'
+  endif
+endwhile
 // Run an organizer for junk that can be trashed.
 headmsg '*organize*'
 if organizing
