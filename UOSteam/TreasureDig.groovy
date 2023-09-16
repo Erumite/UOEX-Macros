@@ -1,16 +1,42 @@
-// Treasure Dig
+// Treasure Map Digger
 //   - Eremite
 //
-// Just need the target map in your main pack and a shovel
-//   (or a tool house that contains shovels)
-// It'll use shovel, target the map, then target the ground at your feet.
+// Will search your main pack for a treasure map and dig at your feet.
+//   - If a completed map is found, it's moved to your trash4tokens bag.
+//   - If no shovel is found, it'll try to remove one from a toolhouse (if it exists)
+//   - Dismounts before digging so your pet can help. Comment out if unwanted.
+//
+@clearignorelist
+// Find a trash4tokens bag
+if not @findobject 'trashcan'
+  @findtype 0x9b2 1173 'backpack' 'any' 0
+  @setalias 'trashcan' 'found'
+endif
+// Find a Tool House if we have one:
+if not @findalias 'toolhouse' or not @findobject 'toolhouse' 69 'backpack' 'any'
+  if @findobject 0x22c4 69 'backpack' 'any' 2
+    @setalias 'toolhouse' 'found'
+  endif
+endif
+// Discard any completed treasure maps.
+@clearignorelist
+while @findtype 0x14ec 'any' 'backpack' 'any' 0
+  if @property 'Completed by' 'found'
+    @moveitem 'found' 'trashcan'
+  else
+    ignoreobject 'found'
+  endif
+endwhile
+// Dismount if we're riding.
 if mounted 'self'
   @useobject 'self'
   pause 600
 endif
+// Find a shovel in backpack (or one deep)
+//  If none found, try to pull one from a tool house.
 if not @findobject 'shovel'
-  if not @findtype 0xf39 'any' 'backpack' 'any' 1
-    useobject 0x4635cfea
+  if not @findtype 0xf39 'any' 'backpack' 'any' 1 and @findalias 'toolhouse'
+    useobject 'toolhouse'
     waitforgump 1513449091 15000
     replygump 0x5a356683 60008
     waitforgump 1513449091 15000
@@ -20,17 +46,16 @@ if not @findobject 'shovel'
   if @findtype 0xf39 'any' 'backpack' 'any' 1
     @setalias 'shovel' 'found'
   else
-    headmsg 'out of shovels?' 33 'self'
+    headmsg 'No Shovel?' 33 'self'
     stop
   endif
 endif
-useobject 'shovel'
-waitfortarget 1500
+@clearignorelist
+// Use map and target ground beneath us if one is found.
 if findtype 0x14ec 'any' 'backpack' 'any' 0
-  target! 'found'
+  waitforcontext 'found' 1 1500
   waitfortarget 1500
   targettileoffset 0 0 0
 else
   headmsg "No map in main pack." 33 'self'
 endif
-pause 2000
