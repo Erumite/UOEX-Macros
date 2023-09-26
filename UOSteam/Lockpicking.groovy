@@ -21,6 +21,8 @@
 //
 //   Happy Lockpicking!
 //
+// If we have a holding bag, move gold into it first for weight.
+@setalias 'holdingbag' 0x412d8c13
 // Gem Pouch
 if not @findobject 'gempouch'
   if @findtype 0xe79 2165 'backpack' 'any' 2
@@ -78,8 +80,18 @@ if not @findalias 'box'
         headmsg '=(Blaze)=' 39 'found'
       elseif @property 'Shadow Iron Lock' 'found'
         headmsg '=(S.Iron)=' 999 'found'
+      elseif @property 'Gold Lock' 'found'
+        headmsg '=(Gold)=' 53 'found'
+      elseif @property 'Valorite Lock' 'found'
+        headmsg '=(Valorite)=' 91 'found'
+      elseif @property 'Verite Lock' 'found'
+        headmsg '=(Verite)=' 61 'found'
+      elseif @property 'Toxic Lock' 'found'
+        headmsg '=(Toxic)=' 69 'found'
+      elseif @property 'Ice Lock' 'found'
+        headmsg '=(Ice)=' 88 'found'
       elseif @property 'Lock' 'found'
-        headmsg '=(^_^)=' 69 'found'
+        headmsg '=(^_^)=' 68 'found'
       elseif not @property "0 Items, 0 Stones" 'found' and @property "Items, " 'found'
         headmsg '=(Items)=' 69 'found'
       endif
@@ -200,6 +212,14 @@ if not @findalias 'working'
   // Box must be opened to run organizers on it.
   useobject 'box'
   pause 600
+  if @findobject 'holdingbag' 'any' 'backpack' 'any'
+    while @findtype 0xeed 'any' 'box' 'any' 1
+      moveitem 'found' 'holdingbag'
+    endwhile
+  endif
+  while organizing
+    pause 100
+  endwhile
   organizer 'LootPickedBox' 'box' 'backpack'
   while organizing
     pause 100
