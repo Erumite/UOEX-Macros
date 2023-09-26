@@ -166,6 +166,10 @@ pushlist 'weapons' 0xe81  // Shepherd's Crook
 @unsetalias 'replaysort'
 for 0 in 'weapons'
   while @findtype weapons[] 'any' 'backpack' 'any' 0
+    if @property 'insured' 'found' or @property "Blessed" 'found'
+      @ignoreobject 'found'
+      continue
+    endif
     @removelist 'valuetally'
     @createlist 'valuetally'
     // Boost these by a lot for manual checking since UOS can't access them.
