@@ -81,6 +81,8 @@ for 1000
     // Stop when we run out of fish or if the target is invalid.
     if @injournal "The fish don't seem to be biting here" "system" or @injournal "That would not work" "system"
       break
+    elseif @injournal "Target cannot be seen." or @injournal "That is not in your line of sight."
+      break
     elseif @injournal "The fish don't seem interested."
       break
     elseif @injournal "The fish got away"
@@ -93,6 +95,8 @@ for 1000
   endwhile
   // Break out of the for loop if all fish are caught or invalid target.
   if @injournal "The fish don't seem to be biting here" "system" or @injournal "That would not work" "system"
+    break
+  elseif @injournal "Target cannot be seen." or @injournal "That is not in your line of sight."
     break
   endif
   // If we fish up a sea serpent, make a note of it so we kill it before moving forward.
