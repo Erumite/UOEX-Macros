@@ -136,7 +136,8 @@ endwhile
 //  All cuttable fish are chopped to steaks and stuffed into
 //  the nearest ship hold.  Finally run "FishingJunk" organizer
 //  to trash other items (buff fish, boots, etc)
-if weight > 450
+if weight > 450 or @war 'self'
+  headmsg 'Weight High or War Mode - Sorting' 33 'self'
   if not @listexists 'fishies'
     @createlist 'fishies'
     @pushlist 'fishies' 0x9ce  // Purpley Fish.
@@ -185,6 +186,7 @@ if not @findalias 'seaserpent'
     pause 600
     useskill 'Hiding'
   else
+    pause 600
     @useobject 'ctrlsextant'
     waitforgump 3963360366 2000
     replygump 0xec3c146e 3
