@@ -146,6 +146,8 @@ if weight > 450 or @war 'self'
     @pushlist 'fishies' 0x9cd  // GrayishBrown Fish
     //@pushlist 'fishies' 0x2a4d // Redfish (Aquarium)
   endif
+  // List of known ships holds - if it's not found, .info on your ship hold
+  //  and add to this list to detect it.  Need to be within 2 tiles of it. (near front)
   if not @listexists 'shipholds'
     @createlist 'shipholds'
     @pushlist 'shipholds' 0x3eae // N/S Orientation
@@ -158,6 +160,7 @@ if weight > 450 or @war 'self'
       endif
     endfor
   endif
+  // Chop all our fish into steaks.
   for 0 in fishies
     while @findtype fishies[] 'any' 'backpack' 'any' 0
       useobject 'bladed'
@@ -166,6 +169,7 @@ if weight > 450 or @war 'self'
       pause 600
     endwhile
   endfor
+  // Move all our stuff to keep into the hold. (fish steaks)
   if @findobject 'shiphold'
     organizer 'FishToHold' 'backpack' 'shiphold'
     while organizing
@@ -174,18 +178,13 @@ if weight > 450 or @war 'self'
   else
     headmsg "No Shiphold Found!" 33
   endif
+  // Trash all our junk (boots/shoes/buff fish, redfish, etc)
   organizer "FishingJunk"
 endif
 // Move foward if we didn't break for a sea serpent.
+// Use sextant if available, else use speech commands and hiding.
 if not @findalias 'seaserpent'
-  if not @findobject 'ctrlsextant' 'any' 'backpack'
-    msg "slow forward"
-    useskill 'Hiding'
-    pause 10000
-    msg "stop"
-    pause 600
-    useskill 'Hiding'
-  else
+  if @findobject 'ctrlsextant' 'any' 'backpack'
     pause 600
     @useobject 'ctrlsextant'
     waitforgump 3963360366 2000
@@ -193,5 +192,12 @@ if not @findalias 'seaserpent'
     pause 10000
     replygump 0xec3c146e 7
     pause 600
+  else
+    msg "slow forward"
+    useskill 'Hiding'
+    pause 10000
+    msg "stop"
+    pause 600
+    useskill 'Hiding'
   endif
 endif
