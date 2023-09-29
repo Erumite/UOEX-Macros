@@ -3,15 +3,26 @@
 //
 // Get on a boat with a fishing pole in your pack, point the boat north (or south) with plenty of
 //  space ahead of you, then hit Play.   Watch for AFK checks.
+//
 //  Comments throughout the code should explain what's going on.
-// 
-// Organizers: 
+//
+// Organizers:
 //   FishToHold  : Add fish steaks etc for objects to move to the ship's hold when heavy.
 //   FishingJunk : Garbage to trash (shoes, boots, buff fish, etc).  Set as backpack -> Trash4Tokens bag.
 //
 // OPTIONAL CONFIG
 // Set bladed weapon (if you aren't using a skinning knife or have a relayered SoP, etc)
+// Set ctrlsextant (Sextant of Control) alias to avoid having to give speech commands and hide.
+//
+// Aliases Set manually - remove or update.
 @setalias 'bladed' 0x4834c9ec
+// If we have a Sextant of Control, use it for movement.
+@setalias 'ctrlsextant' 0x472ff513
+// Dismount if we're on a mount - can't fish while riding.
+if @mounted 'self'
+  @useobject 'self'
+  pause 650
+endif
 // If fishing pole is not set or if it breaks, find one.
 if not @findobject 'fishrod'
   @findtype 0xdc0 'any' 'backpack' 'any' 0
@@ -24,7 +35,12 @@ if not @findobject 'fishrod'
     setalias 'fishrod' 'found'
   endif
 endif
-// If we don't have a bladed weapon to cut fish with, find a skinning knife.
+// If we still haven't found a fishing rod, it probably doesn't exist.  Exit.
+if not @findobject 'fishrod'
+  headmsg "No Fishing Rod!!!" 33
+  stop
+endif
+// If no bladed weapon to cut fish with, find a skinning knife.
 if not @findobject 'bladed'
   @findtype 0xec4 'any' 'backpack' 'any' 1
   @setalias 'bladed' 'found'
@@ -39,11 +55,12 @@ if @findlayer 'self' 1 and graphic 'found' != 0xdc0
   moveitem 'found' 'backpack'
   pause 1000
 endif
+// Also unequip offhand if there is one.
 if @findlayer 'self' 2
   moveitem 'found' 'backpack'
   pause 1000
 endif
-// Equip the fishing rod.
+// Equip the fishing rod, exit if none was found.
 @equipitem 'fishrod' 1
 pause 600
 // Fishing - North  : Main Loop Start
@@ -57,12 +74,26 @@ for 1000
   useobject 'fishrod'
   waitfortarget 1000
   targettileoffset 6 0 0  // 6 tiles East
-  pause 1000
-  // Stop when we run out of fish or if the target is invalid.
+  // To account for varying fishing speeds, wait for a journal event to signify a cast finish.
+  @clearjournal
+  while not dead
+    pause 100
+    // Stop when we run out of fish or if the target is invalid.
+    if @injournal "The fish don't seem to be biting here" "system" or @injournal "That would not work" "system"
+      break
+    elseif @injournal "The fish don't seem interested."
+      break
+    elseif @injournal "The fish got away"
+      break
+    elseif @injournal "You fished up "
+      break
+    elseif @injournal "Uh oh! That doesn't look like a fish!"
+      break
+    endif
+  endwhile
+  // Break out of the for loop if all fish are caught or invalid target.
   if @injournal "The fish don't seem to be biting here" "system" or @injournal "That would not work" "system"
     break
-  else
-    pause 6400
   endif
   // If we fish up a sea serpent, make a note of it so we kill it before moving forward.
   if @findtype 0x96 'any' 'ground' 'any' 15
@@ -107,7 +138,7 @@ if weight > 450
     @pushlist 'fishies' 0x9cf  // Yellowy Fish
     @pushlist 'fishies' 0x9cc  // Green & Big Fish
     @pushlist 'fishies' 0x9cd  // GrayishBrown Fish
-    @pushlist 'fishies' 0x2a4d // Redfish (Aquarium)
+    //@pushlist 'fishies' 0x2a4d // Redfish (Aquarium)
   endif
   if not @listexists 'shipholds'
     @createlist 'shipholds'
@@ -141,10 +172,19 @@ if weight > 450
 endif
 // Move foward if we didn't break for a sea serpent.
 if not @findalias 'seaserpent'
-  msg "slow forward"
-  useskill 'Hiding'
-  pause 10000
-  msg "stop"
-  pause 600
-  useskill 'Hiding'
+  if not @findobject 'ctrlsextant' 'any' 'backpack'
+    msg "slow forward"
+    useskill 'Hiding'
+    pause 10000
+    msg "stop"
+    pause 600
+    useskill 'Hiding'
+  else
+    @useobject 'ctrlsextant'
+    waitforgump 3963360366 2000
+    replygump 0xec3c146e 3
+    pause 10000
+    replygump 0xec3c146e 7
+    pause 600
+  endif
 endif
