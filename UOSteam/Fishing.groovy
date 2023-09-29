@@ -75,8 +75,9 @@ for 1000
   waitfortarget 1000
   targettileoffset 6 0 0  // 6 tiles East
   // To account for varying fishing speeds, wait for a journal event to signify a cast finish.
+  //  Loop 100 times with a 100ms delay - 10s max wait time to catch odd messages/canceled casts.
   @clearjournal
-  while not dead
+  for 100
     pause 100
     // Stop when we run out of fish or if the target is invalid.
     if @injournal "The fish don't seem to be biting here" "system" or @injournal "That would not work" "system"
@@ -92,7 +93,7 @@ for 1000
     elseif @injournal "Uh oh! That doesn't look like a fish!"
       break
     endif
-  endwhile
+  endfor
   // Break out of the for loop if all fish are caught or invalid target.
   if @injournal "The fish don't seem to be biting here" "system" or @injournal "That would not work" "system"
     break
