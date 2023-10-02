@@ -22,6 +22,8 @@
 //   Happy Lockpicking!
 //
 // If we have a holding bag, move gold into it first for weight.
+// This is set manually for now - this is mine so it will likely not find it
+//  and default to looting gold to
 @setalias 'holdingbag' 0x412d8c13
 // Gem Pouch
 if not @findobject 'gempouch'
@@ -45,65 +47,59 @@ if not @listexists 'lockables'
   @pushlist 'lockables' 0xe7f // Keg
   @pushlist 'lockables' 0xe77 // Barrel
 endif
-// Look for a locked container within 1 tile.
-// Seems glitchy in some areas for some reason.
+// Scan all lockable items within 20 tiles - if the target is
+//  within 1 tile, set the 'box' alias to target it without
+//  prompting for a target.
 @clearignorelist
 @unsetalias 'box'
 for 0 in 'lockables'
-  while @findtype lockables[] 'any' 'ground' 'any' 1
-    if @property 'Lock' 'found'
-      headmsg 'Oi!' 69 'found'
-      @setalias 'box' 'found'
-      break
-    elseif not @property "0 Items, 0 Stones" 'found' and @property "Items, " 'found'
-      headmsg 'Loot!' 69 'found'
-      @setalias 'box' 'found'
-      break
+  while @findtype lockables[] 'any' 'ground' 'any' 20
+    @unsetalias 'ignoreme'
+    if @property 'Agapite Lock' 'found'
+      headmsg '=(Agapite)=' 46 'found'
+    elseif @property 'Bronze Lock' 'found'
+      headmsg '=(Bronze)=' 444 'found'
+    elseif @property 'Blaze Lock' 'found'
+      headmsg '=(Blaze)=' 39 'found'
+    elseif @property 'Shadow Iron Lock' 'found'
+      headmsg '=(S.Iron)=' 999 'found'
+    elseif @property 'Gold Lock' 'found'
+      headmsg '=(Gold)=' 53 'found'
+    elseif @property 'Valorite Lock' 'found'
+      headmsg '=(Valorite)=' 91 'found'
+    elseif @property 'Verite Lock' 'found'
+      headmsg '=(Verite)=' 61 'found'
+    elseif @property 'Toxic Lock' 'found'
+      headmsg '=(Toxic)=' 69 'found'
+    elseif @property 'Ice Lock' 'found'
+      headmsg '=(Ice)=' 88 'found'
+    elseif @property 'Lock' 'found'
+      headmsg '=(^_^)=' 68 'found'
+    elseif @property "0 Items, 0 Stones" 'found' and @property "Items, " 'found'
+      @setalias 'ignoreme' 'found'
+      // No Message if the box is empty and is an actual container (not deco)
+    elseif @property "0/" 'found' and @property "Items, " 'found'
+      @setalias 'ignoreme' 'found'
+      // No Message - This is for items with like: (0/125 Items, 0 Stones)
     else
-      ignoreobject 'found'
+      headmsg '=(Items)=' 69 'found'
     endif
+    if @inrange 'found' 1 and not @findalias 'ignoreme'
+      setalias 'box' 'found'
+    endif
+    @ignoreobject 'found'
   endwhile
-  if @findalias 'box'
-    break
-  endif
 endfor
-// Ask the user for the box to pick if nothing on ground.
+// If no box in range, prompt to target a box.
 if not @findalias 'box'
-  @clearignorelist
-  for 0 in 'lockables'
-    while @findtype lockables[] 'any' 'ground' 'any' 20
-      if @property 'Agapite Lock' 'found'
-        headmsg '=(Agapite)=' 46 'found'
-      elseif @property 'Bronze Lock' 'found'
-        headmsg '=(Bronze)=' 444 'found'
-      elseif @property 'Blaze Lock' 'found'
-        headmsg '=(Blaze)=' 39 'found'
-      elseif @property 'Shadow Iron Lock' 'found'
-        headmsg '=(S.Iron)=' 999 'found'
-      elseif @property 'Gold Lock' 'found'
-        headmsg '=(Gold)=' 53 'found'
-      elseif @property 'Valorite Lock' 'found'
-        headmsg '=(Valorite)=' 91 'found'
-      elseif @property 'Verite Lock' 'found'
-        headmsg '=(Verite)=' 61 'found'
-      elseif @property 'Toxic Lock' 'found'
-        headmsg '=(Toxic)=' 69 'found'
-      elseif @property 'Ice Lock' 'found'
-        headmsg '=(Ice)=' 88 'found'
-      elseif @property 'Lock' 'found'
-        headmsg '=(^_^)=' 68 'found'
-      elseif not @property "0 Items, 0 Stones" 'found' and @property "Items, " 'found'
-        headmsg '=(Items)=' 69 'found'
-      endif
-      @ignoreobject 'found'
-    endwhile
-  endfor
   headmsg 'What should I pick?' 64
   promptalias 'box'
 endif
 // If no box defined, bail.
 if not @findalias 'box'
   stop
+else 
+  headmsg "!!!" 69 'box'
 endif
 // If pick is missing or ran out, set the alias to something random and prompt till we
 //   have a proper lockpick.  If you want to change lockpicks, uncomment the unsetalias
@@ -231,6 +227,11 @@ if not @findalias 'working'
     endwhile
   endif
   organizer 'LootPickedBoxTrash' 'box' 'trash'
+  while organizing
+    pause 100
+  endwhile
+  @setalias 'holdingsell' 0x4278eb00
+  organizer "BOHSell" 'box' 'holdingsell'
   while organizing
     pause 100
   endwhile
