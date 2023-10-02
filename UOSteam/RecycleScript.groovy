@@ -20,6 +20,7 @@
 //  * Various Resource Keys, pouches, holders:
 //    * Spell Keys, Tailor Keys, Wood Keys, Metal Keys, Gem Pouch, Tool House
 //  * Bag of Holding   - Very expensive, but dumping gold into here is really nice for weight management.
+//  * Bag of Holding (sell) - A 2nd BoH for heavy items worth selling (scrolls, etc)
 //
 // Can hard code the alias here if preferred
 //  Can also set it to anything if you don't have the item.
@@ -33,6 +34,7 @@
 @setalias 'mobileforge' 0x407e65b2
 @setalias 'toolhouse' 0x4635cfea
 @setalias 'holdingbag' 0x412d8c13
+@setalias 'holdingsell' 0x4278eb00
 // Set the token bag alias
 if not @findobject 'recyclebag'
   headmsg "Select Recycle Bag"
@@ -79,13 +81,13 @@ endif
 //@removelist 'scissorables'
 //@removelist 'fletchables'
 //@removelist 'carpenterchop'
-//@removelist 'keyreagents'
+@removelist 'keyreagents'
 //@removelist 'keycloths'
 //@removelist 'keywood'
 //@removelist 'keymetals'
 //@removelist 'pouchgems'
 //@removelist 'smeltores'
-//@removelist 'tools'
+@removelist 'tools'
 //@removelist 'bohitems'
 // Stop organizing if one's running
 if organizing
@@ -120,6 +122,7 @@ if not @listexists 'keyreagents'
   pushlist 'keyreagents' 0xf80  // Daemon Bone
   pushlist 'keyreagents' 0xe1f  // Destroying Angel
   pushlist 'keyreagents' 0x97a  // Petrified Wood
+  pushlist 'keyreagents' 0x26b8 // Powder of Translocation
 endif
 headmsg "*spell keys*"
 @unsetalias 'dokeyregs'
@@ -196,6 +199,8 @@ if not @listexists 'tools'
   pushlist 'tools' 0x102a // Carp Hammer
   pushlist 'tools' 0x1034 // Saw
   pushlist 'tools' 0x97f  // Skillet
+  pushlist 'tools' 0xfbb  // Tongs
+  pushlist 'tools' 0x9f5  // Hive Tool
 endif
 @unsetalias 'dotoolhouse'
 for 0 in 'tools'
@@ -276,6 +281,10 @@ if war 'self'
     pause 200
   endwhile
   @organizer 'ChopItems'
+  while organizing
+    pause 200
+  endwhile
+  @organizer "BOHSell" 'backpack' 'holdingsell'
   while organizing
     pause 200
   endwhile
@@ -690,6 +699,10 @@ endif
 while organizing
   pause 200
 endwhile
+@organizer "BOHSell" 'backpack' 'holdingsell'
+while organizing
+  pause 200
+endwhile
 @organizer 'LootToSellBag'
 while organizing
   pause 200
@@ -699,5 +712,11 @@ endwhile
 @clearignorelist
 while @findtype 0x13b2 0 'recyclebag' 'any' 0
   @moveitem 'found''tokenbag'
+  pause 300
 endwhile
 headmsg "**DONE**" 64
+// Move plain logs into BoH because so many mobs drop them.
+while @findtype 0x1bdd 0 'backpack' 'any' 0
+  @moveitem 'found' 'holdingbag'
+  pause 300
+endwhile
