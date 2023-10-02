@@ -81,7 +81,7 @@ for 0 in 'lockables'
     elseif @property "0/" 'found' and @property "Items, " 'found'
       @setalias 'ignoreme' 'found'
       // No Message - This is for items with like: (0/125 Items, 0 Stones)
-    else
+    elseif @property "Items, " "found"
       headmsg '=(Items)=' 69 'found'
     endif
     if @inrange 'found' 1 and not @findalias 'ignoreme'
