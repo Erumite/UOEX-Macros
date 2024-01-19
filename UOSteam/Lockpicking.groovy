@@ -8,6 +8,8 @@
 //   You can select an unlocked box and it will try to remove trap and'
 //     run a looter against the box once it's safe.
 //   Also works on boxes in inventory (Paragon Chests, Tokuno chest, etc)
+//   Will also keep track of the most recently untrapped "safe" box so interrupted
+//    looting (from tmap spawns, etc) don't have you waiting for skill cooldown.
 // The first time you use the script, it will ask for the picks you want to use
 //   - (if you run out of picks, it'll prompt again)
 // It will also ask for your trash bag - this is the Trash 4 Tokens bag.
@@ -73,6 +75,8 @@ for 0 in 'lockables'
       headmsg '=(Toxic)=' 69 'found'
     elseif @property 'Ice Lock' 'found'
       headmsg '=(Ice)=' 88 'found'
+    elseif @property 'Platinum Lock' 'found'
+      headmsg '=(Platinum)=' 2442 'found'
     elseif @property 'Lock' 'found'
       headmsg '=(^_^)=' 68 'found'
     elseif @property "0 Items, 0 Stones" 'found' and @property "Items, " 'found'
@@ -98,7 +102,7 @@ endif
 // If no box defined, bail.
 if not @findalias 'box'
   stop
-else 
+else
   headmsg "!!!" 69 'box'
 endif
 // If pick is missing or ran out, set the alias to something random and prompt till we
@@ -179,9 +183,11 @@ while @findobject 'pick'
   endif
 endwhile
 // Only successes above will unset this alias so we can continue to disarm.
+if not @findobject 'safebox'
+  @setalias 'safebox' 'self'
+endif
 if not @findalias 'working'
-  @setalias 'working' 'box'
-  while @findalias 'working'
+  while serial 'safebox' != serial 'box'
     clearjournal
     useskill 'Remove Trap'
     waitfortarget 1500
@@ -190,13 +196,13 @@ if not @findalias 'working'
     pause 1000
     if @injournal "That doesn't appear to be trapped"
       headmsg "No Trap!" 64
-      @unsetalias 'working'
+      @setalias 'safebox' 'box'
     elseif @injournal 'You successfully render the trap harmless'
       headmsg "Safe!" 64
-      @unsetalias 'working'
+      @setalias 'safebox' 'box'
     elseif @injournal "replace this with the failed message of a trap exploding"
       headmsg "OUCH!" 34
-      @unsetalias 'working'
+      @setalias 'safebox' 'box'
     elseif @injournal "must wait a few moments to use another skill"
       pause 100
     else
@@ -214,7 +220,8 @@ if not @findalias 'working'
     endwhile
   endif
   while organizing
-    pause 100
+    organizer 'stop'
+    pause 300
   endwhile
   organizer 'LootPickedBox' 'box' 'backpack'
   while organizing
