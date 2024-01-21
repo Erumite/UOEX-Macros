@@ -81,13 +81,13 @@ endif
 //@removelist 'scissorables'
 //@removelist 'fletchables'
 //@removelist 'carpenterchop'
-@removelist 'keyreagents'
+//@removelist 'keyreagents'
 //@removelist 'keycloths'
 //@removelist 'keywood'
 //@removelist 'keymetals'
 //@removelist 'pouchgems'
 //@removelist 'smeltores'
-@removelist 'tools'
+//@removelist 'tools'
 //@removelist 'bohitems'
 // Stop organizing if one's running
 if organizing
@@ -210,6 +210,7 @@ for 0 in 'tools'
 endfor
 if @findalias 'dotoolhouse'
   headmsg '*tools*'
+  pause 600
   @useobject 'toolhouse'
   waitforgump 1513449091 1500
   replygump 0x5a356683 60030
@@ -221,6 +222,7 @@ if @findalias 'dotoolhouse'
       waitfortarget 1500
     endwhile
   endfor
+  replygump 0x5a356683 0
 endif
 // gargoyle knife
 while @findtype 0x13f6 2419 'backpack' 'any' 0
@@ -251,7 +253,6 @@ if not @listexists 'bohitems'
   pushlist 'bohitems' 0xeed // Gold
   pushlist 'bohitems' 0xe21 // Bandages
   pushlist 'bohitems' 0xf3f // Arrows
-  pushlist 'bohitems' 0x9f1 // Cut of Ribs (3g Each - one slot)
 endif
 for 0 in 'bohitems'
   while @findtype bohitems[] 'any' 'backpack' 'any' 0
@@ -408,7 +409,7 @@ if @findobject 'dosmelting'
     waitforgump 949095101 1000
     for 0 in 'smeltables'
       while @findtype smeltables[] 'any' 'recyclebag' 'any' 1
-        if @property "Lower Reagent Cost" "found" > 14
+        if @property "Lower Reagent Cost" "found" > 16
           @ignoreobject 'found'
           continue
         endif
@@ -558,16 +559,19 @@ for 0 in 'scissorables'
 endfor
 if @findobject 'doscissors'
   pause 600
+  @canceltarget
   for 0 in 'scissorables'
     while @findtype scissorables[] 'any' 'recyclebag' 'any' 1
       if @property "Lower Reagent Cost" "found" > 14
         @ignoreobject 'found'
         continue
       endif
-      useobject 'scissors'
-      waitfortarget 1500
+      if not waitingfortarget
+        useobject 'scissors'
+        waitfortarget 1500
+      endif
       target! 'found'
-      pause 600
+      waitfortarget 1000
       if @injournal 'Scissors cannot be used on that'
         @ignoreobject 'found'
         clearjournal
