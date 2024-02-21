@@ -2,22 +2,36 @@
 // Lockpicking Boxes Script (And looter)
 //   - Eremite
 //
-// Need lockpicks in your inventory (obviously)
+//    Need lockpicks in your inventory (obviously)
+// It will prmopt you to select them if the alias isn't set yet.
+//
+// Running the macro also will do a color-coded headmsg of all chests in the area
+//   with locks or items inside.  Useful to scan the area for lootable boxes.
+//
 // Hit the macro and it will look for a locked box within 1 tile.
 //   If none is found, it will ask for the box you want to pick.
-//   You can select an unlocked box and it will try to remove trap and'
-//     run a looter against the box once it's safe.
-//   Also works on boxes in inventory (Paragon Chests, Tokuno chest, etc)
+//   You can select an unlocked box and it will try to remove trap (if enabled below) and
+//        run a looter against the box once it's safe.
+//
+// Also works on boxes in inventory (Paragon Chests, Tokuno chest, etc)
+// If it's a select box type in inventory (swamp box, etc), it will move it to
+//   your trash can once it has been looted.
+// It will also perform different looting logic on inventory boxes, using spell/gem keys
+//   instead of moving items one at a time as it's significantly faster.
+//
 //   Will also keep track of the most recently untrapped "safe" box so interrupted
 //    looting (from tmap spawns, etc) don't have you waiting for skill cooldown.
+//
 // The first time you use the script, it will ask for the picks you want to use
 //   - (if you run out of picks, it'll prompt again)
+//
 // It will also ask for your trash bag - this is the Trash 4 Tokens bag.
-// You'll also need two Organizers:
+// You'll also need a few Organizers:
 //   - LootPickedBox       :  Items you want to keep (will go to your backpack)
 //   - LootPickedBoxTrash  :  Items you want to trash for some free tokens.
 //   - LootPickedBoxSell   :  Items to sell to vendors. (scrolls, gems, etc)
 // I just build these as I go until eventually it's all auto-looted.
+// 
 // If the trap fails to disarm after like 10-20 tries with no skillups, just double-click
 //   the chest to pop the trap.  The script will notice it's not trapped and move on to loot.
 //
@@ -25,15 +39,36 @@
 //
 // If we have a holding bag, move gold into it first for weight.
 // This is set manually for now - this is mine so it will likely not find it
-//  and default to looting gold to
+//  and default to looting gold to inventory with organizers.
 @setalias 'holdingbag' 0x412d8c13
-// Gem Pouch
+// Comment out the setalias commands to skip remove trap.
+//   skipremovetrap: If not set, then it skips removing trap entirely.
+//   skipremovetrapatmax : If not set, then it will only remove trap when under 120 skill.
+@unsetalias 'skipremovetrap'
+@unsetalias 'skipremovetrapatmax'
+// @setalias 'skipremovetrap' 'self'
+@setalias 'skipremovetrapatmax' 'self'
+// Find Gem Pouch
 if not @findobject 'gempouch'
   if @findtype 0xe79 2165 'backpack' 'any' 2
     @setalias 'gempouch' 'found'
   endif
 endif
-// List of Lockables
+// Set the trash bag if not defined.
+if not @findobject 'trash'
+  if @findtype 0x9b2 1173 'backpack' 'any' 0
+    setalias 'trash' 'found'
+  else
+    headmsg 'Trash can?' 64
+    promptalias 'trash'
+  endif
+endif
+// Set sell bag if not defined
+if not @findobject 'sellbag'
+  headmsg 'Sell bag?' 64
+  promptalias 'sellbag'
+endif
+// List of Lockables to look for.
 @removelist 'lockables'
 if not @listexists 'lockables'
   @createlist 'lockables'
@@ -51,7 +86,7 @@ if not @listexists 'lockables'
 endif
 // Scan all lockable items within 20 tiles - if the target is
 //  within 1 tile, set the 'box' alias to target it without
-//  prompting for a target.
+//  prompting for a target.  Also display headmsg of lock type/etc.
 @clearignorelist
 @unsetalias 'box'
 for 0 in 'lockables'
@@ -117,20 +152,7 @@ if not @findobject 'pick' 'any' 'backpack' 1
     promptalias 'pick'
   endwhile
 endif
-// Set the trash bag if not defined.
-if not @findobject 'trash'
-  if @findtype 0x9b2 1173 'backpack' 'any' 0
-    setalias 'trash' 'found'
-  else
-    headmsg 'Trash can?' 64
-    promptalias 'trash'
-  endif
-endif
-// Set sell bag if not defined
-if not @findobject 'sellbag'
-  headmsg 'Sell bag?' 64
-  promptalias 'sellbag'
-endif
+
 // Hacky boolean value for seeing when we're done.
 @setalias 'working' 'box'
 // Try to pick the chest.
@@ -182,8 +204,15 @@ while @findobject 'pick'
     break
   endif
 endwhile
-// Only successes above will unset this alias so we can continue to disarm.
-if not @findobject 'safebox'
+// If we're skipping remove trap, mark the box as "safe" anyway.
+// If we skip Remove Trap at max skill and are at 120, do the same.
+// Otherwise if we can't find the last safe box, set it to self so
+//   we can compare serials later.
+if @findalias 'skipremovetrap'
+  @setalias 'safebox' 'box'
+elseif @findalias 'skipremovetrapatmax' and @skill 'Remove Trap' == 120
+  @setalias 'safebox' 'box'
+elseif not @findobject 'safebox'
   @setalias 'safebox' 'self'
 endif
 if not @findalias 'working'
@@ -209,39 +238,149 @@ if not @findalias 'working'
       pause 10200
     endif
   endwhile
-  headmsg "*looting*" 43
-  pause 600
-  // Box must be opened to run organizers on it.
-  useobject 'box'
-  pause 600
-  if @findobject 'holdingbag' 'any' 'backpack' 'any'
-    while @findtype 0xeed 'any' 'box' 'any' 1
-      moveitem 'found' 'holdingbag'
+  if not @property '0 items, 0 stones' 'box'
+    // Have to pop the trap before opening if we skipped
+    if @findalias 'skipremovetrap'
+      headmsg "*popping trap*" 33
+      pause 600
+      useobject 'box'
+    elseif @findalias 'skipremovetrapatmax' and @skill 'Remove Trap' == 120
+      headmsg "*popping trap*" 33
+      pause 600
+      useobject 'box'
+    endif
+    headmsg "*looting*" 43
+    pause 600
+    // Box must be opened to run organizers on it.
+    useobject 'box'
+    pause 600
+    if @findobject 'holdingbag' 'any' 'backpack' 'any'
+      while @findtype 0xeed 'any' 'box' 'any' 1
+        moveitem 'found' 'holdingbag'
+      endwhile
+    endif
+    while organizing
+      organizer 'stop'
+      pause 300
     endwhile
-  endif
-  while organizing
-    organizer 'stop'
-    pause 300
-  endwhile
-  organizer 'LootPickedBox' 'box' 'backpack'
-  while organizing
-    pause 100
-  endwhile
-  if @findobject 'gempouch'
-    organizer 'LootPickedBoxGems' 'box' 'gempouch'
+    if @findobject 'gempouch'
+      if @findobject 'box' 'any' 'backpack' 'any'
+        sysmsg 'box in backpack' 69
+        if not @listexists 'pouchgems'
+          createlist 'pouchgems'
+          pushlist 'pouchgems' 0xf2d // Tourmaline
+          pushlist 'pouchgems' 0xf16 // Amethyst
+          pushlist 'pouchgems' 0xf19 // Sapphire
+          pushlist 'pouchgems' 0xf21 // Star Sapphire
+          pushlist 'pouchgems' 0xf26 // Diamond
+          pushlist 'pouchgems' 0xf10 // Emerald
+          pushlist 'pouchgems' 0xf13 // Ruby
+          pushlist 'pouchgems' 0xf25 // Pice of Amber
+          pushlist 'pouchgems' 0xf15 // Citrine
+          pushlist 'pouchgems' 0x1ea7 // Arcane Gem
+        endif
+        @unsetalias 'dopouchgems'
+        for 0 in 'pouchgems'
+          if @findtype pouchgems[] 'any' 'box' 'any' 1
+            @setalias 'dopouchgems' 'found'
+            break
+          endif
+        endfor
+        if @findobject 'dopouchgems'
+          pause 600
+          useobject 'gempouch'
+          waitforgump 309845371 1500
+          replygump 0x1277dd7b 30
+          waitforgump 309845371 1500
+          for 0 in 'pouchgems'
+            while @findtype pouchgems[] 'any' 'box' 'any' 1
+              target! 'found'
+              waitfortarget 1500
+            endwhile
+          endfor
+          replygump 0x1277dd7b 0
+        endif
+        @canceltarget
+        if not @listexists 'keyreagents'
+          createlist 'keyreagents'
+          pushlist 'keyreagents' 0xf7a  // Black Pearl
+          pushlist 'keyreagents' 0xf7b  // Bloodmoss
+          pushlist 'keyreagents' 0xf84  // Garlic
+          pushlist 'keyreagents' 0xf85  // Ginseng
+          pushlist 'keyreagents' 0xf86  // Mandrake Root
+          pushlist 'keyreagents' 0xf88  // Nightshade
+          pushlist 'keyreagents' 0xf8d  // Spider's Silk
+          pushlist 'keyreagents' 0xf8c  // Sulfurous Ash
+          pushlist 'keyreagents' 0xf78  // Bat Wings
+          pushlist 'keyreagents' 0xf7e  // Bone
+          pushlist 'keyreagents' 0xf7d  // Daemon's Blood
+          pushlist 'keyreagents' 0xf8f  // Grave Dust
+          pushlist 'keyreagents' 0xf8e  // Nox Crystals
+          pushlist 'keyreagents' 0xf8a  // Pig Iron
+          pushlist 'keyreagents' 0xf81  // Fertile Dirt
+          pushlist 'keyreagents' 0xf0e  // Empty Bottle
+          pushlist 'keyreagents' 0xef3  // Blank Scrolls
+          pushlist 'keyreagents' 0x1f14 // Recall Rune
+          pushlist 'keyreagents' 0x26b7 // Zoogi Fungus
+          pushlist 'keyreagents' 0xf8f  // Ethereal Powder
+          pushlist 'keyreagents' 0xf80  // Daemon Bone
+          pushlist 'keyreagents' 0xe1f  // Destroying Angel
+          pushlist 'keyreagents' 0x97a  // Petrified Wood
+          pushlist 'keyreagents' 0x26b8 // Powder of Translocation
+        endif
+        @unsetalias 'dokeyregs'
+        for 0 in 'keyreagents'
+          if @findtype keyreagents[] 'any' 'box' 'any' 0
+            @setalias 'dokeyregs' 'found'
+            break
+          endif
+        endfor
+        if @findobject 'dokeyregs'
+          pause 600
+          useobject 'spellkeys'
+          waitforgump 247257139 1000
+          replygump 0xebcd833 60030
+          waitforgump 247257139 1500
+          for 0 in 'keyreagents'
+            while @findtype keyreagents[] 'any' 'box' 'any' 0
+              target! 'found'
+              waitfortarget 1500
+            endwhile
+          endfor
+          replygump 0xebcd833 0
+        endif
+        @canceltarget
+      else
+        organizer 'LootPickedBoxGems' 'box' 'gempouch'
+        while organizing
+          pause 100
+        endwhile
+      endif
+    endif
+    organizer 'LootPickedBox' 'box' 'backpack'
     while organizing
       pause 100
     endwhile
+    organizer 'LootPickedBoxTrash' 'box' 'trash'
+    while organizing
+      pause 100
+    endwhile
+    @setalias 'holdingsell' 0x4278eb00
+    organizer "BOHSell" 'box' 'holdingsell'
+    while organizing
+      pause 100
+    endwhile
+    organizer 'LootPickedBoxSell' 'box' 'sellbag'
   endif
-  organizer 'LootPickedBoxTrash' 'box' 'trash'
-  while organizing
-    pause 100
-  endwhile
-  @setalias 'holdingsell' 0x4278eb00
-  organizer "BOHSell" 'box' 'holdingsell'
-  while organizing
-    pause 100
-  endwhile
-  organizer 'LootPickedBoxSell' 'box' 'sellbag'
+  headmsg "Done!" 64
 endif
-headmsg "Done!" 64
+// If the box is empty, try to remove chest via context menu (tmaps)
+// Otherwise if it's a swamp box and empty, move to trash.
+if @property '0 items, 0 stones' 'box' and not @property "Pulled From A Swamp" 'box'
+  waitforcontext 'box' 0 15000
+  waitforgump 3372031655 15000
+  replygump 0xc8fd1ea7 1
+elseif @property "Pulled From A Swamp" 'box' and @property '0 items, 0 stones' 'box'
+  pause 600
+  moveitem 'box' 'trash'
+endif
