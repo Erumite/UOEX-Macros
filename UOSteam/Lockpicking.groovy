@@ -31,7 +31,7 @@
 //   - LootPickedBoxTrash  :  Items you want to trash for some free tokens.
 //   - LootPickedBoxSell   :  Items to sell to vendors. (scrolls, gems, etc)
 // I just build these as I go until eventually it's all auto-looted.
-// 
+//
 // If the trap fails to disarm after like 10-20 tries with no skillups, just double-click
 //   the chest to pop the trap.  The script will notice it's not trapped and move on to loot.
 //
@@ -152,7 +152,6 @@ if not @findobject 'pick' 'any' 'backpack' 1
     promptalias 'pick'
   endwhile
 endif
-
 // Hacky boolean value for seeing when we're done.
 @setalias 'working' 'box'
 // Try to pick the chest.
@@ -376,11 +375,14 @@ if not @findalias 'working'
 endif
 // If the box is empty, try to remove chest via context menu (tmaps)
 // Otherwise if it's a swamp box and empty, move to trash.
-if @property '0 items, 0 stones' 'box' and not @property "Pulled From A Swamp" 'box'
-  waitforcontext 'box' 0 15000
-  waitforgump 3372031655 15000
-  replygump 0xc8fd1ea7 1
+if @property "Paragon" 'box' and @property '0 items, 0 stones' 'box'
+  pause 600
+  moveitem 'box' 'trash'
 elseif @property "Pulled From A Swamp" 'box' and @property '0 items, 0 stones' 'box'
   pause 600
   moveitem 'box' 'trash'
+elseif @property '0 items, 0 stones' 'box' and not @findobject 'box' 'any' 'backpack'
+  waitforcontext 'box' 0 15000
+  waitforgump 3372031655 15000
+  replygump 0xc8fd1ea7 1
 endif
