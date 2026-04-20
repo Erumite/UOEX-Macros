@@ -1,0 +1,114 @@
+from System.Collections.Generic import List
+from System import Byte
+
+class Notoriety:
+    byte = Byte( 0 )
+    color = ''
+    description = ''
+
+    def __init__ ( self, byte, color, description ):
+        self.byte = byte
+        self.color = color
+        self.description = description
+
+notorieties = {
+    'innocent': Notoriety( Byte( 1 ), 'blue', 'innocent' ),
+    'ally': Notoriety( Byte( 2 ), 'green', 'guilded/ally' ),
+    'attackable': Notoriety( Byte( 3 ), 'gray', 'attackable but not criminal' ),
+    'criminal': Notoriety( Byte( 4 ), 'gray', 'criminal' ),
+    'enemy': Notoriety( Byte( 5 ), 'orange', 'enemy' ),
+    'murderer': Notoriety( Byte( 6 ), 'red', 'murderer' ),
+    'npc': Notoriety( Byte( 7 ), '', 'npc' )
+}
+
+def GetNotorietyList ( notorieties ):
+    '''
+    Returns a byte list of the selected notorieties
+    '''
+    notorietyList = []
+    for notoriety in notorieties:
+        notorietyList.append( notoriety.byte )
+
+    return List[Byte]( notorietyList )
+
+def GetEnemyNotorieties( minRange = 0, maxRange = 12 ):
+    '''
+    Returns a list of the common enemy notorieties
+    '''
+    global notorieties
+
+    return GetNotorietyList( [
+        notorieties[ 'attackable' ],
+        notorieties[ 'criminal' ],
+        notorieties[ 'enemy' ],
+        notorieties[ 'murderer' ]
+    ] )
+
+
+def GetEnemies( Mobiles, minRange = 0, maxRange = 12, notorieties = GetEnemyNotorieties(), IgnorePartyMembers = True ):
+    '''
+    Returns a list of the nearby enemies with the specified notorieties
+    '''
+
+    if Mobiles == None:
+        raise ValueError( 'Mobiles was not passed to GetEnemies' )
+
+    enemyFilter = Mobiles.Filter()
+    enemyFilter.Enabled = True
+    enemyFilter.RangeMin = minRange
+    enemyFilter.RangeMax = maxRange
+    enemyFilter.Notorieties = notorieties
+    enemyFilter.CheckIgnoreObject = True
+    enemyFilter.Friend = False
+    enemies = Mobiles.ApplyFilter( enemyFilter )
+
+    if IgnorePartyMembers:
+        partyMembers = [ enemy for enemy in enemies if enemy.InParty ]
+        for partyMember in partyMembers:
+            enemies.Remove( partyMember )
+
+    return enemies
+
+def FindNearestEnemy():
+    enemies = GetEnemies(Mobiles, 0, 12, GetEnemyNotorieties())
+    if len(enemies) == 0:
+        return None
+    elif len(enemies) == 1:
+        return enemies[0]
+    else:
+        return Mobiles.Select(enemies, "Nearest")
+    
+def WarEnemiesInRange():
+    enemies = GetEnemies(Mobiles, 0, 12, GetEnemyNotorieties())
+    enemies = [enemy for enemy in enemies if enemy.WarMode]
+    return len(enemies)
+
+
+def PickSpecialAbility(enemycount:int, singletarget=False):
+    weapon = Player.GetItemOnLayer("RightHand") or Player.GetItemOnLayer("LeftHand")
+    if Player.Mana < 25:
+        return  # Conserve MP for Buffs
+    if not weapon: # Unarmed
+        Player.WeaponPrimarySA() # Paralyzing Blow
+    elif weapon.ItemID == 0x27A2: # No-Dachi
+        if not singletarget and enemycount > 1:
+            Spells.CastBushido("Momentum Strike")
+        else:
+            Player.WeaponPrimarySA() # Crushing Blow
+    elif weapon.ItemID == 0x143E: # Halberd
+        if not singletarget and enemycount > 2:
+            Player.WeaponPrimarySA() # WhirlWind
+        elif not singletarget and enemycount == 2:
+            Spells.CastBushido("Momentum Strike")
+        else:
+            Spells.CastNinjitsu("Focus Attack")
+    elif weapon.ItemID == 0x27A5: # Yumi
+        if not singletarget and enemycount > 1:
+            Spells.CastBushido("Momentum Strike")
+        else:
+            Player.WeaponPrimarySA()  # Armor Pierce
+    elif weapon.ItemID == 0x27A9: # Swords of Prosperity
+        if not singletarget and enemycount > 1:
+            Spells.CastBushido("Momentum Strike")
+        else:
+            Player.WeaponSecondarySA() # Double Strike
