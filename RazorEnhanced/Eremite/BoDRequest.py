@@ -1,3 +1,5 @@
+# DOESN'T WORK!  Just playing around with reading gumps, etc.
+
 CRAFTER_CTX = 3
 TAMER_CTX = 5
 CRAFTER_GUMP = 0x9bade6ea #  3188567326

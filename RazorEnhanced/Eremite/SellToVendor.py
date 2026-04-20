@@ -22,7 +22,6 @@ def cleanJournal():
 vendor = promptVendor()    
 cleanJournal()
 
-
 while True:
     if not vendor or vendor == -1 or not Mobiles.FindBySerial(vendor) or Player.DistanceTo(vendor) > 10:
         break

@@ -71,7 +71,6 @@ def getLocation(map):
             return location
 
 def map_loc_to_rune(location_str, tolerance=2):
-    
     try: # convert input string "(x, y)" into a tuple (x, y)
         target_x, target_y = ast.literal_eval(location_str)
     except (ValueError, SyntaxError):
@@ -88,7 +87,6 @@ def map_loc_to_rune(location_str, tolerance=2):
     return False
 
 # --- Map Sorting/Handling ---
-    
 def IsDecoded(item):
     for prop in item.Properties:
         if '[Encoded]' in str(prop):
@@ -97,7 +95,7 @@ def IsDecoded(item):
 
 def HandleBagMaps():
     maps = Items.FindAllByID(MAP_ID, 0, Player.Backpack.Serial, 0)
-    maps = [map for map in maps if "treasure map" in map.Name]
+    maps = [map for map in maps if "treasure map" in map.Name.lower()]
 
     comp_maps = [map for map in maps if "completed" in str(map.Properties).lower()]
     for map in comp_maps:

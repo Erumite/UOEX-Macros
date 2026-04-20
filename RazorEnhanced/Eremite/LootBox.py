@@ -11,7 +11,6 @@ LOCK_PATTERN = re.compile(r'.*(?<=>)([^<]+)(?= lock).*')
 WARN_WEIGHT = Misc.ReadSharedValue("WarnWeight")
 CRIT_WEIGHT = Misc.ReadSharedValue("CriticalWeight")
 
-
 lockables = [
     0xe7c, # Grey EW
     0x9ab, # Gray NS
@@ -39,7 +38,6 @@ color_map = {
     "Platinum": 2442
 }
 
-
 def FindLockables():
     filter = Items.Filter()
     filter.Enabled = True
@@ -52,7 +50,6 @@ def FindLockables():
     chests = [chest for chest in chests if HasLoot(chest)]
     near = [chest for chest in chests if Player.DistanceTo(chest) <= 1]
     return near[0] if near else []
-    
 
 def HasLoot(chest):
     for prop in chest.Properties:
@@ -168,8 +165,6 @@ def main():
         DragGemsToPouch(target, gempouch)
     DragLootToBackpack(target)
     DisposeBox(target)
-        
-    
-        
+
 main()
 QuickSort()

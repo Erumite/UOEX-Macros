@@ -1,14 +1,11 @@
-from AutoComplete import *
-from Eremite.utils.enemies import GetEnemies, GetEnemyNotorieties, WarEnemiesInRange, FindNearestEnemy, PickSpecialAbility
+from Eremite.utils.enemies import GetEnemies, FindNearestEnemy, PickSpecialAbility
 from Eremite.utils.buffs import AttackBuffs
 from Eremite.utils.barding import Discordance
 from Eremite.utils.items import RepairCheck
-from Eremite.utils.sorting import QuickSort, trashJunk
 
 enemy = FindNearestEnemy()
 enemycount = len(GetEnemies( Mobiles, maxRange=1))
 if enemy != None:
-    #Misc.ScriptStop("RecycleWeight.py")
     Player.Attack(enemy)
     PickSpecialAbility(enemycount)
     Discordance(enemy)
@@ -20,5 +17,9 @@ else:
         Misc.ScriptRun("RecycleWeight.py")
 
 RepairCheck()
+
+# Restart these in case the stop-all-scripts macro was hit:
 if not Misc.ScriptStatus("WeaponLevelGump.py"):
     Misc.ScriptRun("WeaponLevelGump.py")
+if not Misc.ScriptStatus("ChatUI.py"):
+    Misc.ScriptRun("ChatUI.py")

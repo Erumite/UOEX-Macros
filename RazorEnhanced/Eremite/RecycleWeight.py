@@ -1,9 +1,6 @@
 while Misc.ScriptStatus("CutClaimall.py"):
     Misc.Pause(1000)
-    
 
-from System.Collections.Generic import List
-from System import Int32
 from Scripts.Eremite.utils.items import GetSmithHammer,GetCarpHammer, GetFletchingTools, GetScissors, GetRecycleBag, GetKeys, GetToolHouse, GetGemPouch
 from Eremite.utils.items import AppraiseWeapon, AppraiseJewelry
 from Eremite.utils.sorting import QuickSort, trashJunk
@@ -48,7 +45,6 @@ fletchables = Misc.ReadSharedValue("fletchables")
 scissorables = Misc.ReadSharedValue("scissorables")
 choppables = Misc.ReadSharedValue("choppables")
 
-
 busy_text = "You must wait to perform another action."
 
 def isBlessed(item):
@@ -67,7 +63,6 @@ def useWhenBusy(item):
         Misc.Pause(600)
         Items.UseItem(item)
     return None
-
     
 def appraise_weapons(pack):
     # Smeltable Weapons
@@ -135,8 +130,7 @@ def fletch_items(pack):
         Target.Cancel()
     while Gumps.HasGump(949095101):
         Gumps.CloseGump(949095101)
-        
-        
+
 def chop_items(pack):
     items = Items.FindAllByID(choppables, -1, pack.Serial, 0, True)
     items = [item for item in items if not isBlessed(item)]
@@ -154,7 +148,7 @@ def chop_items(pack):
         Target.Cancel()
     while Gumps.HasGump(0x38920abd):
         Gumps.CloseGump(0x38920abd)
-        
+
 def scissorItem(i):
     if Target.HasTarget():
         Target.TargetExecute(i)
@@ -163,7 +157,7 @@ def scissorItem(i):
             Items.UseItem(scissors)
             Target.WaitForTarget(100)
         Target.TargetExecute(i)
-    
+
 def scissor_items(pack):
     Target.Cancel()
     items = Items.FindAllByID(scissorables, -1, pack.Serial, 0, True)
@@ -192,7 +186,7 @@ def do_spell_keys(pack):
         Target.Cancel()
     while Gumps.HasGump(0xebcd833):
         Gumps.CloseGump(0xebcd833)
-            
+
 def do_wood_keys(pack):
     items = Items.FindAllByID(wood_key_items, -1, pack.Serial, 0)
     if len(items) > 0:
@@ -208,7 +202,7 @@ def do_wood_keys(pack):
         Target.Cancel()
     while Gumps.HasGump(0xa57934d):
         Gumps.CloseGump(0xa57934d)
-        
+
 def do_tailor_keys(pack):
     items = Items.FindAllByID(tailor_key_items, -1, pack.Serial, 1)
     if len(items) > 0:
@@ -225,7 +219,6 @@ def do_tailor_keys(pack):
     while Gumps.HasGump(0x41f8fc19):
         Gumps.CloseGump(0x41f8fc19)
         
-    
 def do_metal_keys(pack):
     items = Items.FindAllByID(metal_key_items, -1, pack.Serial, 0)
     if len(items) > 0:
@@ -313,24 +306,23 @@ def do_edge_cases(pack):
     for item in Items.FindAllByID(0x0F62,0x0345,pack.Serial,0):
         Items.Move(item,recycleBag,-1)
         Misc.Pause(600)
-    
 
 Misc.ClearDragQueue()
-# These can finish quickly to clear up space.
+# These can finish quickly to lower weight.
 do_spell_keys(backpack)
 do_gem_pouch(backpack)
 QuickSort(leather=False, scrolls=False)
+
+# Appraise for items worth keeping.
 appraise_jewelry(backpack)
+appraise_weapons(backpack)
 
 # Handle Chopping
-appraise_weapons(backpack)
-smelt_items(backpack)
-smelt_items(toolBag)
-fletch_items(backpack)
-fletch_items(toolBag)
-chop_items(backpack)
-chop_items(toolBag)
-scissor_items(backpack)
+for bag in [backpack, toolBag]:
+    smelt_items(bag)
+    fletch_items(bag)
+    chop_items(bag)
+    scissor_items(bag)
 
 # Keys: 
 do_metal_keys(backpack)

@@ -1,5 +1,4 @@
-from AutoComplete import *
-from Eremite.utils.enemies import GetEnemies, GetEnemyNotorieties, WarEnemiesInRange, FindNearestEnemy, PickSpecialAbility
+from Eremite.utils.enemies import WarEnemiesInRange, FindNearestEnemy, PickSpecialAbility
 from Eremite.utils.buffs import AttackBuffs
 from Eremite.utils.barding import Discordance
 from Eremite.utils.items import RepairCheck

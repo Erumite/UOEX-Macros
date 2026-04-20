@@ -36,6 +36,7 @@ def UseOres():
             Target.TargetExecute(mobileforge)
             Misc.Pause(600)
 
+# Doesn't seem to work - Ground Items show ID 0 because reserved?
 def UseGroundOres():
     filt = Items.Filter()
     filt.Enabled = True

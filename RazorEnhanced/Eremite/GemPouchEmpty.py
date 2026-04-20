@@ -13,7 +13,6 @@ def GemSlotEmpty():
         Journal.Clear(outmsg)
         return True
     return False
-    
 
 def EmptyGemPouch():
     Journal.Clear(outmsg)

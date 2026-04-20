@@ -1,3 +1,5 @@
+# Sets up tons of shared values used by other scripts.
+
 # =============== Item IDs ===============
 Misc.SetSharedValue('smith_hammer_id' ,0x13E4)
 Misc.SetSharedValue('fletching_tools_id', 0x1022)
@@ -80,7 +82,6 @@ smeltables = [
     0x143d,  # Hammer Pick
     0x1BC3, # Chaos Shield
 ]
-Misc.RemoveSharedValue('smeltables')
 Misc.SetSharedValue('smeltables', smeltables)
 
 
@@ -91,7 +92,6 @@ fletchables = [
     0x26c3, # Repeating X-Bow
     0x26c2  # Composite Bow
 ]
-Misc.RemoveSharedValue("fletchables")
 Misc.SetSharedValue("fletchables", fletchables)
 
 
@@ -103,7 +103,6 @@ choppables = [
     0x27a8, # Bokuto
     0x27a6  # Tetsubo
 ]
-Misc.RemoveSharedValue('choppables')
 Misc.SetSharedValue('choppables', choppables)
 
 scissorables = [
@@ -163,7 +162,6 @@ scissorables = [
     0x2792, # Leather Ninja Mitts
     0x2793  # Leather Ninja Jacket
 ]
-Misc.RemoveSharedValue('scissorables')
 Misc.SetSharedValue('scissorables', scissorables)
 
 cloth_items = [
@@ -173,7 +171,6 @@ cloth_items = [
     0x26b4, # Scales
     0x1766  # Cut Cloth
 ]
-Misc.RemoveSharedValue('cloths')
 Misc.SetSharedValue('cloths', cloth_items)
 
 
@@ -184,7 +181,6 @@ wood_key_items = [
     0xf3f,  # Arrows
     0x1bfb  # bolts
 ]
-Misc.RemoveSharedValue("wooditems")
 Misc.SetSharedValue("wooditems", wood_key_items)
 
 corpse_ignore = [
@@ -276,7 +272,6 @@ corpse_ignore = [
     806, # Solen Infiltrator
     970  # Restless Soul (shrouded human)
 ]
-Misc.RemoveSharedValue('corpse_ignore_list')
 Misc.SetSharedValue('corpse_ignore_list', corpse_ignore)
 
 
@@ -310,17 +305,9 @@ other_reagents = [
     0x97a,  # Petrified Wood
     0x26b8, # Powder of Translocation
 ]
-
-Misc.RemoveSharedValue("MageryReagents")
 Misc.SetSharedValue("MageryReagents", magery_reagents)
-
-Misc.RemoveSharedValue("NecromancyReagents")
 Misc.SetSharedValue("NecromancyReagents", necro_reagents)
-
-Misc.RemoveSharedValue("OtherReagents")
 Misc.SetSharedValue("OtherReagents", other_reagents)
-
-Misc.RemoveSharedValue("KeyReagents")
 Misc.SetSharedValue("KeyReagents", magery_reagents + necro_reagents + other_reagents)
 
 
@@ -343,7 +330,6 @@ gems = [
   0x3199, # Brilliant Amber
   0x3194, # Perfect Emerald
 ]
-Misc.RemoveSharedValue("gems")
 Misc.SetSharedValue("gems", gems)
 
 tools = [
@@ -363,7 +349,6 @@ tools = [
     0xfbb,  # Tongs
     0x9f5   # Hive Tool
 ]
-Misc.RemoveSharedValue("tools")
 Misc.SetSharedValue("tools", tools)
 
 
@@ -412,7 +397,6 @@ weapons = [
     0xf50,  # Crossbow
     0xe81   # Shepherd's Crook
 ]
-Misc.RemoveSharedValue("weapons")
 Misc.SetSharedValue("weapons", weapons)
 
 trash_weapons = [
@@ -420,7 +404,6 @@ trash_weapons = [
     0x0EC4, # Skinning Knife
     0x13B4, # Club
 ]
-Misc.RemoveSharedValue("trash_weapons")
 Misc.SetSharedValue("trash_weapons", trash_weapons)
 
 
@@ -471,7 +454,6 @@ weapon_point_map = {
     "Hit Cold Area": {"points": 4, "max": 50},
     "Hit Physical Area": {"points": 4, "max": 50},
 }
-Misc.RemoveSharedValue("weapon_point_map")
 Misc.SetSharedValue("weapon_point_map", weapon_point_map)
 
 weapon_name_map = {
@@ -514,7 +496,6 @@ weapon_name_map = {
     "hit cold area": "Hit Cold Area",
     "hit physical area": "Hit Physical Area",
 }
-Misc.RemoveSharedValue("weapon_name_map")
 Misc.SetSharedValue("weapon_name_map", weapon_name_map)
 
 spell_scrolls = [

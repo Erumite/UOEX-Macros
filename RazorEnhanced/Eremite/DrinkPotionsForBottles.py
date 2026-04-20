@@ -1,9 +1,9 @@
+# Chug all potions in backpack or recycle bag to get free bottles.
+
 from Eremite.utils.items import GetRecycleBag
 
 left_hand = Player.GetItemOnLayer("LeftHand")
 Player.UnEquipItemByLayer("LeftHand", 600)
-
-
 
 backpack = Player.Backpack.Serial
 recyclebag = GetRecycleBag()
@@ -58,10 +58,10 @@ for pot in agility_pots:
         Misc.Pause(100)
         
 for pot in stam_pots:
-    if Player.Stam >= Player.StamMax:
-        break
     s = pot.Serial
     while Items.FindBySerial(s):
+        if Player.Stam >= Player.StamMax:
+            break
         Items.UseItem(pot)
         Misc.Pause(100)
         
@@ -72,10 +72,10 @@ for pot in strength_pots:
         Misc.Pause(100)
         
 for pot in heal_pots:
-    if Player.Hits >= Player.HitsMax:
-        break
     s = pot.Serial
     while Items.FindBySerial(s):
+        if Player.Hits >= Player.HitsMax:
+            break
         Items.UseItem(pot)
         Misc.Pause(100)
         

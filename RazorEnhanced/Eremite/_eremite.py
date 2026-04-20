@@ -1,3 +1,5 @@
+
+# Hard Coded Values for Myself. :) 
 Misc.SetSharedValue("PlayerName", "Eremite")
 
 # Various Bags for Sorting,etc.
@@ -14,6 +16,7 @@ Misc.SetSharedValue('sosbook', 0x4213F97B)
 Misc.SetSharedValue("WarnWeight", Player.MaxWeight * 0.85)
 Misc.SetSharedValue("CriticalWeight", Player.MaxWeight * 0.95)
 
+# Run startup.py to include shared values.
 Misc.ScriptRun("_startup.py")
 
 
@@ -24,5 +27,3 @@ initialized = Misc.ReadSharedValue("initialized")
 if not initialized:
     Misc.ScriptRun("_eremite.py")
 Misc.SetSharedValue("initialized", True)
-
-    
