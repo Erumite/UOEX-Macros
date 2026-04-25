@@ -65,7 +65,6 @@ trash_items = [
     0x1609, # raw leg of lamb
     0x1B7A, # wooden shield
     0x0EB1, # Standing Harp
-    0x0FC7, # Fire horn
     0x1F1C, # Power Crystal
     0x0E73, # Bola Balls
     0x154B, # Tribal Mask
@@ -93,7 +92,17 @@ trash_items = [
     0x1DA1, # Left Arm
     0x1DA2, # Right Arm
     0x1DA3, # Left Leg
+    0x1DA4, # Right Leg
+    0x1D9F, # Torso
     0x1CED, # Heart (A Bloody Offering)
+    0x0CEB, # Vines
+    0x0CEC, # Vines
+    0x0CED, # Vines
+    0x0CEE, # Vines
+    0x0CEF, # Vines
+    0x0CF0, # Vines
+    0x0CF1, # Vines
+    0x0CF2, # Vines
 ]
 necro_scrolls = [
     0x2269, # poison strike
@@ -112,10 +121,41 @@ necro_scrolls = [
     0x2260, # animate dead
     0x226B, # summon familiar
     0x2263, # curse weapon
+    0x2268, # pain spike
 ]
+swamp_trash = [
+    0x101F, # clump of swamp weed
+    0x0DBC, # lilly pad
+    0x0D3B, # branch
+    0x0C2D, # rotten driftwood
+    0x0DEA, # piece of wood
+    0x1AE0, # mouldy skull
+    0x1BE1, # mouldy logs
+    0x1BDE, # mouldy logs
+    0x0A19, # mouldy plate
+    0x13A8, # mouldy pillow
+    0x0A58, # mouldy sleeping bag
+    0x1EB7, # empty tool kit
+    0x136C, # spongey rock
+    0x0F03, # mossy bottle
+    0x0F60, # mossy longsword
+    0x0B2B, # dead beetle
+    0x1E85, # dead bird
+    0x0DEB, # dead lizard
+    0x2655, # old socks
+    0x0EE9, # old bandages
+    0x0EB3, # lute (Abandoned Hopes and Dreams)
+    0x10EE, # garbage
+    0x0C40, # fungus
+]
+
+hue_specific = { # item_id: hur,
+    0x0DF9: 0x04e6,  # Purple Fungus
+    0x0F83: 0x0000, # Executioner's Cap (Reagent) - exclude Scorp Stinger
+    0x0FC7: 0x0466, # Fire horn - Exclude Horn of Defeat
+}
             
-def trashJunk(pack = None):
-    pack = pack or Player.Backpack
+def trashJunk(pack = Player.Backpack):
     # Druid Scrolls
     items = Items.FindAllByID([0x0E39],0x058b, pack.Serial,0)
     for item in items:
@@ -132,6 +172,17 @@ def trashJunk(pack = None):
         Items.Move(item,recycleBag,-1)
         Misc.Pause(600)
     Misc.Pause(600)
+    # Swamp Trash
+    items = Items.FindAllByID(swamp_trash, -1, pack.Serial, 0)
+    for item in items:
+        if 'pulled from a swamp' in str(item.Properties).lower():
+            Items.Move(item,recycleBag,-1)
+            Misc.Pause(600)
+    # Hue-Specific Trash
+    for item in Items.FindAllByID(list(hue_specific.keys()), -1, pack.Serial, 0):
+        if item.Color == hue_specific[item.ItemID]:
+            Items.Move(item,recycleBag,-1)
+            Misc.Pause(600)
             
 QuickSort()
 trashJunk()

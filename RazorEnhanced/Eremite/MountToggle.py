@@ -1,5 +1,9 @@
-ethy = Items.FindBySerial(0x41A37C36)
+ethy = Items.FindBySerial(0x4D52855F)
 if Player.Mount:
-    Mobiles.UseMobile(Player.Serial)
+    while Player.Mount:
+        Mobiles.UseMobile(Player.Serial)
+        Misc.Pause(50)
 else:
-    Items.UseItem(ethy)
+    while not Player.Mount:
+        Items.UseItem(ethy)
+        Misc.Pause(50)

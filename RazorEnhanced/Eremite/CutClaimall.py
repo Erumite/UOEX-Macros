@@ -2,30 +2,14 @@ from System.Collections.Generic import List
 from collections import OrderedDict
 from System import Int32
 from Eremite.utils.items import GetSkinningKnife
+from Eremite.utils.misc import WeightCheck
 from Eremite.utils.sorting import QuickSort, trashJunk
-
-# This takes precedence over RecycleWeight and LootBox:
-if Misc.ScriptStatus("RecycleWeight.py"):
-    Misc.ScriptStop("RecycleWeight.py")
-if Misc.ScriptStatus("LootBox.py"):
-    Misc.ScriptStop("LootBox.py")
 
 # Unchoppable Bodies
 unchoppable = Misc.ReadSharedValue('corpse_ignore_list')
 mobileforge = Misc.ReadSharedValue("mobileforge")
 
 CORPSE_ID = 0x2006
-WARN_WEIGHT = Misc.ReadSharedValue("WarnWeight")
-CRIT_WEIGHT = Misc.ReadSharedValue("CriticalWeight")
-
-def WeightCheck():
-    if Player.Weight > CRIT_WEIGHT:
-        QuickSort(scrolls = False)
-        UseOres()
-    if Player.Weight > CRIT_WEIGHT:
-        Misc.SendMessage("Weight Too High!", 33)
-        return False
-    return True
 
 def UseOres():
     ores = Items.FindAllByID(0x19B9,-1,Player.Backpack.Serial,0) # Ores
@@ -117,6 +101,8 @@ def main():
     if not WeightCheck():
         return
     Misc.ClearDragQueue()
+    from Eremite.utils.misc import GetItemLock
+    GetItemLock(__file__, wait=True, takeover=True)
 
     # Claim all non-choppable corpses within 10 tiles, ramping up.
     Misc.SendMessage("Scanning Far Corpses..." , 69)
@@ -137,6 +123,7 @@ def main():
     # Misc cleanup from earth eles/etc.
     UseOres()
     UseGroundOres()
+    Player.HeadMessage(69,"Yoink!")
     Misc.SendMessage("Yoink!", 69)
     
 # Main()

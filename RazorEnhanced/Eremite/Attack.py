@@ -11,8 +11,10 @@ if enemy != None:
     Discordance(enemy)
     Target.Cancel()
     AttackBuffs()
+    Target.Cancel()
 else:
     Misc.SendMessage("No enemies in range.", 69)
+    Target.Cancel()
     if not Misc.ScriptStatus("RecycleWeight.py"):
         Misc.ScriptRun("RecycleWeight.py")
 

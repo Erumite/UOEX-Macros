@@ -7,11 +7,8 @@ from collections import OrderedDict
 def GetSmithHammer():
     # See if we have this already saved:
     hammer = Misc.ReadSharedValue("smithing_hammer")
-    try:
-        if hammer and Items.FindBySerial(hammer.Serial):
-            return hammer
-    except:
-        pass
+    if hammer and not isinstance(hammer, int) and Items.FindBySerial(hammer.Serial):
+        return hammer
     # Find a smithing hammer in pack:
     hammer = Items.FindByID(Misc.ReadSharedValue('smith_hammer_id'), 0, Player.Backpack.Serial, 1)
     if hammer and Items.FindBySerial(hammer.Serial):
@@ -27,7 +24,7 @@ def GetSmithHammer():
     
 def GetCarpHammer():
     hammer = Misc.ReadSharedValue("carpenter_hammer")
-    if hammer and Items.FindBySerial(hammer.Serial):
+    if hammer and not isinstance(hammer, int) and Items.FindBySerial(hammer.Serial):
         return hammer
     hammer = Items.FindByID(Misc.ReadSharedValue('carpenter_hammer_id'), 0, Player.Backpack.Serial, 1)
     if hammer and Items.FindBySerial(hammer.Serial):
@@ -38,11 +35,12 @@ def GetCarpHammer():
         Misc.SetSharedValue("carpenter_hammer", hammer)
         return hammer
     return None
-
+    
+GetCarpHammer()
 
 def GetSkinningKnife():
     knife = Misc.ReadSharedValue('skinning_knife')
-    if knife and Items.FindBySerial(knife.Serial):
+    if knife and not isinstance(knife, int) and Items.FindBySerial(knife.Serial):
         return knife
     knife = Items.FindByID(Misc.ReadSharedValue('butchers_war_cleaver_id'), -1, Player.Backpack.Serial, 1)
     if knife:
@@ -72,7 +70,7 @@ def GetRecycleBag():
         
 def GetFletchingTools():
     fletch = Misc.ReadSharedValue("fletching_tools")
-    if fletch and Items.FindBySerial(fletch.Serial):
+    if fletch and not isinstance(fletch, int) and Items.FindBySerial(fletch.Serial):
         return fletch
     fletch = Items.FindByID(Misc.ReadSharedValue('fletching_tools_id'), 0, Player.Backpack.Serial, 1)
     if not fletch:
@@ -84,7 +82,7 @@ def GetFletchingTools():
         
 def GetScissors():
     scissors = Misc.ReadSharedValue("scissors")
-    if scissors and Items.FindBySerial(scissors.Serial):
+    if scissors and not isinstance(scissors, int) and Items.FindBySerial(scissors.Serial):
         return scissors
     scissors = Items.FindByID(Misc.ReadSharedValue('scissors_id'), 0, Player.Backpack.Serial, 1)
     if not scissors:
@@ -322,6 +320,3 @@ def RepairCheck():
 
     if headmsgcolor < 999:
         Player.HeadMessage(headmsgcolor,"REPAIR!")
-        
-    
-RepairCheck()

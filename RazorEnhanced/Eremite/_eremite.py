@@ -19,11 +19,4 @@ Misc.SetSharedValue("CriticalWeight", Player.MaxWeight * 0.95)
 # Run startup.py to include shared values.
 Misc.ScriptRun("_startup.py")
 
-
-# Re-run this after 10 seconds on first start to give client time to
-#   get player weight and search all bags.
-Misc.Pause(10000)
-initialized = Misc.ReadSharedValue("initialized")
-if not initialized:
-    Misc.ScriptRun("_eremite.py")
-Misc.SetSharedValue("initialized", True)
+Player.HeadMessage(69, 'Loaded.')

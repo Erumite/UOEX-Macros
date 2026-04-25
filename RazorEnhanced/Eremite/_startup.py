@@ -108,17 +108,23 @@ Misc.SetSharedValue('choppables', choppables)
 scissorables = [
     0x1efd, # Fancy Shirt
     0x1718, # Wizard Hat
+    0x1714, # Wide-Brim Hat
     0x1F7B, # Doublet
     0x1517, # Shirt
+    0x1541, # Body Sash
+    0x1FFD, # Surcoat
     0x1713, # Floppy Hat
     0x1515, # Cloak
     0x1F9F, # Fur Cape
     0x1544, # Skull Cap
     0x1F01, # Plain Dress
     0x152E, # Short Pants
+    0x1539, # Long Pants
     0x1F00, # Fancy Dress
     0x1715, # Cap
+    0x1719, # Bonnet
     0x1540, # Bandana
+    0x2306, # Flower Garland
     0x153B, # Half Apron
     0x1516, # Skirt
     0x144f, # Bone Chest
@@ -217,6 +223,7 @@ corpse_ignore = [
     71,  # Terathan Drone
     72,  # Terathan Matriarch
     75,  # Cyclops
+    76,  # Titan
     85,  # Ophidian Mage/Shaman
     86,  # Ophidian Avenger
     87,  # Ophidian Matriarch
@@ -241,6 +248,11 @@ corpse_ignore = [
     251, # Revenant Lion
     252, # Lady of the Snow
     253, # Yumutsu Priest
+    258, # Lady Melisande
+    263, # Minotaur
+    266, # Dryad
+    271, # Satyr
+    301, # Treefellow
     302, # Skittering Hopper
     303, # Devourer of Souls
     305, # Gore Fiend
@@ -329,6 +341,7 @@ gems = [
   0x3197, # Fire Ruby
   0x3199, # Brilliant Amber
   0x3194, # Perfect Emerald
+  0x3196, # White Pearl
 ]
 Misc.SetSharedValue("gems", gems)
 
@@ -353,6 +366,8 @@ Misc.SetSharedValue("tools", tools)
 
 
 weapons = [
+    0xe86,  # Pickaxe
+    0xf43,  # Hatchet
     0x26c0, # Lance
     0xf4b,  # DoubleAxe
     0xe87,  # Pitchfork
@@ -403,6 +418,7 @@ trash_weapons = [
     0x0EC3, # Cleaver
     0x0EC4, # Skinning Knife
     0x13B4, # Club
+    0x13F6, # Butcher's Knife
 ]
 Misc.SetSharedValue("trash_weapons", trash_weapons)
 
@@ -411,7 +427,9 @@ jewelry = [
     0x1f06, # Silver Bracelet
     0x1086, # Gold Bracelet
     0x108a, # Gold Ring
-    0x1f09 # Silver Ring
+    0x1f09, # Silver Ring
+    0x1087, # Gold Earrings
+    0x1089, # Gold Bead Necklace
 ]
 Misc.SetSharedValue("jewelry", jewelry)
 

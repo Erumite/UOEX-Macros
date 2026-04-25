@@ -1,6 +1,11 @@
 from System.Collections.Generic import List
 from System import Byte
 
+danger_noodles = {
+    0x0114: "a Rend",
+    0x0114: "a Dark Blood",
+}
+
 class Notoriety:
     byte = Byte( 0 )
     color = ''
@@ -76,8 +81,12 @@ def FindNearestEnemy():
     elif len(enemies) == 1:
         return enemies[0]
     else:
-        return Mobiles.Select(enemies, "Nearest")
-    
+        enemy = Mobiles.Select(enemies, "Nearest")
+        if enemy.MobileID in danger_noodles.keys() and enemy.Name.lower().strip() == danger_noodles[enemy.MobileID].lower().strip():
+            return False
+        return enemy
+        
+        
 def WarEnemiesInRange():
     enemies = GetEnemies(Mobiles, 0, 12, GetEnemyNotorieties())
     enemies = [enemy for enemy in enemies if enemy.WarMode]

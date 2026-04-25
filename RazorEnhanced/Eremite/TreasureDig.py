@@ -1,6 +1,7 @@
 import re
 import ast
 from Eremite.utils.items import GetRecycleBag
+from Eremite.utils.mobiles import GetFacet
 
 recyclebag = GetRecycleBag()
 mapbook = Misc.ReadSharedValue("mapbook")
@@ -8,6 +9,7 @@ mapbook = Misc.ReadSharedValue("mapbook")
 MAP_ID = 0x14EC
 NOTE_ID = 0x3418
 
+AUTO_RECALL = True
 
 # --- Mapping Location to Rune Library Number ---
 location_pattern = re.compile(r"^Location: (.*)")
@@ -86,6 +88,54 @@ def map_loc_to_rune(location_str, tolerance=2):
     Misc.SendMessage(f"Unknown Location: {location_str}", 33)
     return False
 
+# --- Recalling to Map Location (Trammel) ---
+
+def getFacetOfMap(map):
+    pattern = re.compile("^for somewhere in (\w+)")
+    for prop in map.Properties:
+        match = pattern.match(str(prop))
+        if match:
+            return match.group(1)
+    return False
+    
+#         Dict of map locations by range by books by serial
+# eg: range(1, 17) returns 1-16 - printed as range(1, 16+1) for readability.
+# Sacred Journey buttons all end with 7, incrementing by 10 for each page.
+# A hack of finding the array index and appending 7, then converting to int
+#   gets us the button on the right page very neatly. :D
+book_map = {
+    range(1, 16+1)   : Items.FindBySerial(0x4CC24380),
+    range(17, 32+1)  : Items.FindBySerial(0x4CC244D1),
+    range(33, 48+1)  : Items.FindBySerial(0x4CC23D48),
+    range(49, 64+1)  : Items.FindBySerial(0x4CC247DF),
+    range(65, 80+1)  : Items.FindBySerial(0x4CC23B97),
+    range(81, 96+1)  : Items.FindBySerial(0x4CC240F7),
+    range(97, 112+1) : Items.FindBySerial(0x4CC235B3),
+    range(113, 128+1): Items.FindBySerial(0x4CC2376B),
+    range(129, 144+1): Items.FindBySerial(0x4CC2421C),
+    range(145, 160+1): Items.FindBySerial(0x4CC239CE),
+    range(161, 176+1): Items.FindBySerial(0x4CC24955),
+    range(177, 192+1): Items.FindBySerial(0x4CC23EFC),
+    range(193, 200+1): Items.FindBySerial(0x4CC24683),
+}
+def getBookAndRune(runeID):
+    for range, book in book_map.items():
+        if runeID in range:
+            runeval = int(f"{range.index(runeID)}7")
+            return book, runeval
+            
+def RuneBookToMapLocation(runeID):
+    if GetFacet(Player) == "Felucca":
+        Misc.SendMessage("Not recalling from Felucca!", 33)
+        return False
+    book, runeval = getBookAndRune(runeID)
+    Items.UseItem(book)
+    Gumps.WaitForGump(1431013363, 1500)
+    Gumps.SendAction( 1431013363, runeval)
+    Misc.Pause(2000)
+    return True
+    
+    
 # --- Map Sorting/Handling ---
 def IsDecoded(item):
     for prop in item.Properties:
@@ -128,20 +178,27 @@ def HandleBagMaps():
     return maps[0]
 
 # --- Main Logic for Digging ---
-    
-mymap = HandleBagMaps()
-if mymap:
-    Journal.Clear("dig and dig but ")
-    Journal.Clear("wrong facet")
-    Items.Message(mymap, 69, "V")
-    Misc.WaitForContext(mymap, 1500)
-    Misc.ContextReply(mymap, 1)
-    Target.WaitForTarget(1500, False)
-    Target.TargetType(0x0F39,0,1)
-    Misc.Pause(600)
-    if Journal.Search("dig and dig but ") or Journal.Search("wrong facet"):
-        rune_id = getRuneNumber(mymap)
-        if rune_id: 
-            Player.HeadMessage(33, f"Rune ID: {rune_id}")
-        else:
-            Player.HeadMessage(33, "Wrong Spot")
+def main():
+    from Eremite.utils.misc import GetItemLock
+    GetItemLock(__file__, wait=True, takeover=True)    
+    mymap = HandleBagMaps()
+    if mymap:
+        Journal.Clear("dig and dig but ")
+        Journal.Clear("wrong facet")
+        Items.Message(mymap, 69, "V")
+        Misc.WaitForContext(mymap, 1500)
+        Misc.ContextReply(mymap, 1)
+        Target.WaitForTarget(1500, False)
+        Target.TargetType(0x0F39,0,1)
+        Misc.Pause(600)
+        if Journal.Search("dig and dig but ") or Journal.Search("wrong facet"):
+            rune_id = getRuneNumber(mymap)
+            if rune_id: 
+                Player.HeadMessage(33, f"Rune ID: {rune_id}")
+                if AUTO_RECALL and getFacetOfMap(mymap) == "Trammel":
+                    RuneBookToMapLocation(int(rune_id))
+            else:
+                Player.HeadMessage(33, "Wrong Spot")
+                
+if __name__ == "__main__":
+    main()

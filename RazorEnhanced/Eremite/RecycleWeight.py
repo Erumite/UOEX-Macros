@@ -1,6 +1,3 @@
-while Misc.ScriptStatus("CutClaimall.py"):
-    Misc.Pause(1000)
-
 from Scripts.Eremite.utils.items import GetSmithHammer,GetCarpHammer, GetFletchingTools, GetScissors, GetRecycleBag, GetKeys, GetToolHouse, GetGemPouch
 from Eremite.utils.items import AppraiseWeapon, AppraiseJewelry
 from Eremite.utils.sorting import QuickSort, trashJunk
@@ -99,11 +96,15 @@ def smelt_items(pack):
     items = [item for item in items if not isBlessed(item)]
     if len(items) > 0:
         Misc.SendMessage(f"Smelting {len(items)} items...", 69)
-        useWhenBusy(smith_hammer)
-        Gumps.WaitForGump(949095101, 1500)
+        while not Gumps.HasGump(949095101):
+            Items.UseItem(smith_hammer)
+            Gumps.WaitForGump(949095101, 600)
         Gumps.SendAction(0x38920abd,14)
         Target.WaitForTarget(1500)
         for item in items:
+            if not Target.HasTarget():
+                Gumps.SendAction(0x38920abd,14)
+                Target.WaitForTarget(1500)
             Target.TargetExecute(item)
             Gumps.WaitForGump(949095101, 1500)
             Gumps.SendAction(0x38920abd,14)
@@ -117,12 +118,15 @@ def fletch_items(pack):
     items = [item for item in items if not isBlessed(item)]
     if len(items) > 0:
         Misc.SendMessage(f"Fletching {len(items)} items...", 69)
-        if not Gumps.HasGump(949095101):
-            useWhenBusy(fletching_tools)
+        while not Gumps.HasGump(949095101):
+            Items.UseItem(fletching_tools)
             Gumps.WaitForGump(949095101,1500)
         Gumps.SendAction(0x38920abd,14)
         Target.WaitForTarget(1500)
         for item in items:
+            if not Target.HasTarget():
+                Gumps.SendAction(0x38920abd,14)
+                Target.WaitForTarget(1500)
             Target.TargetExecute(item)
             Gumps.WaitForGump(949095101,1500)
             Gumps.SendAction(0x38920abd,14)
@@ -136,15 +140,19 @@ def chop_items(pack):
     items = [item for item in items if not isBlessed(item)]
     if len(items) > 0:
         Misc.SendMessage(f"Chopping {len(items)} items...")
-        if not Gumps.HasGump(949095101):
-            useWhenBusy(carpenter_hammer)
+        while not Gumps.HasGump(949095101):
+            Items.UseItem(carpenter_hammer)
             Gumps.WaitForGump(949095101, 1000)
+        Gumps.SendAction(0x38920abd, 14)
+        Target.WaitForTarget(1500)
         for item in items:
-            Gumps.SendAction(0x38920abd, 14)
-            Target.WaitForTarget(1500)
+            if not Target.HasTarget():
+                Gumps.SendAction(0x38920abd,14)
+                Target.WaitForTarget(1500)
             Target.TargetExecute(item)
             Gumps.WaitForGump(949095101, 1000)
-        Target.WaitForTarget(600)
+            Gumps.SendAction(0x38920abd, 14)
+            Target.WaitForTarget(1500)
         Target.Cancel()
     while Gumps.HasGump(0x38920abd):
         Gumps.CloseGump(0x38920abd)
@@ -173,14 +181,20 @@ def scissor_items(pack):
 # Resource Keys
 def do_spell_keys(pack):
     items = Items.FindAllByID(spell_key_items, -1, pack.Serial, 0)
+    # Spring waters share ID with other non-keyable items.
+    spring_waters = Items.FindAllByID(0x0E24, 0x047f, pack.Serial, 0)
+    items += spring_waters
     if len(items) > 0:
         Misc.SendMessage(f"Adding {len(items)} reagents to spell keys...")
-        if not Gumps.HasGump(247257139):
-            useWhenBusy(spell_keys)
+        while not Gumps.HasGump(247257139):
+            Items.UseItem(spell_keys)
             Gumps.WaitForGump(247257139, 1000)
         Gumps.SendAction(0xebcd833,60030)
         Target.WaitForTarget(1000)
         for item in items:
+            if not Target.HasTarget():
+                Gumps.SendAction(0xebcd833,60030)
+                Target.WaitForTarget(1000)
             Target.TargetExecute(item)
             Target.WaitForTarget(1000)
         Target.Cancel()
@@ -191,12 +205,15 @@ def do_wood_keys(pack):
     items = Items.FindAllByID(wood_key_items, -1, pack.Serial, 0)
     if len(items) > 0:
         Misc.SendMessage(f"Adding {len(items)} wood to wood keys...")
-        if not Gumps.HasGump(173511501):
-            useWhenBusy(wood_keys)
+        while not Gumps.HasGump(173511501):
+            Items.UseItem(wood_keys)
             Gumps.WaitForGump(173511501,1000)
         Gumps.SendAction(0xa57934d,60023)
         Target.WaitForTarget(1000)
         for item in items:
+            if not Target.HasTarget():
+                Gumps.SendAction(0xa57934d,60030)
+                Target.WaitForTarget(1000)
             Target.TargetExecute(item)
             Target.WaitForTarget(1000)
         Target.Cancel()
@@ -207,33 +224,39 @@ def do_tailor_keys(pack):
     items = Items.FindAllByID(tailor_key_items, -1, pack.Serial, 1)
     if len(items) > 0:
         Misc.SendMessage(f"Adding {len(items)} cloth to tailor keys...")
-        if not Gumps.HasGump(1106836505):
-            useWhenBusy(tailor_keys)
+        while not Gumps.HasGump(1106836505):
+            Items.UseItem(tailor_keys)
             Gumps.WaitForGump(1106836505, 1000)
         Gumps.SendAction(0x41f8fc19, 60029)
         Target.WaitForTarget(1000)
         for item in items:
+            if not Target.HasTarget():
+                Gumps.SendAction(1106836505,60030)
+                Target.WaitForTarget(1000)
             Target.TargetExecute(item)
             Target.WaitForTarget(1000)
         Target.Cancel()
-    while Gumps.HasGump(0x41f8fc19):
-        Gumps.CloseGump(0x41f8fc19)
+    while Gumps.HasGump(1106836505):
+        Gumps.CloseGump(1106836505)
         
 def do_metal_keys(pack):
     items = Items.FindAllByID(metal_key_items, -1, pack.Serial, 0)
     if len(items) > 0:
         Misc.SendMessage(f"Adding {len(items)} ingots to metal keys...")
-        if not Gumps.HasGump(4213074123):
-            useWhenBusy(metal_keys)
-            Gumps.WaitForGump(4213074123,1000)
-        Gumps.SendAction(0xfb1e68cb,60015)
+        while not Gumps.HasGump(4213074123):
+            Items.UseItem(metal_keys)
+            Gumps.WaitForGump(4213074123, 1000)
+        Gumps.SendAction(4213074123,60015)
         Target.WaitForTarget(1000)
         for item in items:
+            if not Target.HasTarget():
+                Gumps.SendAction(4213074123,60030)
+                Target.WaitForTarget(1000)
             Target.TargetExecute(item)
             Target.WaitForTarget(1000)
         Target.Cancel()
-    while Gumps.HasGump(0xfb1e68cb):
-        Gumps.CloseGump(0xfb1e68cb)
+    while Gumps.HasGump(4213074123):
+        Gumps.CloseGump(4213074123)
         
 def do_tool_house(pack):
     items = Items.FindAllByID(tool_house_items, -1, pack.Serial, 0)
@@ -251,12 +274,15 @@ def do_tool_house(pack):
     
     if len(items) > 0:
         Misc.SendMessage(f"Adding {len(items)} tools to tool house...")
-        if not Gumps.HasGump(1513449091):
-            useWhenBusy(tool_house)
+        while not Gumps.HasGump(1513449091):
+            Items.UseItem(tool_house)
             Gumps.WaitForGump(1513449091,1000)
         Gumps.SendAction(0x5a356683, 60030)
         Target.WaitForTarget(1000)
         for item in items:
+            if not Target.HasTarget():
+                Gumps.SendAction(0x5a356683,60030)
+                Target.WaitForTarget(1000)
             Target.TargetExecute(item)
             Target.WaitForTarget(1000)
         Target.Cancel()
@@ -267,12 +293,15 @@ def do_gem_pouch(pack):
     items = Items.FindAllByID(gems, -1, pack.Serial, 1)
     if len(items) > 0:
         Misc.SendMessage(f"Adding {len(items)} gems to gem pouch...")
-        if not Gumps.HasGump(309845371):
-            useWhenBusy(gem_pouch)
+        while not Gumps.HasGump(309845371):
+            Items.UseItem(gem_pouch)
             Gumps.WaitForGump(309845371,1000)
         Gumps.SendAction(0x1277dd7b, 30)
         Target.WaitForTarget(1000)
         for item in items:
+            if not Target.HasTarget():
+                Gumps.SendAction(0x1277dd7b,60030)
+                Target.WaitForTarget(1000)
             Target.TargetExecute(item)
             Target.WaitForTarget(1000)
         Target.Cancel()
@@ -307,36 +336,42 @@ def do_edge_cases(pack):
         Items.Move(item,recycleBag,-1)
         Misc.Pause(600)
 
-Misc.ClearDragQueue()
-# These can finish quickly to lower weight.
-do_spell_keys(backpack)
-do_gem_pouch(backpack)
-QuickSort(leather=False, scrolls=False)
+def main():
+    from Eremite.utils.misc import GetItemLock
+    GetItemLock(__file__, wait=True, takeover=False)
+    Misc.ClearDragQueue()
+    # These can finish quickly to lower weight.
+    do_spell_keys(backpack)
+    do_gem_pouch(backpack)
+    QuickSort(leather=False, scrolls=False)
 
-# Appraise for items worth keeping.
-appraise_jewelry(backpack)
-appraise_weapons(backpack)
+    # Appraise for items worth keeping.
+    appraise_jewelry(backpack)
+    appraise_weapons(backpack)
 
-# Handle Chopping
-for bag in [backpack, toolBag]:
-    smelt_items(bag)
-    fletch_items(bag)
-    chop_items(bag)
-    scissor_items(bag)
+    # Handle Chopping
+    for bag in [backpack, toolBag]:
+        smelt_items(bag)
+        fletch_items(bag)
+        chop_items(bag)
+        scissor_items(bag)
 
-# Keys: 
-do_metal_keys(backpack)
-do_wood_keys(backpack)
-do_tailor_keys(backpack)
-do_tool_house(backpack)
-do_gem_pouch(backpack)
+    # Keys: 
+    do_metal_keys(backpack)
+    do_wood_keys(backpack)
+    do_tailor_keys(backpack)
+    do_tool_house(backpack)
+    do_gem_pouch(backpack)
 
-# Cleanup
-do_spell_keys(backpack) # again for bones
-trashJunk(backpack)
-do_edge_cases(backpack)
-QuickSort()
-InstrumentStocker()
+    # Cleanup
+    do_spell_keys(backpack) # again for bones
+    trashJunk(backpack)
+    do_edge_cases(backpack)
+    QuickSort()
+    InstrumentStocker()
 
-# All Done
-Misc.SendMessage("Job's Done...", 69)
+    # All Done
+    Misc.SendMessage("Job's Done...", 69)
+    
+if __name__ == "__main__":
+    main()

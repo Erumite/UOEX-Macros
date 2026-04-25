@@ -18,7 +18,7 @@ def EmptyGemPouch():
     Journal.Clear(outmsg)
     Items.UseItem(gempouch)
     Gumps.WaitForGump(gemgump, 1000)
-    for i in range(1, 9):
+    for i in range(1, 9+1):
         while not GemSlotEmpty() and Player.Weight < warnweight:
             Gumps.SendAction(gemgump, i)
             Gumps.WaitForGump(gemgump, 1000)

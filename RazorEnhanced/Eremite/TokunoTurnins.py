@@ -30,9 +30,8 @@ collector_npc = 0x0000E50B # The quest guy to give stuff to.
 my_box_serial = 0x400CC718
 my_box = Items.FindBySerial(my_box_serial)
 
-if not my_box.Contains:
-    Items.WaitForContents(my_box,600)
-    Misc.Pause(600)
+Items.WaitForContents(my_box,600)
+Misc.Pause(600)
 
 for relic in Items.FindAllByID(lesser_tokuno_relic_ids, -1, my_box_serial, 1):
     if lesser_tokuno_relics[relic.ItemID] in relic.Name.strip():

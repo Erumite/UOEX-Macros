@@ -1,15 +1,18 @@
 import re
 from Eremite.utils.items import GetRecycleBag, GetGemPouch, GetLockpicks
 from Eremite.utils.sorting import QuickSort
+from Eremite.utils.misc import WeightCheck
+from Eremite.utils.misc import GetItemLock
 
+from Eremite.RecycleWeight import do_gem_pouch, do_spell_keys
 holdingbag = Misc.ReadSharedValue("BagOfHolding")
+scrollbag = Misc.ReadSharedValue("ScrollBoH")
+spell_scrolls = Misc.ReadSharedValue("spell_scrolls")
 gempouch = GetGemPouch()
 recyclebag = GetRecycleBag()
 lockpicks = GetLockpicks(best=True)
 
 LOCK_PATTERN = re.compile(r'.*(?<=>)([^<]+)(?= lock).*')
-WARN_WEIGHT = Misc.ReadSharedValue("WarnWeight")
-CRIT_WEIGHT = Misc.ReadSharedValue("CriticalWeight")
 
 lockables = [
     0xe7c, # Grey EW
@@ -47,10 +50,18 @@ def FindLockables():
     filter.RangeMax = 15
     chests = Items.ApplyFilter(filter)
     chests = [chest for chest in chests if chest.ItemID in lockables]
+    chests = [chest for chest in chests if not isLockedDown(chest)]
     chests = [chest for chest in chests if HasLoot(chest)]
     near = [chest for chest in chests if Player.DistanceTo(chest) <= 1]
     return near[0] if near else []
 
+def isLockedDown(chest):
+    for prop in chest.Properties:
+        prop = str(prop)
+        if "locked down" in prop.lower():
+            return True
+    return False
+    
 def HasLoot(chest):
     for prop in chest.Properties:
         prop = str(prop)
@@ -63,23 +74,17 @@ def HasLoot(chest):
                return True
         if 'items' in prop.lower():
             count = prop.split(' items')[0]
+            if '/' in count: # 0/90 items, 0 stones
+                count = count.split('/')[0]
             count = int(count)
             if int(count) > 0:
                 Items.Message(chest,69,f"-=({count} Items)=-")
                 return True
     return False
 
-def WeightCheck():
-    if Player.Weight > CRIT_WEIGHT:
-        QuickSort(scrolls = False)
-    if Player.Weight > CRIT_WEIGHT:
-        Misc.SendMessage("Weight Too High!", 33)
-        return False
-    return True
-
 def isLocked(chest):
     for prop in chest.Properties:
-        if "lock<" in (str(prop)):
+        if "lock" in (str(prop).lower()):
             return True
     return False
     
@@ -110,6 +115,16 @@ def DisposeBox(box):
         Misc.ContextReply(box, 0)
         Gumps.WaitForGump(0xc8fd1ea7, 10000)
         Gumps.SendAction(0xc8fd1ea7, 1)
+    elif box.RootContainer == Player.Backpack.Serial:
+        if box.Name.lower() == "bag of reagents":
+            Misc.Pause(600)
+            Items.Move(box, recyclebag, -1)
+        elif any(["paragon" in str(prop).lower() for prop in box.Properties]):
+            Misc.Pause(600)
+            Items.Move(box, recyclebag, -1)
+        elif any(["from a swamp" in str(prop).lower() for prop in box.Properties]):
+            Misc.Pause(600)
+            Items.Move(box, recyclebag, -1)
         
 def DragGemsToPouch(box, gempouch):
     gems = Misc.ReadSharedValue('gems')
@@ -130,6 +145,16 @@ def DragGoldToBoH(box, boh):
         gold = Items.FindAllByID(0x0EED,0, box.Serial,0)
     return True
     
+def lootScrolls(bag):
+    scrolls = Items.FindAllByID(spell_scrolls, 0, bag.Serial, 0)
+    while len(scrolls) > 0:
+        for scroll in scrolls:
+            Items.Move(scroll, scrollbag, -1)
+            Misc.Pause(600)
+        scrolls = Items.FindAllByID(spell_scrolls, 0, bag.Serial, 0)
+    return True
+    
+    
 def DragLootToBackpack(box):
     while len(box.Contains) > 0:
         for loot in box.Contains:
@@ -138,7 +163,6 @@ def DragLootToBackpack(box):
                 return
             Items.Move(loot,Player.Backpack.Serial,-1)
             Misc.Pause(600)
-        Items.WaitForContents(box, 600)
     return True
 
 def main():
@@ -149,6 +173,9 @@ def main():
         target = Items.FindBySerial(target)
     if not target or target == -1:
         return
+        
+    GetItemLock(__file__, wait=True, takeover=True)
+    
     if target.OnGround and Player.DistanceTo(target) > 1:
         Items.Message(target, 66, "Too far.")
         return
@@ -161,10 +188,16 @@ def main():
     Misc.ClearDragQueue()
     if holdingbag:
         DragGoldToBoH(target, holdingbag)
-    if gempouch: 
+    if target.RootContainer == Player.Backpack.Serial:
+        do_gem_pouch(target)
+        do_spell_keys(target)
+    elif gempouch: 
         DragGemsToPouch(target, gempouch)
+    if scrollbag:
+        lootScrolls(target)
     DragLootToBackpack(target)
     DisposeBox(target)
+    QuickSort(scrolls=False)
 
-main()
-QuickSort()
+if __name__ == "__main__":
+    main()
