@@ -113,7 +113,7 @@ def DisposeBox(box):
         # Remove Chest on treasure boxes.
         Misc.WaitForContext(box, 1500)
         Misc.ContextReply(box, 0)
-        Gumps.WaitForGump(0xc8fd1ea7, 10000)
+        Gumps.WaitForGump(0xc8fd1ea7, 600)
         Gumps.SendAction(0xc8fd1ea7, 1)
     elif box.RootContainer == Player.Backpack.Serial:
         if box.Name.lower() == "bag of reagents":
@@ -123,6 +123,9 @@ def DisposeBox(box):
             Misc.Pause(600)
             Items.Move(box, recyclebag, -1)
         elif any(["from a swamp" in str(prop).lower() for prop in box.Properties]):
+            Misc.Pause(600)
+            Items.Move(box, recyclebag, -1)
+        elif any(["from a shipwreck" in str(prop).lower() for prop in box.Properties]):
             Misc.Pause(600)
             Items.Move(box, recyclebag, -1)
         

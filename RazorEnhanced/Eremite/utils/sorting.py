@@ -26,8 +26,9 @@ def QuickSort(leather = True, gold = True, wool=True, meat=True, scrolls=True, l
     if leather:
         found = Items.FindAllByID(LEATHER, -1, Player.Backpack.Serial, 0)
         for f in found:
-            Items.Move(f,bagofholding,-1)
-            Misc.Pause(600)
+            if f.Amount > 20: # Avoid overburdening BoH with colored leather
+                Items.Move(f,bagofholding,-1)
+                Misc.Pause(600)
     if wool:
         found = Items.FindAllByID(WOOL, -1, Player.Backpack.Serial, 0)
         for f in found:
@@ -45,10 +46,7 @@ def QuickSort(leather = True, gold = True, wool=True, meat=True, scrolls=True, l
             Misc.Pause(600)
     if scrolls:
         for s in Items.FindAllByID(spell_scrolls, 0, Player.Backpack.Serial,0):
-            try:
-                Items.Move(s, scrollbag, -1)
-            except Exception as e:
-                Misc.SendMessage(f"Move failed: {e}", 33)
+            Items.Move(s, scrollbag, -1)
             Misc.Pause(600)
     if logs:
         for item in Items.FindAllByID(LOGS, 0, Player.Backpack.Serial,0):
@@ -128,8 +126,14 @@ swamp_trash = [
     0x0DBC, # lilly pad
     0x0D3B, # branch
     0x0C2D, # rotten driftwood
+    0x0C2E, # rotten driftwood
+    0x0C30, # rotten driftwood
+    0x0C2F, # rotten driftwood
     0x0DEA, # piece of wood
+    0x28D9, # roofing
+    0x1CE8, # torso
     0x1AE0, # mouldy skull
+    0x1B18, # mouldy rib cage
     0x1BE1, # mouldy logs
     0x1BDE, # mouldy logs
     0x0A19, # mouldy plate
@@ -143,10 +147,21 @@ swamp_trash = [
     0x1E85, # dead bird
     0x0DEB, # dead lizard
     0x2655, # old socks
+    0x170F, # old shoes
     0x0EE9, # old bandages
     0x0EB3, # lute (Abandoned Hopes and Dreams)
     0x10EE, # garbage
     0x0C40, # fungus
+    0x09C9, # Mysterious Green Meat
+]
+
+shipwreck_trash = [
+    0x0EA2, # Painting
+    0x1B0E, # Bone Pile
+    0x13A5, # Pillow (rectangular)
+    0x13AD, # Pillow (square)
+    0x0FC9, # Shells
+    0x0FCB, # Shell
 ]
 
 hue_specific = { # item_id: hur,
@@ -176,6 +191,12 @@ def trashJunk(pack = Player.Backpack):
     items = Items.FindAllByID(swamp_trash, -1, pack.Serial, 0)
     for item in items:
         if 'pulled from a swamp' in str(item.Properties).lower():
+            Items.Move(item,recycleBag,-1)
+            Misc.Pause(600)
+    # Shipwreck Trash
+    items = Items.FindAllByID(shipwreck_trash, -1, pack.Serial, 0)
+    for item in items:
+        if 'recovered from a shipwreck' in str(item.Properties).lower():
             Items.Move(item,recycleBag,-1)
             Misc.Pause(600)
     # Hue-Specific Trash

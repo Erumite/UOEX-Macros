@@ -14,6 +14,8 @@ WEAP_KEEP_THRESHOLD = 250
 # Containers
 lootBag = Misc.ReadSharedValue("LootBag")
 toolBag = Items.FindBySerial(Misc.ReadSharedValue("ToolBag"))
+scrollBag = Misc.ReadSharedValue("ScrollBoH")
+bagOfHolding = Misc.ReadSharedValue("BagOfHolding")
 recycleBag = GetRecycleBag()
 backpack = Player.Backpack
 
@@ -80,7 +82,7 @@ def appraise_weapons(pack):
         if AppraiseWeapon(item) >= WEAP_KEEP_THRESHOLD:
             Items.Move(item,lootBag,-1)
             Misc.Pause(600)
-        else:
+        elif not "gargoyle" in item.Name.lower():
             Items.Move(item,recycleBag,-1)
             Misc.Pause(600)    
             
@@ -198,6 +200,7 @@ def do_spell_keys(pack):
             Target.TargetExecute(item)
             Target.WaitForTarget(1000)
         Target.Cancel()
+        Misc.Pause(600)
     while Gumps.HasGump(0xebcd833):
         Gumps.CloseGump(0xebcd833)
 
@@ -217,6 +220,7 @@ def do_wood_keys(pack):
             Target.TargetExecute(item)
             Target.WaitForTarget(1000)
         Target.Cancel()
+        Misc.Pause(600)
     while Gumps.HasGump(0xa57934d):
         Gumps.CloseGump(0xa57934d)
 
@@ -236,6 +240,7 @@ def do_tailor_keys(pack):
             Target.TargetExecute(item)
             Target.WaitForTarget(1000)
         Target.Cancel()
+        Misc.Pause(600)
     while Gumps.HasGump(1106836505):
         Gumps.CloseGump(1106836505)
         
@@ -255,6 +260,7 @@ def do_metal_keys(pack):
             Target.TargetExecute(item)
             Target.WaitForTarget(1000)
         Target.Cancel()
+        Misc.Pause(600)
     while Gumps.HasGump(4213074123):
         Gumps.CloseGump(4213074123)
         
@@ -286,11 +292,13 @@ def do_tool_house(pack):
             Target.TargetExecute(item)
             Target.WaitForTarget(1000)
         Target.Cancel()
+        Misc.Pause(600)
     while Gumps.HasGump(0x5a356683):
         Gumps.CloseGump(0x5a356683)
         
+        
 def do_gem_pouch(pack):
-    items = Items.FindAllByID(gems, -1, pack.Serial, 1)
+    items = Items.FindAllByID(gems, -1, pack.Serial, 0)
     if len(items) > 0:
         Misc.SendMessage(f"Adding {len(items)} gems to gem pouch...")
         while not Gumps.HasGump(309845371):
@@ -335,6 +343,31 @@ def do_edge_cases(pack):
     for item in Items.FindAllByID(0x0F62,0x0345,pack.Serial,0):
         Items.Move(item,recycleBag,-1)
         Misc.Pause(600)
+    # Move normal ointments to LootBoH
+    for oint in Items.FindAllByID(0x0E24, 0, pack.Serial, 0):
+        Items.Move(oint, scrollBag, -1)
+        Misc.Pause(600)
+
+peerless_loot = {
+    0x318B: "diseased bark",
+    0x3183: "blight",
+    0x3184: "corruption",
+    0x3185: "scourge",
+    0x3186: "putrefaction",
+    0x3187: "taint",
+    0x3188: "muculent",
+}    
+def sortPeerlessLoot(pack):
+    peer_ids = list(peerless_loot.keys())
+    for item in Items.FindAllByID(peer_ids, -1, pack.Serial, 0):
+        Items.WaitForProps(item,600) # claimall fails to update the names.
+        if peerless_loot[item.ItemID] in item.Name.lower():
+            Items.Move(item, lootBag, -1)
+            Misc.Pause(600)
+    for note in Items.FindAllByID(0x0E39, 0x0a43, pack.Serial, 0):
+        if "elven note" in note.Name.lower():
+            Items.Move(note, bagOfHolding, -1)
+            Misc.Pause(600)
 
 def main():
     from Eremite.utils.misc import GetItemLock
@@ -361,13 +394,13 @@ def main():
     do_wood_keys(backpack)
     do_tailor_keys(backpack)
     do_tool_house(backpack)
-    do_gem_pouch(backpack)
 
     # Cleanup
     do_spell_keys(backpack) # again for bones
     trashJunk(backpack)
     do_edge_cases(backpack)
     QuickSort()
+    sortPeerlessLoot(backpack)
     InstrumentStocker()
 
     # All Done

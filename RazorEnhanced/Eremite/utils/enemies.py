@@ -95,7 +95,7 @@ def WarEnemiesInRange():
 
 def PickSpecialAbility(enemycount:int, singletarget=False):
     weapon = Player.GetItemOnLayer("RightHand") or Player.GetItemOnLayer("LeftHand")
-    if Player.Mana < 25:
+    if Player.Mana < 40:
         return  # Conserve MP for Buffs
     if not weapon: # Unarmed
         Player.WeaponPrimarySA() # Paralyzing Blow

@@ -111,6 +111,9 @@ scissorables = [
     0x1714, # Wide-Brim Hat
     0x1F7B, # Doublet
     0x1517, # Shirt
+    0x2310, # Formal Shirt
+    0x1537, # Kilt
+    0x153D, # Full Apron
     0x1541, # Body Sash
     0x1FFD, # Surcoat
     0x1713, # Floppy Hat
@@ -166,7 +169,11 @@ scissorables = [
     0x2797, # Ninja Tabi
     0x2791, # Leather Ninja Pants
     0x2792, # Leather Ninja Mitts
-    0x2793  # Leather Ninja Jacket
+    0x2793, # Leather Ninja Jacket
+    0x2B78, # Diseased Flesh (some kind of pants)
+    0x2B74, # Diseased Flesh (chest)
+    0x2B75, # Diseased Flesh (hands)
+    0x2B77, # Diseased Flesh (arms)
 ]
 Misc.SetSharedValue('scissorables', scissorables)
 
@@ -255,6 +262,7 @@ corpse_ignore = [
     301, # Treefellow
     302, # Skittering Hopper
     303, # Devourer of Souls
+    304, # Burnt One
     305, # Gore Fiend
     307, # Gibbering Corpse
     308, # Bone Daemon
@@ -268,6 +276,7 @@ corpse_ignore = [
     755, # Gargoyle Destroyer
     756, # Exodus Overseer
     757, # Exodus Minion
+    763, # Large automaton
     764, # Juka Warrior
     765, # Juka Mage
     766, # Juka Lord
@@ -281,6 +290,8 @@ corpse_ignore = [
     790, # Sand Vortex
     792, # Chaos Demon
     793, # Undead Steed
+    795, # Bellhop
+    796, # Strong Bellhop
     806, # Solen Infiltrator
     970  # Restless Soul (shrouded human)
 ]
@@ -473,6 +484,23 @@ weapon_point_map = {
     "Hit Physical Area": {"points": 4, "max": 50},
 }
 Misc.SetSharedValue("weapon_point_map", weapon_point_map)
+
+relevant_armor_props = {
+    "Defence Chance Increase", "Hit Chance Increase", "Swing Speed Increase", "Reflect Physical Damage",
+    "Spell Damage", "Faster Cast Recovery", "Lower Mana Cost", "Lower Reagent Cost", "Enhance Potions",
+    "Hit Point Regeneration", "Stamina Regeneration", "Mana Regeneration", "Strength Bonus",
+    "Dexterity Bonus", "Intelligence Bonus", "Hit Point Increase", "Stamina Increase", "Mana Increase",
+    "Physical Resist", "Fire Resist", "Cold Resist", "Poison Resist", "Energy Resist",
+}
+Misc.SetSharedValue("relevant_armor_props", relevant_armor_props)
+
+relevant_weapon_props = {
+    "Reflect Physical Damage", "Spell Damage", "Strength Bonus", "Hit Point Increase", "Hit Life Leech",
+    "Hit Stamina Leech", "Hit Mana Leech", "Hit Lower Attack", "Hit Lower Defense", "Hit Magic Arrow",
+    "Hit Harm", "Hit Fireball", "Hit Lightning", "Hit Energy Area", "Hit Fire Area", "Hit Poison Area",
+    "Hit Cold Area", "Hit Physical Area",
+}
+Misc.SetSharedValue("relevant_weapon_props", relevant_weapon_props)
 
 weapon_name_map = {
     "defense chance increase": "Defence Chance Increase",

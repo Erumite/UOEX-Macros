@@ -152,19 +152,9 @@ VIRTUES = {
     "sacrifice", "honor", "spirituality", "humility", "chaos"
 }
 
-# MASTERY_NAMES are referenced by golems in game , we use this to filter out their title messages 
-# currently disabled ( not-filtered ) , as a player may actually just say the mastery name as a response 
-MASTERY_NAMES = {
-    "aero", "fira", "earth", "shadow", "blood", "doom", "fortune", "artisan", "bulwark", "poison", "lyric", "death", "druidic", "holy"
-}
-
 # Specific System lines to filter out entirely (case-insensitive, substring or regex)
 FILTER_SYSTEM_SUBSTRINGS = [
-    "[safe looting] you refuse to loot this corpse",
     "careful! you",  # e.g., "System : Careful! You ..."
-    "enhanced summons",  # e.g., "System : [Enhanced Summons] ..."
-    "enhanced sumons",  #  misspelling 
-    "a pixie is guarding you",
 ]
 
 FILTER_SYSTEM_PATTERNS = [
@@ -213,9 +203,9 @@ FILTER_GENERIC_EXACTS = [
     "i now own your soul!!!", "your end is near young adventurer!!", "thou shalt not pass my post!!",
     "your weak spells have no effect on me, muahahaha!!", "hiding is not allowed in this area...",
     "we are now one with each other!!", "you unlock it.", "ar, anchor raised sir.", "aye aye sir.",
-    "ar, we've stopped sir.", "er, the ship is not moving sir.", "ar, can't turn sir.",
+    "ar, we've stopped sir.", "er, the ship is not moving sir.", "ar, can't turn sir.", "ar, the anchor is down sir!",
     "ar, anchor dropped sir.", "the item was placed in your bank box.", "you are not allowed to access this.",
-    "that is locked."
+    "that is locked.", "repurgo", "temptatio exsuscito", "you must wait a few seconds before using another healing potion."
 ]
 
 FILTER_GENERIC_PREFIXES = [
@@ -238,12 +228,14 @@ FILTER_SPEAKER_EXACTS = [
 
 # Town NPCs , adjust per shard
 FILTER_SPEAKER_OPTIONAL_NPC = [
-
+    "an albino squirrel"
 ]
 
-# talkative monsters like lizardmen are filtered from local chat by default
+#  All lowercase: filter talkative monsters from local chat.
 FILTER_SPEAKER_MONSTER_NPC = [
-    "an orcish mage", "an orcish lord", "an orc bomber", "a wisp", "Lady Melisande"
+    "an orcish mage", "an orcish lord", "an orc bomber", "a wisp", "lady melisande", "katchaki",
+    "a master of the arts", "linked gate", 
+    "dingleberry" # Parrot
 ]
 
 #//==================================================================================
@@ -293,8 +285,10 @@ class JournalFilterUI:
         #    r"^\s*System: \[[\d:]+\] (?P<speaker>[\w\d]+):\s*(?P<message>.+)\s*$",
         #    re.IGNORECASE,
         #)
+        
+        # UOEX Pattern:
         self.system_global_capturing_pattern = re.compile(
-            r"^\[[\d:]+\]\s*(?P<speaker>[\w\d]+):\s*(?P<message>.+)\s*$",
+            r"^\[[\d:]+\]\s*(?P<speaker>[\w\d\s]+):\s*(?P<message>.+)\s*$",
             re.IGNORECASE,
         )
 

@@ -123,11 +123,14 @@ def main():
     # Misc cleanup from earth eles/etc.
     UseOres()
     UseGroundOres()
-    Player.HeadMessage(69,"Yoink!")
     Misc.SendMessage("Yoink!", 69)
     
 # Main()
+gold = Player.Gold
 main()
-CUO.PlayMacro("AllNames")
+Misc.Pause(600)
+gained=Player.Gold - gold
+if gained > 20:
+    Player.HeadMessage(55, f"+{gained}")
 QuickSort()
 trashJunk()

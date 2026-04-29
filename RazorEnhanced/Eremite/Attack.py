@@ -8,17 +8,17 @@ enemycount = len(GetEnemies( Mobiles, maxRange=1))
 if enemy != None:
     Player.Attack(enemy)
     PickSpecialAbility(enemycount)
-    Discordance(enemy)
-    Target.Cancel()
+    if not Misc.ScriptStatus('RecycleWeight.py'):
+        Discordance(enemy) # Avoid target collision
+        Target.Cancel()
     AttackBuffs()
-    Target.Cancel()
 else:
     Misc.SendMessage("No enemies in range.", 69)
     Target.Cancel()
-    if not Misc.ScriptStatus("RecycleWeight.py"):
+    if not Misc.ScriptStatus("RecycleWeight.py") and not Misc.ScriptStatus("LootBox.py"):
         Misc.ScriptRun("RecycleWeight.py")
 
-RepairCheck()
+RepairCheck()        
 
 # Restart these in case the stop-all-scripts macro was hit:
 if not Misc.ScriptStatus("WeaponLevelGump.py"):

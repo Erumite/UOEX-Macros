@@ -27,24 +27,30 @@ stam_pots += Items.FindAllByID(0x0F0B,0,recyclebag,0)
 cure_pots = Items.FindAllByID(0x0F07,0,backpack,0)
 cure_pots += Items.FindAllByID(0x0F07,0,recyclebag,0)
 
-for pot in poison_pots:
-    s = pot.Serial
-    while Items.FindBySerial(s):
-        Items.UseItem(pot)
-        Misc.Pause(100)
-        
-if Player.Poisoned and len(cure_pots) > 0:
-    for pot in cure_pots:
+if len(poison_pots) > 0:
+    bandaging = BandageHeal.Status()
+    BandageHeal.Stop()
+    for pot in poison_pots:
         s = pot.Serial
         while Items.FindBySerial(s):
             Items.UseItem(pot)
             Misc.Pause(100)
-            if Journal.Search("would surely kill you"):
-                break
-if Player.Poisoned:
-    Player.ChatSay(0, '[cs Cure')
-    Target.WaitForTarget(1500)
-    Target.Self()
+            
+    if Player.Poisoned and len(cure_pots) > 0:
+        for pot in cure_pots:
+            s = pot.Serial
+            while Items.FindBySerial(s):
+                Items.UseItem(pot)
+                Misc.Pause(100)
+                if Journal.Search("would surely kill you"):
+                    break
+    if Player.Poisoned:
+        Player.ChatSay(0, '[cs purge')
+        Target.WaitForTarget(1500)
+        Target.Self()
+
+    if bandaging:
+        BandageHeal.Start()
     
 for pot in Items.FindAllByID(0x0F07,0,backpack,0):
     Items.Move(pot, recyclebag, -1)

@@ -28,7 +28,13 @@ class NoteFisher():
     def hasNote(): # -> bool
         NOTE_ID = 0x3418
         if not Items.FindAllByID(NOTE_ID, -1, Player.Backpack.Serial, 0): 
-            Player.HeadMessage(33, "No Stash Note")
+            return False
+        return True
+
+    @staticmethod
+    def hasSoS(): # -> bool
+        SOS_ID = 0x14ED
+        if not Items.FindAllByID(SOS_ID, -1, Player.Backpack.Serial, 0):
             return False
         return True
             
@@ -82,9 +88,10 @@ class NoteFisher():
         Dress.DressFStart()
         while Dress.DressStatus():
             Misc.Pause(100)
-        
+
     def FishNote(self): # -> bool (depleted)
-        if not self.hasNote() or not self.getFishPole():
+        if (not self.hasNote() and not self.hasSoS()) or not self.getFishPole():
+            Player.HeadMessage(33, "No Note|SOS|Pole")
             return False
 
         # Unmount to fish.
@@ -101,6 +108,7 @@ class NoteFisher():
             self.fishSpot(Player.Position.X, Player.Position.Y +2)
             done, finished, attacked = self.waitForCast()
             if finished:
+                Misc.Pause(600)
                 return True
             if attacked:
                 Misc.Pause(600)

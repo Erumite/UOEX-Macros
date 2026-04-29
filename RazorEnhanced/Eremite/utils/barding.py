@@ -15,7 +15,8 @@ instruments = {
 instrument_ids = list(instruments.keys())
 
 # These are immune to discord until very low HP, ignore them till below 8% HP.
-#  Mobile.Name seems to have a character limit
+#   to conserve instrument charges.  Match any of the below (lowercase, stripped)
+#   against the contents of the mob's full Mobile.Name value (lowercase, stripped)
 discord_ignore = [
     "the spectre of chiret", # The Spectre Of Chiret, The Master Necromancer
     "the spectre of julius", # The Spectre Of Julius, The Master Rogue
@@ -23,7 +24,10 @@ discord_ignore = [
     "the spectre of tinmo", # The Spectre Of Tinmo, The Master Cleric
     "the spectre of tyre", # The Spectre Of Tyre, The Master Paladin 
     "the spectre of alamein", #The Spectre Of Alamein, The Master Fighter
-    "The Spectre Queen", "Slaarion", "Lady Melisande", "Dread Horn"
+    "the spectre queen", "slaarion", "lady melisande", "dread horn", "netopir",
+    "skrat the imp lord", "katchaki", "the cyclopian warrior", "a saliva",
+    "skeletor", "master jonath", "lord malachai", "monstrous interred grizzle",
+    "ancient mage mikael"
 ]
 discord_ignore_lc = [s.lower().strip() for s in discord_ignore]
 
@@ -35,7 +39,7 @@ play_what_log = "What instrument shall you play"
 def ShouldDiscord(target):
     mobname = target.Name.lower().strip()
     if any([t in mobname for t in discord_ignore_lc]):
-        return target.Hits / Target.HitsMax * 100 <= 8.0
+        return target.Hits / target.HitsMax * 100 <= 9.0
     return True
 
 # Cast Discordance on A Target

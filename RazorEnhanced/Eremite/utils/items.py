@@ -198,17 +198,19 @@ def parse_resist_line(line):
             total += int(num_match.group()) if num_match else 0
     return total
 
-def AppraiseWeapon(weapon, verbose=False):
+def AppraiseWeaponFiltered(weapon, verbose=False, relevant_props = None):
     if not weapon:
         return
     
     point_map = Misc.ReadSharedValue("weapon_point_map")
+    relevant_props = relevant_props or list(point_map.keys())
     name_map = Misc.ReadSharedValue("weapon_name_map")
     
     pattern = re.compile(r'^(.+?)\s+(\d+)\s*%?$', re.IGNORECASE)
     skip_keywords = [
         "durability", "requirement", "weapon damage", "speed:", "handed",
-        "range", "skill", "quiver", "~", "blessed", "binds to", "insured"
+        "range", "skill", "quiver", "~", "blessed", "binds to", "insured",
+        "slayer", "balron damnation", "spell channeling", "faster casting"
     ]
     props = weapon.Properties
     found_props = {}
@@ -246,7 +248,7 @@ def AppraiseWeapon(weapon, verbose=False):
             Misc.SendMessage(f"Failed to match prop: {prop}", 33)
     
     for prop_name, value in found_props.items():
-        if prop_name is None:
+        if prop_name is None or prop_name not in relevant_props:
             continue
         else:
             ref = point_map[prop_name]
@@ -260,8 +262,15 @@ def AppraiseWeapon(weapon, verbose=False):
             print(f"{prop_name}: {value}x{points_per}={contribution}")
         
     return total
+    
+def AppraiseWeapon(weapon, verbose=False):
+    relevant_weapon_props = Misc.ReadSharedValue("relevant_weapon_props")
+    relevant_armor_props = Misc.ReadSharedValue("relevant_armor_props")
+    weapon_value = AppraiseWeaponFiltered(weapon, verbose=verbose, relevant_props = relevant_weapon_props)
+    armor_value = AppraiseWeaponFiltered(weapon, verbose=verbose, relevant_props = relevant_armor_props)
+    return max(weapon_value, armor_value)
+    
             
-
 jewelry_keep_rules = {
     "strength bonus": 8,
     "dexterity bonus": 8,
