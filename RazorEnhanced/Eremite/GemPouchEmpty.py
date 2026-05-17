@@ -24,8 +24,10 @@ def EmptyGemPouch():
             Gumps.WaitForGump(gemgump, 1000)
     Gumps.CloseGump(gemgump)
     Misc.Pause(600)
+    # Need to move them to the sell bag for sell agent to work.
     for gem in Items.FindAllByID(gems , -1, Player.Backpack.Serial, 0):
         Items.Move(gem, sellbag, -1)
+        Misc.Pause(600)
     Player.HeadMessage(69, "Go Sell!")
     
 if gempouch:

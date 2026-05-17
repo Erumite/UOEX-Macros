@@ -1,13 +1,14 @@
-from Eremite.utils.enemies import GetEnemies, FindNearestEnemy, PickSpecialAbility
+from Eremite.utils.enemies import GetEnemies, FindNearestEnemy, PickSpecialAbility, FireHorn
 from Eremite.utils.buffs import AttackBuffs
 from Eremite.utils.barding import Discordance
 from Eremite.utils.items import RepairCheck
 
 enemy = FindNearestEnemy()
-enemycount = len(GetEnemies( Mobiles, maxRange=1))
 if enemy != None:
     Player.Attack(enemy)
+    enemycount = len(GetEnemies( Mobiles, maxRange=1))
     PickSpecialAbility(enemycount)
+    #FireHorn(enemy)
     if not Misc.ScriptStatus('RecycleWeight.py'):
         Discordance(enemy) # Avoid target collision
         Target.Cancel()
@@ -18,7 +19,7 @@ else:
     if not Misc.ScriptStatus("RecycleWeight.py") and not Misc.ScriptStatus("LootBox.py"):
         Misc.ScriptRun("RecycleWeight.py")
 
-RepairCheck()        
+RepairCheck() 
 
 # Restart these in case the stop-all-scripts macro was hit:
 if not Misc.ScriptStatus("WeaponLevelGump.py"):

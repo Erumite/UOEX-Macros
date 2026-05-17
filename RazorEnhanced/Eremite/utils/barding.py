@@ -27,7 +27,7 @@ discord_ignore = [
     "the spectre queen", "slaarion", "lady melisande", "dread horn", "netopir",
     "skrat the imp lord", "katchaki", "the cyclopian warrior", "a saliva",
     "skeletor", "master jonath", "lord malachai", "monstrous interred grizzle",
-    "ancient mage mikael"
+    "ancient mage mikael", "a travesty"
 ]
 discord_ignore_lc = [s.lower().strip() for s in discord_ignore]
 

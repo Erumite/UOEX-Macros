@@ -128,6 +128,9 @@ def DisposeBox(box):
         elif any(["from a shipwreck" in str(prop).lower() for prop in box.Properties]):
             Misc.Pause(600)
             Items.Move(box, recyclebag, -1)
+        elif box.ItemID in [0x0E76, 0x0E75] and box.Color == 0: # Juka bags - Undyed
+            Misc.Pause(600)
+            Items.Move(box, recyclebag, -1)
         
 def DragGemsToPouch(box, gempouch):
     gems = Misc.ReadSharedValue('gems')

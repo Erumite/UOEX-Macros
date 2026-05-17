@@ -20,7 +20,7 @@ def AttackBuffs():
     do_buff("consecrateweapon", consecrate_delay, 1)
     do_buff("counterattack", 3, 1)
     if Player.Stam < 290:
-        do_buff("divinefury", 0, 2)
+        do_buff("divinefury", 0, 1)
 
 def PreBuffs():
     do_buff("bless", 120, 1)

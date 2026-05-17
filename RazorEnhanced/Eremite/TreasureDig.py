@@ -145,6 +145,8 @@ def IsDecoded(item):
 
 def HandleBagMaps():
     maps = Items.FindAllByID(MAP_ID, 0, Player.Backpack.Serial, 0)
+    for map in maps:
+        Items.WaitForProps(map, 500)
     maps = [map for map in maps if "treasure map" in map.Name.lower()]
 
     comp_maps = [map for map in maps if "completed" in str(map.Properties).lower()]
@@ -165,6 +167,7 @@ def HandleBagMaps():
         
     notes = Items.FindAllByID(NOTE_ID, -1, Player.Backpack.Serial, 0)
     for note in notes:
+        Items.WaitForProps(note, 500)
         while not IsDecoded(note):
             Items.UseItem(note)
             Misc.Pause(600)
@@ -185,6 +188,7 @@ def main():
     if mymap:
         Journal.Clear("dig and dig but ")
         Journal.Clear("wrong facet")
+        Journal.Clear("you are standing on top of it.")
         Items.Message(mymap, 69, "V")
         Misc.WaitForContext(mymap, 1500)
         Misc.ContextReply(mymap, 1)
@@ -199,6 +203,9 @@ def main():
                     RuneBookToMapLocation(int(rune_id))
             else:
                 Player.HeadMessage(33, "Wrong Spot")
+        elif Journal.Search("you are standing on top of it."):
+            Player.HeadMessage(33, "Move, fatty.")
+            
                 
 if __name__ == "__main__":
     main()

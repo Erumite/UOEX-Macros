@@ -105,7 +105,7 @@ def main():
     GetItemLock(__file__, wait=True, takeover=True)
 
     # Claim all non-choppable corpses within 10 tiles, ramping up.
-    Misc.SendMessage("Scanning Far Corpses..." , 69)
+    #Misc.SendMessage("Scanning Far Corpses..." , 69)
     corpses = ScanCorpses(10)
     to_claim = [c for c in corpses if c.Amount in unchoppable]
     if len(to_claim) > 0:
@@ -113,17 +113,18 @@ def main():
         ClaimAllCorpses(to_claim)
     
     # Scan for choppable bodies within 2 tiles and clean them up
-    Misc.SendMessage("Scanning Near Corpses..." , 69)
+    #Misc.SendMessage("Scanning Near Corpses..." , 69)
     corpses = ScanCorpses(2)
     to_chop = [c for c in corpses if c.Amount not in unchoppable]
     if len(to_chop) > 0:
         Misc.SendMessage("Chopping Near Corpses..." , 69)
         CutCorpses(to_chop)
+    Target.Cancel()
     
     # Misc cleanup from earth eles/etc.
     UseOres()
     UseGroundOres()
-    Misc.SendMessage("Yoink!", 69)
+    #Misc.SendMessage("Yoink!", 69)
     
 # Main()
 gold = Player.Gold

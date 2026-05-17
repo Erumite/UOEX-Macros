@@ -1,7 +1,7 @@
 from Eremite.utils.enemies import GetEnemies
 
 def PullAllMobs():
-    enemies = GetEnemies( Mobiles, maxRange = 15)
+    enemies = GetEnemies( Mobiles, maxRange = 15, losCheck=True)
     if len(enemies) == 0:
         return
     for enemy in enemies:

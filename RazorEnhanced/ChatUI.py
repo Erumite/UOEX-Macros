@@ -64,10 +64,10 @@ SHOW_GLOBAL_CHAT_PVP = True      # System: <PVP> Speaker : message
 SHOW_GLOBAL_CHAT_TRADE = True    # System: <Trade> Speaker : message
 
 # Anti-spam  , filters hotkey spam , numeric only messages 
-SHOW_NUMERIC_ONLY_MESSAGES = False   # messages that are only digits (e.g., accidental number spam)
-SHOW_LONG_ALNUM_TOKENS = False       # messages that contain very long alphanumeric tokens (likely hotkey mash)
+SHOW_NUMERIC_ONLY_MESSAGES = True   # messages that are only digits (e.g., accidental number spam)
+SHOW_LONG_ALNUM_TOKENS = True       # messages that contain very long alphanumeric tokens (likely hotkey mash)
 LONG_ALNUM_TOKEN_THRESHOLD = 20      # tokens longer than this (A-Za-z0-9 only, no spaces) are considered spam when SHOW_LONG_ALNUM_TOKENS is False
-SHOW_PUNCT_NUM_ONLY_MESSAGES = False # messages that contain only punctuation/special characters and numbers (no letters)
+SHOW_PUNCT_NUM_ONLY_MESSAGES = True # messages that contain only punctuation/special characters and numbers (no letters)
 
 SHOW_TIMESTAMP = False  # Show [HH:MM:SS] prefix; default off 
 DEDUPLICATE_BY_TEXT = True # De-duplicate for simple anti spam
@@ -205,7 +205,8 @@ FILTER_GENERIC_EXACTS = [
     "we are now one with each other!!", "you unlock it.", "ar, anchor raised sir.", "aye aye sir.",
     "ar, we've stopped sir.", "er, the ship is not moving sir.", "ar, can't turn sir.", "ar, the anchor is down sir!",
     "ar, anchor dropped sir.", "the item was placed in your bank box.", "you are not allowed to access this.",
-    "that is locked.", "repurgo", "temptatio exsuscito", "you must wait a few seconds before using another healing potion."
+    "that is locked.", "repurgo", "temptatio exsuscito", "you must wait a few seconds before using another healing potion.",
+    f"hey {Player.Name.lower()}, you can buy that item from me."
 ]
 
 FILTER_GENERIC_PREFIXES = [
@@ -288,7 +289,7 @@ class JournalFilterUI:
         
         # UOEX Pattern:
         self.system_global_capturing_pattern = re.compile(
-            r"^\[[\d:]+\]\s*(?P<speaker>[\w\d\s]+):\s*(?P<message>.+)\s*$",
+            r"^\[[\d:]+\]\s*(?P<speaker>\+?[\w\d\s]+):\s*(?P<message>.+)\s*$",
             re.IGNORECASE,
         )
 

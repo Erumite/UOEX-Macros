@@ -1,5 +1,6 @@
 from System.Collections.Generic import List
 from System import Byte
+from datetime import datetime
 
 danger_noodles = {
     0x0114: "a Rend",
@@ -50,7 +51,7 @@ def GetEnemyNotorieties( minRange = 0, maxRange = 12 ):
     ] )
 
 
-def GetEnemies( Mobiles, minRange = 0, maxRange = 12, notorieties = GetEnemyNotorieties(), IgnorePartyMembers = True ):
+def GetEnemies( Mobiles, minRange = 0, maxRange = 12, notorieties = GetEnemyNotorieties(), IgnorePartyMembers = True, losCheck=True ):
     '''
     Returns a list of the nearby enemies with the specified notorieties
     '''
@@ -62,6 +63,7 @@ def GetEnemies( Mobiles, minRange = 0, maxRange = 12, notorieties = GetEnemyNoto
     enemyFilter.Enabled = True
     enemyFilter.RangeMin = minRange
     enemyFilter.RangeMax = maxRange
+    enemyFilter.CheckLineOfSight = True
     enemyFilter.Notorieties = notorieties
     enemyFilter.CheckIgnoreObject = True
     enemyFilter.Friend = False
@@ -72,6 +74,10 @@ def GetEnemies( Mobiles, minRange = 0, maxRange = 12, notorieties = GetEnemyNoto
         for partyMember in partyMembers:
             enemies.Remove( partyMember )
 
+    pets = [ enemy for enemy in enemies if enemy in Player.Pets ]
+    for pet in pets:
+        enemies.Remove(pet)
+            
     return enemies
 
 def FindNearestEnemy():
@@ -92,23 +98,36 @@ def WarEnemiesInRange():
     enemies = [enemy for enemy in enemies if enemy.WarMode]
     return len(enemies)
 
+def FireHorn(enemy):
+    if Player.DistanceTo(enemy) > 3:
+        return
 
+    firehorn_delay = 6
+    last_fh_use = Misc.ReadSharedValue("firehorn") or 0
+    diff = datetime.now().timestamp() - last_fh_use
+    if diff < firehorn_delay:
+        return
+    firehorns = Items.FindAllByID(0x0FC7, 0x0466, Player.Backpack.Serial, 1)
+    if firehorns:
+        Items.UseItem(firehorns[0])
+        Target.WaitForTarget(1500)
+        Target.TargetExecute(enemy)
+    
+    
 def PickSpecialAbility(enemycount:int, singletarget=False):
     weapon = Player.GetItemOnLayer("RightHand") or Player.GetItemOnLayer("LeftHand")
-    if Player.Mana < 40:
+    if Player.Mana < 40 or not weapon:
         return  # Conserve MP for Buffs
-    if not weapon: # Unarmed
-        Player.WeaponPrimarySA() # Paralyzing Blow
-    elif weapon.ItemID == 0x27A2: # No-Dachi
+    if weapon.ItemID == 0x27A2: # No-Dachi
         if not singletarget and enemycount > 1:
             Spells.CastBushido("Momentum Strike")
         else:
             Player.WeaponPrimarySA() # Crushing Blow
     elif weapon.ItemID == 0x143E: # Halberd
-        if not singletarget and enemycount > 2:
+        if not singletarget and enemycount > 1:
             Player.WeaponPrimarySA() # WhirlWind
-        elif not singletarget and enemycount == 2:
-            Spells.CastBushido("Momentum Strike")
+        #elif not singletarget and enemycount == 2:
+        #    Spells.CastBushido("Momentum Strike")
         else:
             Spells.CastNinjitsu("Focus Attack")
     elif weapon.ItemID == 0x27A5: # Yumi
@@ -121,3 +140,9 @@ def PickSpecialAbility(enemycount:int, singletarget=False):
             Spells.CastBushido("Momentum Strike")
         else:
             Player.WeaponSecondarySA() # Double Strike
+    else: # Fallback if not configured.
+        if not singletarget and enemycount > 1:
+            Spells.CastBushido("Momentum Strike")
+        else:
+            Spells.CastNinjitsu("Focus Attack")
+        

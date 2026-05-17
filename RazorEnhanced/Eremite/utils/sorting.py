@@ -124,6 +124,7 @@ necro_scrolls = [
 swamp_trash = [
     0x101F, # clump of swamp weed
     0x0DBC, # lilly pad
+    0x0DBD, # lilly pad
     0x0D3B, # branch
     0x0C2D, # rotten driftwood
     0x0C2E, # rotten driftwood

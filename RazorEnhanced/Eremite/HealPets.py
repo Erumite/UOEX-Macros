@@ -2,15 +2,16 @@ from datetime import datetime
 from collections import OrderedDict
 
 my_pets = [
-    0x001C4E5F, # self - for testing
     0x011C7009, # Eggplant (mule)
+    0x012D36A8, # Albino Squirrel - 370 # Peanut
 ]
-
+DO_SACRED_BOON = False
 # Percent of HP to cast:
 SACRED_BOON_THRESHOLD = 90.0
 TOUCH_OF_LIFE_THRESHOLD = 90.0
 BANDAGE_THRESHOLD = 80.0
 SB_DURATION = 30.0 # Sacred Boon Duration
+
 
 # Keep track of sacred boon timers (template)
 #sacred_boon_timer = {
@@ -38,11 +39,25 @@ def pet_hpp(pet): # -> float : pet HP Percent as float (clamped in increments of
     
 def heal_pets():
     Player.HeadMessage(69, "Healing Pets")
-    pets = [Mobiles.FindBySerial(pet) for pet in my_pets]
+    #pets = [Mobiles.FindBySerial(pet) for pet in my_pets]
+    pets = Player.Pets
     pets = [pet for pet in pets if pet] # filter unfound.
     pet_prio = {pet: pet_hpp(pet) for pet in pets}
     pet_prio = OrderedDict(sorted(pet_prio.items(), key=lambda item: item[1], reverse=False))
     for pet in pets:
+        if pet_hpp(pet) == 0:
+            if Player.DistanceTo(pet) > 2:
+                Misc.WaitForContext(pet, 1500)
+                Misc.ContextReply(pet, 1) # follow
+                Target.WaitForTarget(1500)
+                Target.TargetExecute(Player.Serial)
+                continue
+            else:
+                Player.ChatSay('[band')
+                Target.WaitForTarget(1500)
+                Target.TargetExecute(pet)
+                Gumps.WaitForGump(0x4da72c0, 3000)
+                Gumps.SendAction(0x4da72c0, 1)
         while pet_hpp(pet) <= BANDAGE_THRESHOLD and Player.DistanceTo(pet) < 3:
             Player.ChatSay(77, '[band')
             Target.WaitForTarget(1000)
@@ -51,7 +66,7 @@ def heal_pets():
             Misc.Pause(2000)
         if pet_hpp(pet) <= TOUCH_OF_LIFE_THRESHOLD:
             TouchOfLife(pet)
-        if pet_hpp(pet) <= SACRED_BOON_THRESHOLD:
+        if DO_SACRED_BOON and pet_hpp(pet) <= SACRED_BOON_THRESHOLD:
             SacredBoon(pet)
     Player.HeadMessage(69, "Pet Heal Done")
         

@@ -13,7 +13,6 @@ class NoteFisher():
     WEAPON_DRESS = "singletarget"
     
     def __init__(self): # -> None
-        self.equipPole()
         self.fishpole = self.getFishPole()
         self.undressbag = Items.FindBySerial(Misc.ReadSharedValue("BagOfHolding")) or Player.Backpack
         self.left_hand  = Player.GetItemOnLayer("LeftHand")
@@ -37,21 +36,25 @@ class NoteFisher():
         if not Items.FindAllByID(SOS_ID, -1, Player.Backpack.Serial, 0):
             return False
         return True
-            
+        
     def getFishPole(self): # -> Item (fishpole) | None
-        fishpole = Player.GetItemOnLayer("FirstValid")
-        fishpole = fishpole if fishpole and fishpole.ItemID == 0x0DC0 else None
+        fishpole = self.equipPole()
         if not fishpole:
             Player.HeadMessage(33, "No Fishing Pole")
             return False
         return fishpole
         
-    def equipPole(self): # -> None
-        Dress.ChangeList(self.FISHING_DRESS)
-        Dress.DressFStart()
-        while Dress.DressStatus():
-            Misc.Pause(100)
-        Misc.Pause(600)
+    def equipPole(self, retry=3): # -> Item (pole)
+        for _ in range(0, retry):
+            Dress.ChangeList(self.FISHING_DRESS)
+            Dress.DressFStart()
+            while Dress.DressStatus():
+                Misc.Pause(100)
+            Misc.Pause(600) # Item use delay
+            fishpole = Player.GetItemOnLayer("FirstValid")
+            fishpole = fishpole if fishpole and fishpole.ItemID == 0x0DC0 else None
+            if fishpole:
+                return fishpole
 
     def fishSpot(self, X, Y): # -> None
         #water = Statics.GetStaticsTileInfo(X, Y, Player.Map)
@@ -91,7 +94,7 @@ class NoteFisher():
 
     def FishNote(self): # -> bool (depleted)
         if (not self.hasNote() and not self.hasSoS()) or not self.getFishPole():
-            Player.HeadMessage(33, "No Note|SOS|Pole")
+            Player.HeadMessage(33, "No Note|SOS")
             return False
 
         # Unmount to fish.
@@ -121,6 +124,7 @@ class NoteFisher():
             
 # ============================================================================
 def main():
+    Misc.ClearDragQueue()
     GetItemLock(__file__, wait=True, takeover=True)
     nf = NoteFisher()
     nf.FishNote()

@@ -170,6 +170,9 @@ scissorables = [
     0x2791, # Leather Ninja Pants
     0x2792, # Leather Ninja Mitts
     0x2793, # Leather Ninja Jacket
+    0x27A1, # Jin-baori
+    0x2798, # Kasa
+    0x2782, # Male Kimono
     0x2B78, # Diseased Flesh (some kind of pants)
     0x2B74, # Diseased Flesh (chest)
     0x2B75, # Diseased Flesh (hands)
@@ -246,6 +249,7 @@ corpse_ignore = [
     182, # Orc Bomber
     196, # Kaze Kemono
     199, # Shadow
+    203, # Pig (only meat)
     219, # Forest Ostard
     238, # Rat
     240, # Kappa
@@ -259,6 +263,7 @@ corpse_ignore = [
     263, # Minotaur
     266, # Dryad
     271, # Satyr
+    290, # Boar (meat only)
     301, # Treefellow
     302, # Skittering Hopper
     303, # Devourer of Souls
@@ -280,6 +285,8 @@ corpse_ignore = [
     764, # Juka Warrior
     765, # Juka Mage
     766, # Juka Lord
+    767, # Betrayer
+    768, # Juggernaut
     775, # Plague Beast
     776, # Horde Minion
     777, # Doppelganger

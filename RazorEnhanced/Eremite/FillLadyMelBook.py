@@ -12,6 +12,11 @@ def getQuestItems():
     has_all_five = all([len(x) > 0 for x in [toadstools, foulfungi, stifftwigs, petritwigs, fossiltwigs]])
     return toadstools, foulfungi, stifftwigs, petritwigs, fossiltwigs, has_all_five
 
+def MelTicketCount():
+    ticks = Items.FindAllByID(0x14EF, 0, Player.Backpack.Serial, 1)
+    ticks = [tick for tick in ticks if "melisande" in tick.Name.lower()]
+    Misc.SendMessage(f"Mel Tickets: {len(ticks)}", 88)
+    
 def ClearStaleGumps():
     while Gumps.HasGump(0xfd84f341):
         Gumps.SendAction(0xfd84f341, 3)
@@ -87,7 +92,9 @@ def FillLadyMelBook():
     
 def main():
     FillLadyMelBook()
+    MelTicketCount()
     ClearStaleGumps()
+    
         
 if __name__ == "__main__":
     main()

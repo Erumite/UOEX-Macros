@@ -36,8 +36,6 @@ def GetCarpHammer():
         return hammer
     return None
     
-GetCarpHammer()
-
 def GetSkinningKnife():
     knife = Misc.ReadSharedValue('skinning_knife')
     if knife and not isinstance(knife, int) and Items.FindBySerial(knife.Serial):
@@ -92,6 +90,18 @@ def GetScissors():
         return scissors
     return None
 
+def getSewingKit():
+    sewingkit = Misc.ReadSharedValue("sewingkit")
+    if sewingkit and not isinstance(sewingkit, int) and Items.FindBySerial(sewingkit.Serial):
+        return sewingkit
+    sewingkit = Items.FindByID(0x0F9D, 0, Player.Backpack.Serial, 1)
+    if not sewingkit:
+        sewingkit = Target.PromptTarget("Select sewing kit.", 34)
+    if sewingkit and sewingkit != -1:
+        Misc.SetSharedValue('sewingkit', sewingkit)
+        return sewingkit
+    return None
+
 key_colors = {
     "metal": 0x0014,
     "spell": 0x0021,
@@ -125,6 +135,18 @@ def GetToolHouse():
         return thouse
     return None
 
+def GetRunicToolHouse():
+    thouse = Misc.ReadSharedValue("runic_tool_house")
+    if thouse and Items.FindBySerial(thouse.Serial):
+        return thouse
+    thouse = Items.FindByID(Misc.ReadSharedValue('toolhouse_id'), 0x0058, Player.Backpack.Serial,1)        
+    if not thouse:
+        thouse = Target.PromptTarget("Select Tool House.", 34)
+    if thouse and thouse != -1 and thouse.Color == 0x0058 and thouse.ItemID == Misc.ReadSharedValue('toolhouse_id'):
+        Misc.SetSharedValue("runic_tool_house", thouse)
+        return thouse
+    return None
+    
 def GetGemPouch():
     pouch = Misc.ReadSharedValue('gem_pouch')
     if pouch and Items.FindBySerial(pouch.Serial):
@@ -275,7 +297,9 @@ jewelry_keep_rules = {
     "strength bonus": 8,
     "dexterity bonus": 8,
     "intelligence bonus": 8,
-    "lower reagent cost": 17
+    "lower reagent cost": 17,
+    "animal taming": 12,
+    "spell damage increase": 17,
 }
     
 def AppraiseJewelry(item):
