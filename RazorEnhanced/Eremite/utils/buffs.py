@@ -11,8 +11,8 @@ def do_buff(name, timeout, casttime):
         Misc.Pause(casttime * 1000)
 
 consecrate_karma = {
-    "Glorious": 9,
-    "Illustrious": 8
+    "Glorious": 8,
+    "Illustrious": 7
 }
         
 def AttackBuffs():      

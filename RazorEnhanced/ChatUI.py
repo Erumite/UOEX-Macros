@@ -69,7 +69,7 @@ SHOW_LONG_ALNUM_TOKENS = True       # messages that contain very long alphanumer
 LONG_ALNUM_TOKEN_THRESHOLD = 20      # tokens longer than this (A-Za-z0-9 only, no spaces) are considered spam when SHOW_LONG_ALNUM_TOKENS is False
 SHOW_PUNCT_NUM_ONLY_MESSAGES = True # messages that contain only punctuation/special characters and numbers (no letters)
 
-SHOW_TIMESTAMP = False  # Show [HH:MM:SS] prefix; default off 
+SHOW_TIMESTAMP = True  # Show [HH:MM:SS] prefix; default off 
 DEDUPLICATE_BY_TEXT = True # De-duplicate for simple anti spam
 SHOW_ROW_DUPLICATES = False       # duplicate rows; False keeps spam suppressed 
 SHOW_STATUS_EFFECT_LINES = False  # asterisk-wrapped status/emote-like lines
@@ -229,7 +229,8 @@ FILTER_SPEAKER_EXACTS = [
 
 # Town NPCs , adjust per shard
 FILTER_SPEAKER_OPTIONAL_NPC = [
-    "an albino squirrel"
+    "an albino squirrel",
+    "an orcling"
 ]
 
 #  All lowercase: filter talkative monsters from local chat.

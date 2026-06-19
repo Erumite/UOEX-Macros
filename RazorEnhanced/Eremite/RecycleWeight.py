@@ -1,5 +1,5 @@
 from Scripts.Eremite.utils.items import GetSmithHammer,GetCarpHammer, GetFletchingTools, GetScissors, GetRecycleBag, GetKeys, GetToolHouse, GetGemPouch, GetRunicToolHouse
-from Eremite.utils.items import AppraiseWeapon, AppraiseJewelry
+from Eremite.utils.items import AppraiseWeapon, AppraiseJewelry, AppraiseArmor
 from Eremite.utils.sorting import QuickSort, trashJunk
 from Eremite.utils.barding import InstrumentStocker
 
@@ -9,7 +9,15 @@ fletching_tools = GetFletchingTools()
 scissors = GetScissors()
 gem_pouch = GetGemPouch()
 
-WEAP_KEEP_THRESHOLD = 250
+WEAP_KEEP_THRESHOLD = 350
+
+# Stop crafting macro that breaks this. 
+if Misc.ScriptStatus('CraftPicksToSell.py'):
+    Misc.ScriptStop('CraftPicksToSell.py')
+
+# Crappy hack of a fix for the startup delay problem.
+if not Misc.ReadSharedValue('gem_pouch'):
+    Misc.ScriptRun("_eremite.py")
 
 # Containers
 lootBag = Misc.ReadSharedValue("LootBag")
@@ -39,6 +47,7 @@ jewelry = Misc.ReadSharedValue('jewelry')
 
 # Various Item ID Lists
 weapons = Misc.ReadSharedValue("weapons")
+armors = Misc.ReadSharedValue("armors")
 trash_weapons = Misc.ReadSharedValue("trash_weapons")
 smeltables = Misc.ReadSharedValue("smeltables")
 fletchables = Misc.ReadSharedValue("fletchables")
@@ -95,6 +104,16 @@ def appraise_jewelry(pack):
         dest = lootBag if AppraiseJewelry(item) else recycleBag
         Items.Move(item,dest,-1)
         Misc.Pause(600)
+        
+def appraise_armor(pack):
+    items = Items.FindAllByID(armors, -1, pack.Serial, 0)
+    if len(items) > 0: 
+        Misc.SendMessage("* Analyzing Armors...", 88)
+        Misc.Pause(600)
+    for item in items:
+        if AppraiseArmor(item):
+            Items.Move(item, lootBag,-1)
+            Misc.Pause(600)
         
 def trashUnsmeltables(pack):
     to_trash = []
@@ -439,13 +458,17 @@ peerless_loot = {
     0x318D: "eye of the travesty",
 }    
 def sortPeerlessLoot(pack):
+    peerless_storage = Items.FindBySerial(0x47A61E5D) # Storage for peerless items @ house.
     peer_ids = list(peerless_loot.keys())
     for item in Items.FindAllByID(peer_ids, -1, pack.Serial, 0):
         Items.WaitForProps(item,600) # claimall fails to update the names.
         if peerless_loot[item.ItemID] in item.Name.lower():
             Items.Move(item, lootBag, -1)
             Misc.Pause(600)
-    for note in Items.FindAllByID(0x0E39, 0x0a43, pack.Serial, 0):
+    if peerless_storage and Player.DistanceTo(peerless_storage) < 2:
+        for item in Items.FindAllByID(peer_ids, -1, lootBag, 0):
+            Items.Move(item, peerless_storage, -1)
+    for note in Items.FindAllByID(0x0E39, 0x0a43, pack.Serial, 0): # Elven Notes
         Items.WaitForProps(note, 600)
         if "elven note" in note.Name.lower():
             Items.Move(note, bagOfHolding, -1)
@@ -477,6 +500,7 @@ def main():
     # Appraise for items worth keeping.
     appraise_jewelry(backpack)
     appraise_weapons(backpack)
+    appraise_armor(backpack)
 
     # Handle Chopping
     for bag in [backpack, toolBag]:
@@ -490,6 +514,7 @@ def main():
     do_wood_keys(backpack)
     do_tailor_keys(backpack)
     do_tool_house(backpack)
+    do_tool_house(recycleBag)
     do_runic_tool_house(backpack)
 
     # Cleanup

@@ -46,6 +46,7 @@ def FindLockables():
     filter.Enabled = True
     filter.IsContainer = True
     filter.OnGround = True
+    filter.IsCorpse = False
     filter.RangeMin = 0
     filter.RangeMax = 15
     chests = Items.ApplyFilter(filter)
@@ -180,7 +181,7 @@ def main():
     if not target or target == -1:
         return
         
-    GetItemLock(__file__, wait=True, takeover=True)
+    GetItemLock(__file__, wait=False, takeover=True)
     
     if target.OnGround and Player.DistanceTo(target) > 1:
         Items.Message(target, 66, "Too far.")

@@ -7,10 +7,11 @@ from collections import OrderedDict
 def GetSmithHammer():
     # See if we have this already saved:
     hammer = Misc.ReadSharedValue("smithing_hammer")
-    if hammer and not isinstance(hammer, int) and Items.FindBySerial(hammer.Serial):
+    hid = Misc.ReadSharedValue('smith_hammer_id')
+    if hammer and not isinstance(hammer, int) and Items.FindBySerial(hammer.Serial) and hammer.ItemID == hid:
         return hammer
     # Find a smithing hammer in pack:
-    hammer = Items.FindByID(Misc.ReadSharedValue('smith_hammer_id'), 0, Player.Backpack.Serial, 1)
+    hammer = Items.FindByID(hid, 0, Player.Backpack.Serial, 1)
     if hammer and Items.FindBySerial(hammer.Serial):
         Misc.SetSharedValue("smithing_hammer", hammer)
         return hammer
@@ -24,9 +25,10 @@ def GetSmithHammer():
     
 def GetCarpHammer():
     hammer = Misc.ReadSharedValue("carpenter_hammer")
-    if hammer and not isinstance(hammer, int) and Items.FindBySerial(hammer.Serial):
+    hid = Misc.ReadSharedValue('carpenter_hammer_id')
+    if hammer and not isinstance(hammer, int) and Items.FindBySerial(hammer.Serial) and hammer.ItemID == hid:
         return hammer
-    hammer = Items.FindByID(Misc.ReadSharedValue('carpenter_hammer_id'), 0, Player.Backpack.Serial, 1)
+    hammer = Items.FindByID(hid, 0, Player.Backpack.Serial, 1)
     if hammer and Items.FindBySerial(hammer.Serial):
         Misc.SetSharedValue("carpenter_hammer", hammer)
         return hammer
@@ -38,9 +40,10 @@ def GetCarpHammer():
     
 def GetSkinningKnife():
     knife = Misc.ReadSharedValue('skinning_knife')
-    if knife and not isinstance(knife, int) and Items.FindBySerial(knife.Serial):
+    kid = Misc.ReadSharedValue('butchers_war_cleaver_id')
+    if knife and not isinstance(knife, int) and Items.FindBySerial(knife.Serial) and knife.ItemID == kid:
         return knife
-    knife = Items.FindByID(Misc.ReadSharedValue('butchers_war_cleaver_id'), -1, Player.Backpack.Serial, 1)
+    knife = Items.FindByID(kid, -1, Player.Backpack.Serial, 1)
     if knife:
         return knife
     Misc.SendMessage("No Butcher's War Cleaver Found! You should buy one to auto-cut leather to pack!", 33)
@@ -68,9 +71,10 @@ def GetRecycleBag():
         
 def GetFletchingTools():
     fletch = Misc.ReadSharedValue("fletching_tools")
-    if fletch and not isinstance(fletch, int) and Items.FindBySerial(fletch.Serial):
+    fid = Misc.ReadSharedValue('fletching_tools_id')
+    if fletch and not isinstance(fletch, int) and Items.FindBySerial(fletch.Serial) and fletch.ItemID == fid:
         return fletch
-    fletch = Items.FindByID(Misc.ReadSharedValue('fletching_tools_id'), 0, Player.Backpack.Serial, 1)
+    fletch = Items.FindByID(fid, 0, Player.Backpack.Serial, 1)
     if not fletch:
         fletch = Target.PromptTarget("Select fletching tools.",34)
     if fletch and fletch != -1:
@@ -80,9 +84,10 @@ def GetFletchingTools():
         
 def GetScissors():
     scissors = Misc.ReadSharedValue("scissors")
-    if scissors and not isinstance(scissors, int) and Items.FindBySerial(scissors.Serial):
+    sid = Misc.ReadSharedValue('scissors_id')
+    if scissors and not isinstance(scissors, int) and Items.FindBySerial(scissors.Serial) and scissors.ItemID == sid:
         return scissors
-    scissors = Items.FindByID(Misc.ReadSharedValue('scissors_id'), 0, Player.Backpack.Serial, 1)
+    scissors = Items.FindByID(sid, 0, Player.Backpack.Serial, 1)
     if not scissors:
         scissors = Target.PromptTarget("Select scissors.",34)
     if scissors and scissors != -1:
@@ -187,6 +192,7 @@ def GetLockpicks(level=None, best=False, worst=False):
         return picks[0]
     
     pick = None
+    _ = [Items.WaitForProps(p, 1000) for p in picks]
     if level:
         pick = [p for p in picks if level.lower() in str(p.Properties).lower()]
         
@@ -223,7 +229,8 @@ def parse_resist_line(line):
 def AppraiseWeaponFiltered(weapon, verbose=False, relevant_props = None):
     if not weapon:
         return
-    
+    Items.WaitForProps(weapon, 1000)
+        
     point_map = Misc.ReadSharedValue("weapon_point_map")
     relevant_props = relevant_props or list(point_map.keys())
     name_map = Misc.ReadSharedValue("weapon_name_map")
@@ -256,8 +263,10 @@ def AppraiseWeaponFiltered(weapon, verbose=False, relevant_props = None):
         
         if prop.lower().startswith("resistances:"):
             total += parse_resist_line(prop)
+            points = total * 5
             if verbose:
-                print(f"Resistances: +{total}")
+                print(f"Resistances: +{total} ({points})")
+            found_props["Resistances"] = total
             continue
 
         match = pattern.match(prop)
@@ -285,24 +294,31 @@ def AppraiseWeaponFiltered(weapon, verbose=False, relevant_props = None):
         
     return total
     
-def AppraiseWeapon(weapon, verbose=False):
+def AppraiseWeapon(weapon, verbose=False, summary=False):
+    Items.WaitForProps(weapon, 600)
     relevant_weapon_props = Misc.ReadSharedValue("relevant_weapon_props")
     relevant_armor_props = Misc.ReadSharedValue("relevant_armor_props")
     weapon_value = AppraiseWeaponFiltered(weapon, verbose=verbose, relevant_props = relevant_weapon_props)
     armor_value = AppraiseWeaponFiltered(weapon, verbose=verbose, relevant_props = relevant_armor_props)
+    if summary:
+        total_value = AppraiseWeaponFiltered(weapon, verbose=verbose)
+        Misc.SendMessage(f"Armor Value: {armor_value}", 88)
+        Misc.SendMessage(f"Weapon Value: {weapon_value}", 88)
+        Misc.SendMessage(f"Total Value: {total_value}", 88)
     return max(weapon_value, armor_value)
     
-            
 jewelry_keep_rules = {
     "strength bonus": 8,
     "dexterity bonus": 8,
     "intelligence bonus": 8,
-    "lower reagent cost": 17,
+    "lower reagent cost": 19,
     "animal taming": 12,
+    "animal lore": 8,
     "spell damage increase": 17,
 }
     
 def AppraiseJewelry(item):
+    Items.WaitForProps(item, 1000)
     props = item.Properties
     pattern = re.compile(r'^([\w\s]+\w)\s\+?(\d+)%?', re.IGNORECASE)
     for prop in props:
@@ -310,6 +326,22 @@ def AppraiseJewelry(item):
         if match:
             prop_name = match.group(1)
             if prop_name in jewelry_keep_rules and int(match.group(2)) >= jewelry_keep_rules[prop_name]:
+                return True
+    return False
+
+    
+armor_keep_rules = {
+    "lower reagent cost": 19,
+}
+    
+def AppraiseArmor(item): # -> Bool
+    Items.WaitForProps(item, 1000)
+    pattern = re.compile(r'^([\w\s]+\w)\s\+?(\d+)%?', re.IGNORECASE)
+    for prop in item.Properties:
+        match = pattern.match(str(prop))
+        if match:
+            prop_name = match.group(1)
+            if prop_name in armor_keep_rules and int(match.group(2)) >= armor_keep_rules[prop_name]:
                 return True
     return False
     
@@ -325,8 +357,7 @@ def RepairCheck():
         if not item:
             continue
         
-        if not item.PropsUpdated:
-            Items.GetProperties(item.Serial,100)
+        Items.WaitForProps(item, 500)
             
         has_dura = False
         for prop in item.Properties:

@@ -21,18 +21,24 @@ def exexDump():
         Items.Move(gold,exex,-1)
         Misc.Pause(600)
     # Ointments
-    for oint in Items.FindAllByID(0x0E24, 0, Player.Backpack.Serial,1):
+    ointments = Items.FindAllByID(0x0E24, 0, Player.Backpack.Serial,1)
+    _ = [Items.WaitForProps(o, 600) for o in ointments]
+    for oint in ointments:
         if "Ointment" in oint.Name:
             Items.Move(oint, exex, -1)
             Misc.Pause(600)
     # Essences
-    for ess in Items.FindAllByID(0x0E24, 0x0679, Player.Backpack.Serial, 1):
+    essences = Items.FindAllByID(0x0E24, 0x0679, Player.Backpack.Serial, 1)
+    _ = [Items.WaitForProps(e, 600) for e in essences]
+    for ess in essences:
         if "Essence of " in ess.Name:
             Items.Move(ess, exex, -1)
             Misc.Pause(600)
     Items.Message(exex,0x082a,"*burp*")
     # Elven Notes
-    for note in Items.FindAllByID(0x0E39,0x0a43, Player.Backpack.Serial, 1):
+    notes = Items.FindAllByID(0x0E39,0x0a43, Player.Backpack.Serial, 1)
+    _ = [Items.WaitForProps(n, 600) for n in notes]
+    for note in notes:
         if "elven note" in note.Name.lower():
             Items.Move(note, exex, -1)
             Misc.Pause(600)
@@ -43,8 +49,6 @@ def exexDump():
     if scroll_pouch:
         for scroll in Items.FindAllByID(keep_scrolls, 0, Player.Backpack.Serial, 1):
             Items.Move(scroll, scroll_pouch, -1)
-    
-            
-            
+            Misc.Pause(600)
 
 exexDump()

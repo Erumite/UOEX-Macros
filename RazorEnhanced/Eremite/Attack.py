@@ -3,6 +3,7 @@ from Eremite.utils.buffs import AttackBuffs
 from Eremite.utils.barding import Discordance
 from Eremite.utils.items import RepairCheck
 
+RepairCheck()
 enemy = FindNearestEnemy()
 if enemy != None:
     Player.Attack(enemy)
@@ -18,8 +19,6 @@ else:
     Target.Cancel()
     if not Misc.ScriptStatus("RecycleWeight.py") and not Misc.ScriptStatus("LootBox.py"):
         Misc.ScriptRun("RecycleWeight.py")
-
-RepairCheck() 
 
 # Restart these in case the stop-all-scripts macro was hit:
 if not Misc.ScriptStatus("WeaponLevelGump.py"):

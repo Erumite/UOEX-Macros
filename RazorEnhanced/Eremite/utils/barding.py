@@ -54,7 +54,7 @@ def Discordance(target):
         FindInstrument()
         Misc.Pause(600)
         Player.UseSkill("Discordance")
-    Target.WaitForTarget(1000)
+    Target.WaitForTarget(500)
     Target.TargetExecute(target)
     Target.Cancel()
     return True
@@ -106,6 +106,6 @@ def InstrumentStocker():
     for item in pack_instruments:
         if item.Serial in keep_serials:
             if item.Container != toolbag:
-                Items.Move(item, toolbag, -1)
+                Items.Move(item, toolbag, -1, 93, 34)
         else:
             Items.Move(item, recyclebag, -1)

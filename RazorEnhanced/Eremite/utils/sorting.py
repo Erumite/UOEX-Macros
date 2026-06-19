@@ -14,9 +14,10 @@ recycleBag = GetRecycleBag()
 bagofholding = Misc.ReadSharedValue("BagOfHolding")
 scrollbag = Misc.ReadSharedValue("ScrollBoH")
 spell_scrolls = Misc.ReadSharedValue("spell_scrolls")
+loot_bag = Misc.ReadSharedValue("LootBag")
 
 
-def QuickSort(leather = True, gold = True, wool=True, meat=True, scrolls=True, logs=True, resources=True):
+def QuickSort(leather = True, gold = True, wool=True, meat=True, scrolls=True, logs=True, resources=True, misc=True):
     """Quick Sorting for when chopping."""
     if gold:
         found = Items.FindAllByID(GOLD, 0, Player.Backpack.Serial, 0)
@@ -56,6 +57,13 @@ def QuickSort(leather = True, gold = True, wool=True, meat=True, scrolls=True, l
         for item in Items.FindAllByID(RESOURCES, -1, Player.Backpack.Serial, 0):
             Items.Move(item,bagofholding,-1)
             Misc.Pause(600)
+    if misc:
+        essences = Items.FindAllByID(0x0E24,0x0679,Player.Backpack.Serial,0)
+        _ = [Items.WaitForProps(e, 600) for e in essences]
+        essences = [e for e in essences if "essence" in e.Name.lower()]
+        for e in essences:
+            Items.Move(e, loot_bag, -1)
+            
 
 trash_items = [
     0x1F0B, # orc helm
@@ -139,6 +147,8 @@ swamp_trash = [
     0x1BDE, # mouldy logs
     0x0A19, # mouldy plate
     0x13A8, # mouldy pillow
+    0x09E2, # mouldy pan
+    0x09D8, # mouldy meal
     0x0A58, # mouldy sleeping bag
     0x1EB7, # empty tool kit
     0x136C, # spongey rock
@@ -152,8 +162,12 @@ swamp_trash = [
     0x0EE9, # old bandages
     0x0EB3, # lute (Abandoned Hopes and Dreams)
     0x10EE, # garbage
+    0x0F3B, # mud
     0x0C40, # fungus
+    0x1125, # Peculiar Shroom
+    0x113C, # Curious Slime
     0x09C9, # Mysterious Green Meat
+    0x097D, # Perfectly Good Cheese
 ]
 
 shipwreck_trash = [

@@ -123,7 +123,12 @@ def PickSpecialAbility(enemycount:int, singletarget=False):
             Spells.CastBushido("Momentum Strike")
         else:
             Player.WeaponPrimarySA() # Crushing Blow
-    elif weapon.ItemID == 0x143E: # Halberd
+    elif weapon.ItemID == 0x0F4B: # Double Axe
+        if not singletarget and enemycount > 1:
+            Player.WeaponSecondarySA() # WhirlWind
+        else:
+            Player.WeaponPrimarySA() # Double Strike
+    elif weapon.ItemID in [0x143E, 0x13FB]: # Halberd | Large Battle Axe
         if not singletarget and enemycount > 1:
             Player.WeaponPrimarySA() # WhirlWind
         #elif not singletarget and enemycount == 2:

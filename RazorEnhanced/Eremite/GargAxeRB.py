@@ -5,22 +5,25 @@ class GargAxeChopper():
     boh = Misc.ReadSharedValue("BagOfHolding")
     runebooks = [0x406F1B45] # Replace me
 
-    chop_end = [ "logs in your backpack", "you carefully extract", "you hack at the tree for a while", "not enough wood here to harvest" ]
+    chop_end = [ "logs in your backpack", "you carefully extract", "hack at the tree for a while", "not enough wood here to harvest" ]
     
     def __init__(self):
+        self.getGargAxe()
+        self.garunebook = Misc.ReadSharedValue("garunebook") or self.runebooks[0]
+        self.gaslot = Misc.ReadSharedValue("gaslot") or 0
+        
+    def getGargAxe(self):
         garg_axe = Items.FindByID(0x0F45, 0x0973, Player.Backpack.Serial, 1)
         if not garg_axe:
             garg_axe = Player.GetItemOnLayer('LeftHand')
             garg_axe = garg_axe if garg_axe.ItemID == 0x0F45 and garg_axe.Color == 0x0973 else None
         self.garg_axe = garg_axe
-        self.garunebook = Misc.ReadSharedValue("garunebook") or self.runebooks[0]
-        self.gaslot = Misc.ReadSharedValue("gaslot") or 0
         
     def EquipGargAxe(self):
         left_hand = Player.GetItemOnLayer('LeftHand')
         left_hand = left_hand if left_hand != self.garg_axe else None
         right_hand = Player.GetItemOnLayer('RightHand')
-
+        self.getGargAxe()
         if left_hand:
             Items.Move(left_hand, self.boh, -1)
             Misc.Pause(600)

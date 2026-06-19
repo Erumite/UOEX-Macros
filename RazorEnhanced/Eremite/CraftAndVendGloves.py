@@ -1,19 +1,8 @@
 from Eremite.utils.items import getSewingKit
 
-
-# serial: rune count
-
-# Serial of bag gloves are crafted into
-
-
-
-# -----------
-
-
-
 class GloveCrafter():
     # -- Settings --
-    craft_bag_serial = 0x433FD36C
+    craft_bag_serial = 0x427497F2
     gold_bag_serial = 0x412D8C13
     armorer_books = {
         0x43672748: 16,
@@ -35,12 +24,12 @@ class GloveCrafter():
             return False
         Items.UseItem(sewingkit)
         Gumps.WaitForGump(0xdb74b85f, 1500) # Sewing Gump
-        Gumps.SendAction(0xdb74b85f, 60014) # Armor
+        Gumps.SendAction(0xdb74b85f, 60009) # Armor
         Gumps.WaitForGump(0xdb74b85f, 1500)
         Gumps.SendAction(0xdb74b85f, 60010) # Leather
         Gumps.WaitForGump(0xdb74b85f, 1500)
         Gumps.SendAction(0xdb74b85f, 60022) # Craft Leather Gloves
-    
+        
 
     def getArmorer(self):
         filter = Mobiles.Filter()
@@ -53,8 +42,9 @@ class GloveCrafter():
             for prop in n.Properties:
                 if any([title in str(prop).lower() for title in self.glove_buyers]) and "guildmaster" not in str(prop).lower() and "guildmistress" not in str(prop).lower():
                     self.armorer = n
-                    Mobiles.UseMobile(n)
                     Misc.Pause(650)
+                    Mobiles.UseMobile(n)
+                    Misc.Pause(500)
                     return n
                 
     def recallToArmorer(self, next=False):
@@ -71,8 +61,9 @@ class GloveCrafter():
                     current["book"] = 0
         Misc.SetSharedValue("glovesellcurrent",current)
         book_serial = list(self.armorer_books.keys())[current["book"]]
-        Items.UseItem(book_serial)
-        Gumps.WaitForGump(1431013363, 1500)
+        while not Gumps.HasGump(1431013363):
+            Items.UseItem(book_serial)
+            Gumps.WaitForGump(1431013363, 600)
         button = f'{current["rune"]}7'
         button = int(button)
         Gumps.SendAction(1431013363, button)
@@ -95,6 +86,7 @@ class GloveCrafter():
         armorer = self.armorer or self.getArmorer()
         Misc.WaitForContext(armorer.Serial, 10000)
         Misc.ContextReply(armorer.Serial, 2)
+        Misc.Pause(600)
         
     def moveGold(self):
         for gold in Items.FindAllByID(0x0EED, 0, Player.Backpack.Serial, 0):
@@ -102,6 +94,8 @@ class GloveCrafter():
             Misc.Pause(600)
         
     def go(self):
+        SellAgent.ChangeList("craftvend")
+        SellAgent.Enable()
         self.recallToArmorer()
         while True:
             self.moveGold()
@@ -113,9 +107,5 @@ def main():
     crafter = GloveCrafter()
     crafter.go()
     
-    
-    
 if __name__ == "__main__":
     main()
-
-

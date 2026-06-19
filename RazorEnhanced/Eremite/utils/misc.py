@@ -2,7 +2,7 @@ from Eremite.utils.sorting import QuickSort
 WARN_WEIGHT = Misc.ReadSharedValue("WarnWeight")
 CRIT_WEIGHT = Misc.ReadSharedValue("CriticalWeight")
 
-item_lock_scripts = ["RecycleWeight.py", "LootBox.py", "DrinkPotionsForBottles.py", "TreasureDig.py", "FishSwampNotes.py"]
+item_lock_scripts = ["RecycleWeight.py", "LootBox.py", "DrinkPotionsForBottles.py", "TreasureDig.py", "FishSwampNotes.py", "BlankScrollRestock.py", "CutClaimall.py"]
 # Usage from other scripts::  GetItemLock(__file__)
 def GetItemLock(requester, wait=False, takeover=False): # -> bool (lock acquired)
     if '\\' in requester:
@@ -12,6 +12,7 @@ def GetItemLock(requester, wait=False, takeover=False): # -> bool (lock acquired
         if not wait:
             return False
         if takeover:
+            Misc.ClearDragQueue()
             for s in scripts:
                 Misc.ScriptStop(s)
             return True
@@ -20,6 +21,7 @@ def GetItemLock(requester, wait=False, takeover=False): # -> bool (lock acquired
     
 
 def GetPackItemCount(): # -> int, int | current, max
+    Items.WaitForProps(Player.Backpack, 600)
     for p in Player.Backpack.Properties:
         if "items" in str(p):
             p = str(p)
@@ -45,4 +47,3 @@ def WeightCheck(): #-> bool
         Player.HeadMessage(33, "Too Many Items!")
         return False
     return True
-

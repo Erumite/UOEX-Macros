@@ -1,6 +1,6 @@
 # Crappy hack of a fix for the startup delay problem.
 if not Misc.ReadSharedValue('gem_pouch'):
-    Misc.ScriptRun("_eremite")
+    Misc.ScriptRun("_eremite.py")
 
 Misc.ScriptStop("RecycleWeight.py")
 Misc.ScriptStop("Attack.py")

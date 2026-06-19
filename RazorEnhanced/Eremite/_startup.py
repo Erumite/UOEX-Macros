@@ -247,6 +247,7 @@ corpse_ignore = [
     154, # Mummy
     181, # Orc ??? (weird shambly thing)
     182, # Orc Bomber
+    189, # Orc Brute
     196, # Kaze Kemono
     199, # Shadow
     203, # Pig (only meat)
@@ -292,6 +293,7 @@ corpse_ignore = [
     777, # Doppelganger
     778, # Gazer Larva
     780, # Bog Thing
+    784, # Arcane Daemon
     785, # Moloch
     789, # Quagmire
     790, # Sand Vortex
@@ -432,6 +434,51 @@ weapons = [
 ]
 Misc.SetSharedValue("weapons", weapons)
 
+
+armors = [
+    0x1410, # plate arms
+    0x1411, # Plate Legs
+    0x1412, # Plate Helm
+    0x1413, # Plate Gorget
+    0x1414, # Plate Gloves
+    0x1408, # Close Helmet
+    0x1415, # Plate Chest
+    0x1c04, # Female Plate Chest
+    0x13f0, # Ring Legs
+    0x13ee, # ring arms
+    0x140c, # Bascinet Helm
+    0x13be, # Chain Legs
+    0x13bb, # Chain Coif
+    0x140a, # Helmet
+    0x13ec, # Ringmail Tunic
+    0x13EB, # Ringmail Gloves
+    0x140e, # Norse Helm
+    0x13bf, # Chainmail Tunic
+    0x144f, # Bone Chest
+    0x1452, # Bone Legs
+    0x1451, # Bone Helm
+    0x13d6, # studded gorget
+    0x144e, # Bone Wrists
+    0x1450, # bone gloves
+    0x1db9, # leather hat
+    0x13d5, # Studded gloves
+    0x1c00, # Leather Shorts
+    0x13cd, # Leather Sleeves
+    0x1c06, # Female Leather Armor
+    0x13c6, # Leather Gloves
+    0x1c0c, # Studded Bustier
+    0x13cb, # Leather Legs
+    0x13db, # Studded Tunic
+    0x13cc, # Leather Tunic
+    0x13c7, # Leather Gorget
+    0x1c0a, # Leather Bustier
+    0x13da, # Studded Leggings
+    0x13dc, # Studded Sleeves
+    0x1c08, # Leather Skirt
+    0x1c02, # Studded Armor
+]
+Misc.SetSharedValue("armors", armors)
+
 trash_weapons = [
     0x0EC3, # Cleaver
     0x0EC4, # Skinning Knife
@@ -475,6 +522,7 @@ weapon_point_map = {
     "Cold Resist": {"points": 5, "max": 20},
     "Poison Resist": {"points": 5, "max": 20},
     "Energy Resist": {"points": 5, "max": 20},
+    "Resistances": {"points": 5, "max": 100},
     "Hit Life Leech": {"points": 3, "max": 60},
     "Hit Stamina Leech": {"points": 3, "max": 60},
     "Hit Mana Leech": {"points": 3, "max": 60},
@@ -497,7 +545,7 @@ relevant_armor_props = {
     "Spell Damage", "Faster Cast Recovery", "Lower Mana Cost", "Lower Reagent Cost", "Enhance Potions",
     "Hit Point Regeneration", "Stamina Regeneration", "Mana Regeneration", "Strength Bonus",
     "Dexterity Bonus", "Intelligence Bonus", "Hit Point Increase", "Stamina Increase", "Mana Increase",
-    "Physical Resist", "Fire Resist", "Cold Resist", "Poison Resist", "Energy Resist",
+    "Physical Resist", "Fire Resist", "Cold Resist", "Poison Resist", "Energy Resist", "Resistances"
 }
 Misc.SetSharedValue("relevant_armor_props", relevant_armor_props)
 

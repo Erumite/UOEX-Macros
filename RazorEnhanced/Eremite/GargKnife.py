@@ -10,7 +10,7 @@ def GargChop():
         Mobiles.UseMobile(Player.Serial)
         Misc.Pause(300)
     # Cast Mirror Images to avoid one-shots from Ethy Elementals
-    while Player.Followers < Player.FollowersMax:
+    while Player.Followers < Player.FollowersMax - 1:
         Player.ChatSay(77, '[cs mirrorimage')
         Misc.Pause(2500)
     # Cast Evasion to soak a one-shot.
@@ -30,7 +30,7 @@ def GargChop():
     Target.TargetExecute(corpse)
     Misc.Pause(600)
 
-    if Journal.Search("You skin it") or Journal.Search("You cut away some") or Journal.Search("nothing of value"):
+    if Journal.Search("You skin it") or Journal.Search("You cut away some") or Journal.Search("nothing useful to carve"):
         Player.ChatSay(77, '[claimall')
         Target.WaitForTarget(1500)
         Target.TargetExecute(corpse)

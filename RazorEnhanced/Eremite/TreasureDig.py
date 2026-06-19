@@ -2,6 +2,9 @@ import re
 import ast
 from Eremite.utils.items import GetRecycleBag
 from Eremite.utils.mobiles import GetFacet
+from Eremite.utils.misc import GetItemLock
+
+GetItemLock(__file__, wait=True, takeover=True)
 
 recyclebag = GetRecycleBag()
 mapbook = Misc.ReadSharedValue("mapbook")
@@ -129,8 +132,9 @@ def RuneBookToMapLocation(runeID):
         Misc.SendMessage("Not recalling from Felucca!", 33)
         return False
     book, runeval = getBookAndRune(runeID)
-    Items.UseItem(book)
-    Gumps.WaitForGump(1431013363, 1500)
+    while not Gumps.HasGump(1431013363):
+        Items.UseItem(book)
+        Gumps.WaitForGump(1431013363, 600)
     Gumps.SendAction( 1431013363, runeval)
     Misc.Pause(2000)
     return True

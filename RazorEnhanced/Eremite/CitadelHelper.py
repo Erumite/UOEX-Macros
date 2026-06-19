@@ -1,6 +1,6 @@
 from System import Int32
 from System.Collections.Generic import List
-
+from random import randint
 
 class CitadelHelper():
     book_barrel_serial = 0x4004A697
@@ -11,12 +11,19 @@ class CitadelHelper():
     elixier_lever = Items.FindBySerial(elixier_lever_serial)
 
     def __init__(self):
-        pass
+        self.peerlessbag = self.GetPeerlessBag()
     
     @staticmethod
     def countBooks():
         book_count = Items.FindAllByID(0x0FF2,0,Player.Backpack.Serial,0)
         return len(book_count)
+    
+    @staticmethod
+    def GetPeerlessBag():
+        pouches = Items.FindAllByID(0x0E79, 0, Player.Backpack.Serial, 0)
+        _ = [Items.WaitForProps(p, 700) for p in pouches]
+        pouches = [p for p in pouches if "peerless" in str(p.Properties).lower()]
+        return pouches[0] if len(pouches) > 0 else None
 
     def doBooks(self):
         Player.HeadMessage(88, "Doing books.")
@@ -38,6 +45,9 @@ class CitadelHelper():
             if self.countBooks() >= 7:
                 break
             for cont in [book_spawn_crate, book_spawn_barrel]:
+                if "0 items" in str(cont.Properties).lower():
+                    Misc.Pause(600)
+                    continue
                 PathFinding.PathFindTo(cont.Position.X, cont.Position.Y +1, cont.Position.Z)
                 Items.WaitForContents(cont,600)
                 Misc.Pause(600)
@@ -53,9 +63,12 @@ class CitadelHelper():
         PathFinding.PathFindTo(self.book_barrel.Position.X + 1, self.book_barrel.Position.Y, self.book_barrel.Position.Z)
         books = Items.FindAllByID(0x0FF2,0,Player.Backpack.Serial,0)
         for book in books:
-            Items.Move(book, self.book_barrel, -1)
-            Misc.Pause(600)
-        PathFinding.PathFindTo(138, 1928, 0)
+            while book.RootContainer == Player.Backpack.Serial:
+                Items.Move(book, self.book_barrel, -1)
+                Misc.Pause(600)
+        Misc.Pause(1000)
+        PathFinding.PathFindTo(141, 1923, 0) # In front of door
+        PathFinding.PathFindTo(138, 1928, 0) # In front of portal
 
     def doEntryPuzzle(self):
         PathFinding.PathFindTo(95, 1882, 0) # Teleport Spot
@@ -89,8 +102,7 @@ class CitadelHelper():
         elif self.elixier_lever and Player.DistanceTo(self.elixier_lever) < 2:
             Items.UseItem(self.elixier_lever)
 
-    @staticmethod
-    def KeyCount():
+    def KeyCount(self):
         keys = {
             0x100E: "Dragon Flame Key",
             0x1010: "Tiger Claw Key",
@@ -98,9 +110,25 @@ class CitadelHelper():
         }
         for key,name in keys.items():
             items = Items.FindAllByID(key, 0, Player.Backpack.Serial, 1, False)
+            _ = [Items.WaitForProps(i, 500) for i in items]
             items = [item for item in items if item.Name.lower() == name.lower()]
             count = len(items)
             Misc.SendMessage(f"{count} : {name}", 88)
+            keys = [i for i in items if i.Container == Player.Backpack.Serial]
+            for key in keys:
+                if "dragon" in key.Name.lower():
+                    Items.Move(key, self.peerlessbag, -1, 145, randint(65,100))
+                    Misc.Pause(600)
+                elif "tiger" in key.Name.lower():
+                    Items.Move(key, self.peerlessbag, -1, randint(110, 143), 144)
+                    Misc.Pause(600)
+                elif "serpent" in key.Name.lower():
+                    Items.Move(key, self.peerlessbag, -1, randint(44, 85), 140)
+                    Misc.Pause(600)
+            
+
+
+        
             
     def ElixierChest(self):
         if "iron lock" in str(self.elixierchest.Properties).lower():
