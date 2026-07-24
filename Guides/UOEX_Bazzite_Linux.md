@@ -88,6 +88,31 @@ You can also click the 3-dot menu dropdown to create a Desktop Shortcut that you
 
 ![Add Desktop Shortcut](https://files.catbox.moe/fjpbvt.png)
 
+---
+
+## Optional Setup and Migration Of Settings
+
+### Notes on Migrating Your Scripts + Profiles
+#### **WARNING**: Some settings may get broken while migrating if the paths changed or if they contain Hotkeys!
+
+If you open up your scripts, agents, etc and all the settings are gone, it's likely one of two things: 
+
+* The paths have changed: `D:\Old\Path` becomes `C:\New\Path`, etc.
+    * You can do a search and replace of the settings files for anything containing your old path.
+* Non-Zero Hotkey Values
+    * It seems the key mappings (integers) for hotkeys differ between Windows and Linux.
+    * Any files containing Hotkey assignments are likely to break and be emptied out.
+    * Search for any files containing `"Hotkey":` in it and set them **ALL** to Zero.
+        * If you have an editor that supports regex, try replacing `"Hotkey": \d+,` with `"Hotkey": 0,`
+* Profile Name Change
+    * Linux is case sensitive `Name` and `name` are two different folders whereas on Windows they're the same.
+    * Actual changes like swapping from a named profile to `default` and vice versa. 
+    * You can simply copy the files from one profile into the directory of another.
+
+**ANOTHER WARNING** : Make sure UO is closed while copying and moving around files or it will probably freeze. 
+
+A git repository in your data directory goes a long way to keeping track of what is getting changed.
+
 ### Symlink Your Scripts and Profiles
 
 This is an optional step, but I'd prefer to have my scripts outside of the bottle and in a more accessible location.  Namely, `~/Documents/UOData/`
@@ -99,8 +124,6 @@ It will move the Razor Scripts, Razor Profiles and CUO Profiles into `~/Document
 Then, it creates a symlink from the bottle file system to the ones in Documents.
 
 You can keep your config in this directory and not worry about losing it if the bottle is deleted, share it between bottles (not recommended to do at the same time), or track your profile/scripts with git. 
-
-**WARNING**: Some settings may get broken while migrating if the paths changed.  If all your script assignments in Razor are gone, do a search and replace with the new paths in the files.  If you do a search-replace and restore your original scripts, you should also set the hotkey values to 0 as I found the keymappings differ between Windows and Linux and this can cause freezes.
 
 **YOU MUST GIVE BOTTLES ACCESS** to your Documents folder before you do this as it does not have this access normally.
 
