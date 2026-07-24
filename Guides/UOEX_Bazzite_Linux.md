@@ -100,6 +100,8 @@ Then, it creates a symlink from the bottle file system to the ones in Documents.
 
 You can keep your config in this directory and not worry about losing it if the bottle is deleted, share it between bottles (not recommended to do at the same time), or track your profile/scripts with git. 
 
+WARNING: Some settings may get broken while migrating if the paths changed.  If all your script assignments in Razor are gone, do a search and replace with the new paths in the files.
+
 **YOU MUST GIVE BOTTLES ACCESS** to your Documents folder before you do this as it does not have this access normally. 
 
 1. Open `FlatSeal` and find `Bottles`
