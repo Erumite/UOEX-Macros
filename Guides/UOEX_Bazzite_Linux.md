@@ -100,9 +100,9 @@ Then, it creates a symlink from the bottle file system to the ones in Documents.
 
 You can keep your config in this directory and not worry about losing it if the bottle is deleted, share it between bottles (not recommended to do at the same time), or track your profile/scripts with git. 
 
-WARNING: Some settings may get broken while migrating if the paths changed.  If all your script assignments in Razor are gone, do a search and replace with the new paths in the files.
+**WARNING**: Some settings may get broken while migrating if the paths changed.  If all your script assignments in Razor are gone, do a search and replace with the new paths in the files.  If you do a search-replace and restore your original scripts, you should also set the hotkey values to 0 as I found the keymappings differ between Windows and Linux and this can cause freezes.
 
-**YOU MUST GIVE BOTTLES ACCESS** to your Documents folder before you do this as it does not have this access normally. 
+**YOU MUST GIVE BOTTLES ACCESS** to your Documents folder before you do this as it does not have this access normally.
 
 1. Open `FlatSeal` and find `Bottles`
 2. Scroll down to `Other files` and add `~/Documents/UOData`
