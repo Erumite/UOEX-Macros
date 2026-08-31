@@ -28,14 +28,14 @@ def main(API: API):
     if poison_pots:
         for pot in poison_pots:
             pot_serial = getattr(pot, 'Serial', pot)
-            while API.FindItem(pot_serial):
+            while API.FindItem(pot_serial) and not API.StopRequested:
                 API.UseObject(pot_serial)
                 API.Pause(0.6)
 
         if getattr(API.Player, 'Poisoned', False) and cure_pots:
             for pot in cure_pots:
                 pot_serial = getattr(pot, 'Serial', pot)
-                while API.FindItem(pot_serial):
+                while API.FindItem(pot_serial) and not API.StopRequested:
                     API.UseObject(pot_serial)
                     API.Pause(0.6)
                     if API.InJournal("would surely kill you", clearMatches=True):
@@ -53,13 +53,13 @@ def main(API: API):
 
     for pot in agility_pots:
         pot_serial = getattr(pot, 'Serial', pot)
-        while API.FindItem(pot_serial):
+        while API.FindItem(pot_serial) and not API.StopRequested:
             API.UseObject(pot_serial)
             API.Pause(0.6)
 
     for pot in stam_pots:
         pot_serial = getattr(pot, 'Serial', pot)
-        while API.FindItem(pot_serial):
+        while API.FindItem(pot_serial) and not API.StopRequested:
             if getattr(API.Player, 'Stamina', 0) >= getattr(API.Player, 'MaxStamina', 1):
                 break
             API.UseObject(pot_serial)
@@ -67,13 +67,13 @@ def main(API: API):
 
     for pot in strength_pots:
         pot_serial = getattr(pot, 'Serial', pot)
-        while API.FindItem(pot_serial):
+        while API.FindItem(pot_serial) and not API.StopRequested:
             API.UseObject(pot_serial)
             API.Pause(0.6)
 
     for pot in heal_pots:
         pot_serial = getattr(pot, 'Serial', pot)
-        while API.FindItem(pot_serial):
+        while API.FindItem(pot_serial) and not API.StopRequested:
             if getattr(API.Player, 'Hits', 0) >= getattr(API.Player, 'MaxHits', 1):
                 break
             API.UseObject(pot_serial)

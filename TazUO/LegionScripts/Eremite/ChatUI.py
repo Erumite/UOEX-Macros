@@ -47,37 +47,32 @@ IGNORED_NPC_NAMES = {
     "linked gate",
     "lady melisande",
 }
+IGNORED_NPC_NAMES = {n.lower() for n in IGNORED_NPC_NAMES}
 
 # Fast Exact String Ignore List (everything here should be all lowercase)
 EXACT_IGNORE_MESSAGES = {
-    "bank", "guards",
-    "the spell fizzles.",
-    "you have hidden yourself well.",
-    "you are now hidden.",
-    "you enter stealth mode.",
+    "bank", "guards", "the spell fizzles.", "anh mi sah ko",
+    "you have hidden yourself well.", "you are now hidden.", "you enter stealth mode.",
     "me hurt!", "nooooo!", "aaah! that hurt...", "good blow!", "oof! that hurt!", "ouch! me hurt!",
-    "away with thee!", "me dying?", "me die!", "must... not die...",
-    "no, kill me not!",
+    "away with thee!", "me dying?", "me die!", "must... not die...", "no, kill me not!",
     "i can't reach that.",
-    "take a look at my goods.",
-    "take a look at your goods.",
-    "greetings.  have a look around.",
-    "please stand still, you are being moved.",
-    "you are being moved. please stand still.",
+    "take a look at my goods.", "take a look at your goods.", "greetings.  have a look around.",
+    "please stand still, you are being moved.", "you are being moved. please stand still.",
     "lady melisande feels your presence, and approaches",
-    "you fail to make anything of the map.",
-    "you successfully decode a treasure map!",
+    "you fail to make anything of the map.", "you successfully decode a treasure map!",
+    "you manage to decipher the encoded location.",
     "*acid blood scars your weapon!*",
     "you are bleeding profusely",
-    "you stepped onto a spike trap!",
-    "you stepped onto a blade trap!",
-    "you are enveloped by a noxious gas cloud!",
-    "you manage to decipher the encoded location.",
+    "you stepped onto a spike trap!", "you stepped onto a blade trap!", "you are enveloped by a noxious gas cloud!",
     "i now own your soul!!!", "your weak spells have no effect on me, muahahaha!!",
     "we are now one with each other!!", "thou shalt not pass my post!!",
     "your end is near young adventurer!!",
     f"have a look at my inventory {API.Player.Name}, i have the item you seek.",
     f"hey {API.Player.Name}, you can buy that item from me.",
+    "come here...", "i won't hurt you.", "will you be my friend?", "i've always wanted a pet like you.",
+    "good...", "here...", "*begins taming a creature.*", "nice...", "will you travel with me, noble creature?",
+    "it would be mutually beneficial if we were to join forces.", "i can protect you from the dangers of this world.",
+    "i've been searching for a companion like you.", "if you accompany me, we will protect one another.",
 }
 # Enforce lowercase.
 EXACT_IGNORE_MESSAGES = [m.lower() for m in EXACT_IGNORE_MESSAGES]
@@ -90,7 +85,8 @@ IGNORED_REGEX_PATTERNS = [
     r"^Lead on! Payment will be made when we arrive",
     r"^We have arrived! I thank thee,",
     r"^The total of thy purchase is \d+ gold",
-    r"^\S+ wants a cracker.$",    
+    r"^\S+ wants a cracker.$",
+    r" begins to spasm uncontrollably. \*$"
 ]
 IGNORED_REGEX_PATTERNS=[re.compile(pattern, re.IGNORECASE) for pattern in IGNORED_REGEX_PATTERNS]
 
@@ -652,7 +648,7 @@ class ChatUIManager:
 def main(API: API):
     manager = ChatUIManager(API)
     try:
-        while True:
+        while not API.StopRequested:
             new_entries = manager.process_journal_entries(API)
             if new_entries > 0 or manager.last_rendered_sig is None:
                 manager.render_gump(API)

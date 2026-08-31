@@ -303,7 +303,7 @@ def UseOres(API):
     mobileforge_serial = getattr(mobileforge, 'Serial', mobileforge)
     ores = API.FindTypeAll(0x19B9, container=backpack_serial) or []
     for ore in ores:
-        while API.FindItem(ore.Serial):
+        while API.FindItem(ore.Serial) and not API.StopRequested:
             API.UseObject(ore.Serial)
             if API.WaitForTarget(timeout=0.6):
                 API.Target(mobileforge_serial)
@@ -317,7 +317,7 @@ def UseGroundOres(API):
     mobileforge_serial = getattr(mobileforge, 'Serial', mobileforge)
     ores = API.GetItemsOnGround(distance=1, graphic=0x19B9) or []
     for ore in ores:
-        while API.FindItem(ore.Serial):
+        while API.FindItem(ore.Serial) and not API.StopRequested:
             API.UseObject(ore.Serial)
             if API.WaitForTarget(timeout=0.6):
                 API.Target(mobileforge_serial)

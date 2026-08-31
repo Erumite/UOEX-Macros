@@ -123,7 +123,7 @@ def WaitForMelStone(API: API):
     last_rendered_time = None
 
     try:
-        while True:
+        while not API.StopRequested:
             # Check if green stone is present
             mel_stone = API.FindItem(MEL_STONE_SERIAL)
             if mel_stone:

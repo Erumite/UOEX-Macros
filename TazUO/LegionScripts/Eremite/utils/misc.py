@@ -17,7 +17,7 @@ def GetItemLock(API: API, requester, wait=False, takeover=False):
     
     scripts = [s for s in item_lock_scripts if s != requester]
     
-    while any(API.IsScriptRunning(s) for s in scripts):
+    while any(API.IsScriptRunning(s) for s in scripts) and not API.StopRequested:
         if takeover:
             API.ClearMoveQueue()
             for s in scripts:

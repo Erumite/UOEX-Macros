@@ -172,7 +172,7 @@ def RuneBookToMapLocation(API: API, runeID: int):
         API.SysMsg(f"No runebook configured for rune {runeID}", 33)
         return False
 
-    while not API.HasGump(1431013363):
+    while not API.HasGump(1431013363) and not API.StopRequested:
         API.UseObject(book_serial)
         API.WaitForGump(1431013363, delay=1.0)
         API.Pause(0.2)
@@ -210,7 +210,7 @@ def HandleBagMaps(API: API):
             continue
 
         if "tattered" in props:
-            while "tattered" in (API.ItemNameAndProps(map_item.Serial, True) or "").lower():
+            while "tattered" in (API.ItemNameAndProps(map_item.Serial, True) or "").lower() and not API.StopRequested:
                 API.ContextMenu(map_item.Serial, 0)
                 API.Pause(0.4)
             if mapbook:
@@ -222,7 +222,7 @@ def HandleBagMaps(API: API):
 
     notes = FindTypesInContainer(API, graphics=NOTE_ID) or []
     for note in notes:
-        while not IsDecoded(API, note):
+        while not IsDecoded(API, note) and not API.StopRequested:
             API.UseObject(note.Serial)
             API.Pause(0.6)
         if mapbook:

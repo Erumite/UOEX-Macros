@@ -53,13 +53,13 @@ def MelTicketCount(API: API):
 
 
 def ClearStaleGumps(API: API):
-    while API.HasGump(STALE_GUMP_ID):
+    while API.HasGump(STALE_GUMP_ID) and not API.StopRequested:
         API.ReplyGump(3, STALE_GUMP_ID)
         API.Pause(0.2)
 
 
 def FillLadyMelBook(API: API):
-    while True:
+    while not API.StopRequested:
         bp_serial = getattr(API.Player.Backpack, 'Serial', None) if (API.Player and API.Player.Backpack) else None
         if not bp_serial:
             return False
@@ -85,7 +85,7 @@ def FillLadyMelBook(API: API):
 
         if not melbook:
             API.Pathfind(6455, 834, wait=True)
-            while True:
+            while not API.StopRequested:
                 API.Msg("fight lady mel")
                 for _ in range(6):
                     API.Pause(1.0)
@@ -114,7 +114,7 @@ def FillLadyMelBook(API: API):
         API.Pathfind(6450, 840, wait=True)
         API.Pause(0.6)
 
-        while API.FindType(0x0E3B, hue=0x01F4, container=bp_serial):
+        while API.FindType(0x0E3B, hue=0x01F4, container=bp_serial) and not API.StopRequested:
             API.Msg("ready")
             for _ in range(6):
                 melbook = API.FindType(0x0E3B, hue=0x01F4, container=bp_serial)

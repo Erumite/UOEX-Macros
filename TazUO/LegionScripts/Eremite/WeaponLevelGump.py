@@ -175,7 +175,7 @@ def main(API: API):
     gained = False
     active_gump = None
 
-    while True:
+    while not API.StopRequested:
         last_xp, gained, active_gump = SendGump(API, last_xp, gained, active_gump)
         API.Pause(REFRESH_SEC)
 

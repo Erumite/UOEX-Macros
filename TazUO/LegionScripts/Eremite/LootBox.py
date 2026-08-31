@@ -59,7 +59,7 @@ def EnsureContainerOpen(API: API, container, timeout_per_try=1.2, max_retries=3)
     for attempt in range(max_retries):
         API.UseObject(container_serial)
         start = time.time()
-        while time.time() - start < timeout_per_try:
+        while time.time() - start < timeout_per_try and not API.StopRequested:
             items = API.ItemsInContainer(container_serial, recursive=False)
             if items is not None and len(items) > 0:
                 return items
@@ -196,7 +196,7 @@ def DragGemsToPouch(API: API, box, gempouch):
 
     items = API.ItemsInContainer(box_serial, recursive=False) or []
     gs = [i for i in items if getattr(i, 'Graphic', 0) in gems]
-    while gs:
+    while gs and not API.StopRequested:
         for g in gs:
             MoveItemToContainer(API, g.Serial, gempouch_serial)
             API.Pause(0.6)
@@ -214,7 +214,7 @@ def DragGoldToBoH(API: API, box, boh):
 
     items = API.ItemsInContainer(box_serial, recursive=False) or []
     gold = [i for i in items if getattr(i, 'Graphic', 0) == 0x0EED]
-    while gold:
+    while gold and not API.StopRequested:
         for g in gold:
             MoveItemToContainer(API, g.Serial, boh_serial)
             API.Pause(0.6)
@@ -236,7 +236,7 @@ def lootScrolls(API: API, bag, scrollbag, spell_scrolls):
 
     items = API.ItemsInContainer(bag_serial, recursive=False) or []
     scrolls = [i for i in items if getattr(i, 'Graphic', 0) in spell_scrolls]
-    while scrolls:
+    while scrolls and not API.StopRequested:
         for scroll in scrolls:
             MoveItemToContainer(API, scroll.Serial, scrollbag_serial)
             API.Pause(0.6)
@@ -248,7 +248,7 @@ def lootScrolls(API: API, bag, scrollbag, spell_scrolls):
 def DragLootToBackpack(API: API, box):
     box_serial = getattr(box, 'Serial', box)
     items = API.ItemsInContainer(box_serial, recursive=False) or []
-    while items:
+    while items and not API.StopRequested:
         for loot in items:
             if not WeightCheck(API):
                 API.HeadMsg("High Weight", API.Player.Serial, 33)
@@ -283,7 +283,7 @@ def main(API: API):
         return
 
     API.HeadMsg("V", target_serial, 69)
-    while isLocked(API, target):
+    while isLocked(API, target) and not API.StopRequested:
         DoLockPick(API, target)
 
     # Open container and set off trap if present; retries UseObject until contents are received

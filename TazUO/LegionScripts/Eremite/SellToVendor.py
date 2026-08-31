@@ -42,7 +42,7 @@ def main(API: API):
 
     cleanJournal(API)
 
-    while True:
+    while not API.StopRequested:
         vendor_serial = getattr(vendor, 'Serial', vendor)
         vendor_mob = API.FindMobile(vendor_serial)
 

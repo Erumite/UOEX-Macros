@@ -37,7 +37,7 @@ def main(API: API):
     if getattr(API, 'Player', None):
         API.HeadMsg("o-|==>", API.Player.Serial, 69)
 
-    while True:
+    while not API.StopRequested:
         start_time = time.time()
 
         RepairCheck(API)

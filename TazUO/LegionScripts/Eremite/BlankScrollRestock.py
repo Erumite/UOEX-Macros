@@ -45,7 +45,7 @@ def BuyScrolls(API: API, holdingbag_serial: int):
 
 def RecallAndBuyAll(API: API, scrollbook_serial: int, holdingbag_serial: int):
     for runeslot in range(7, 160, 10):
-        while not API.HasGump(RUNEBOOK_GUMP):
+        while not API.HasGump(RUNEBOOK_GUMP) and not API.StopRequested:
             API.UseObject(scrollbook_serial)
             API.WaitForGump(RUNEBOOK_GUMP, delay=0.6)
         API.ReplyGump(runeslot)
@@ -56,7 +56,7 @@ def RecallAndBuyAll(API: API, scrollbook_serial: int, holdingbag_serial: int):
 
 
 def RecallHome(API: API, home_rune_serial: int):
-    while not API.HasGump(RUNEBOOK_GUMP):
+    while not API.HasGump(RUNEBOOK_GUMP) and not API.StopRequested:
         API.UseObject(home_rune_serial)
         API.WaitForGump(RUNEBOOK_GUMP, delay=0.6)
     API.ReplyGump(7)
@@ -79,13 +79,13 @@ def StartCrafting(API: API):
     # Open Scribe Pen craft gump & craft Flamestrike
     pen_serial = scribe_pens[0].Serial
     API.UseObject(pen_serial)
-    while not API.HasGump(PEN_GUMP):
+    while not API.HasGump(PEN_GUMP) and not API.StopRequested:
         API.Pause(0.1)
     API.ReplyGump(60004, PEN_GUMP)
-    while not API.HasGump(PEN_GUMP):
+    while not API.HasGump(PEN_GUMP) and not API.StopRequested:
         API.Pause(0.1)
     API.ReplyGump(60011, PEN_GUMP)
-    while not API.HasGump(PEN_GUMP):
+    while not API.HasGump(PEN_GUMP) and not API.StopRequested:
         API.Pause(0.1)
     API.ReplyGump(60020, PEN_GUMP)
 
@@ -97,7 +97,7 @@ def main(API: API):
     holdingbag = API.FindItem(HOLDINGBAG_SERIAL) or GetMyItem(API, "holdingbag")
     holdingbag_serial = getattr(holdingbag, 'Serial', HOLDINGBAG_SERIAL) if holdingbag else HOLDINGBAG_SERIAL
 
-    while GoldCheck:
+    while GoldCheck and not API.StopRequested:
         if getattr(API.Player, 'InWarMode', False):
             API.HeadMsg("War: Skipping", API.Player.Serial, 33)
         else:

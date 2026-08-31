@@ -1,12 +1,9 @@
-from json import tool
-from sys import api_version
 from Eremite.utils.items import GetMyItem, AppraiseWeapon, AppraiseJewelry, AppraiseArmor, MoveItemToContainer
 from Eremite.utils.sorting import QuickSort, trashJunk
 from Eremite.utils.barding import InstrumentStocker
 from Eremite.utils.misc import GetItemLock
 
 WEAP_KEEP_THRESHOLD = 350
-busy_text = "You must wait to perform another action."
 
 def isBlessed(API: API, item):
     """Checks if an item is blessed or insured."""
@@ -143,7 +140,7 @@ def smelt_items(API: API, container=None):
 
     if to_smelt:
         API.SysMsg(f"* Smelting {len(to_smelt)} items...", 88)
-        while not API.HasGump(949095101) and not API.HasGump(0x38920abd):
+        while not API.HasGump(949095101) and not API.HasGump(0x38920abd) and not API.StopRequested:
             API.UseObject(smith_hammer)
             API.WaitForGump(949095101, 600)
             API.Pause(0.6)
@@ -190,7 +187,7 @@ def fletch_items(API: API, container=None):
 
     if to_chop:
         API.SysMsg(f"* Fletching {len(to_chop)} items...", 88)
-        while not API.HasGump(949095101):
+        while not API.HasGump(949095101) and not API.StopRequested:
             API.UseObject(fletching_tools)
             API.WaitForGump(949095101, 1500)
             API.Pause(0.6)
@@ -233,7 +230,7 @@ def chop_items(API: API, container=None):
 
     if to_chop:
         API.SysMsg(f"* Chopping {len(to_chop)} items...", 88)
-        while not API.HasGump(949095101) and not API.HasGump(0x38920abd):
+        while not API.HasGump(949095101) and not API.HasGump(0x38920abd) and not API.StopRequested:
             API.UseObject(carpenter_saw)
             API.WaitForGump(949095101, 1000)
             API.Pause(0.6)
@@ -288,7 +285,7 @@ def scissorItem(API: API, scissors, item):
     if API.HasTarget("any"):
         API.Target(item.Serial)
     else:
-        while not API.HasTarget("any"):
+        while not API.HasTarget("any") and not API.StopRequested:
             API.UseObject(scissors)
             API.WaitForTarget(timeout=0.3)
         API.Target(item.Serial)
@@ -376,7 +373,7 @@ def do_keys(API: API, key_type: str, shared_var: str = None, gump_id: int = None
 
     if to_add:
         API.SysMsg(f"* Adding {len(to_add)} items to {key_type}...", 88)
-        while not API.HasGump(gump_id):
+        while not API.HasGump(gump_id) and not API.StopRequested:
             API.UseObject(keys)
             API.WaitForGump(gump_id)
             API.Pause(0.6)
